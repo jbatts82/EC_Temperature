@@ -9,3 +9,4 @@ Rpi Provisioning Steps:
 - Set up Samba.
 - Set up pip3
 - Set up virtualenv with pip
+- anything else?
