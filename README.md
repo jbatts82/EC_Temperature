@@ -11,6 +11,7 @@ Rpi Provisioning Steps:
 - Set up Samba.
 - Set up pip3
 - set up wiringPi
+- python3-gpiozero
 - Set up virtualenv with pip
 - anything else?
 
