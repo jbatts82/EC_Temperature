@@ -1,20 +1,17 @@
 ###############################################################################
 # File Name  : DHT11.py
-# Date       : 07/12/2020
+# Date       : 03/14/2021
 # Description: Reads humidity sensor
 ###############################################################################
 
-import sys
-import time
-from datetime import datetime
 import Adafruit_DHT
-from SupportFiles.Shared import DHT11_Data
+from support.shared import DHT11_Data
+from datetime import datetime
 
 class DHT11:
     sensor_index = 0
     def __init__(self, config):
         if config.sensor_cnt > self.sensor_index:
-            config.sensor_configs[self.sensor_index]["assigned"] =  True
             self.pin = config.sensor_configs[self.sensor_index]["data_pin"]
             self.name = config.sensor_configs[self.sensor_index]["name"]
             self.sensor_type = config.sensor_configs[self.sensor_index]["sensor_type"]
