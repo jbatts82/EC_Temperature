@@ -12,6 +12,7 @@ Rpi Provisioning Steps:
 - Set up pip3
 - set up wiringPi
 - python3-gpiozero
+- python-kasa
 - Set up virtualenv with pip
 - anything else?
 

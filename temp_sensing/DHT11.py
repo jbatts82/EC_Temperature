@@ -11,13 +11,13 @@ from datetime import datetime
 class DHT11:
     sensor_index = 0
     def __init__(self, config):
-        if config.sensor_cnt > self.sensor_index:
-            self.pin = config.sensor_configs[self.sensor_index]["data_pin"]
-            self.name = config.sensor_configs[self.sensor_index]["name"]
-            self.sensor_type = config.sensor_configs[self.sensor_index]["sensor_type"]
+        if len(config.dht11_config) > self.sensor_index:
+            self.pin = config.dht11_config[self.sensor_index]["pin"]
+            self.name = config.dht11_config[self.sensor_index]["name"]
+            self.sensor_type = config.dht11_config[self.sensor_index]["sensor_type"]
             self.current_data = DHT11_Data()
             self.previous_data = DHT11_Data() #ie:previous good data
-            self.current_data.name = config.sensor_configs[self.sensor_index]["name"]
+            self.current_data.name = config.dht11_config[self.sensor_index]["name"]
             DHT11.sensor_index += 1
             self.process_sensor()
             print("Success Processing : Sensor Started Successfully")

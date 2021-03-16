@@ -12,7 +12,7 @@ class leds:
 	def __init__(self, config):
 		night_mode = True
 		if config:
-			led_configs = config.led_configs
+			led_configs = config.led_config
 			led_array = []
 
 			for led in led_configs:
