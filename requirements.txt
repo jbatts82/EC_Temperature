@@ -1,2 +1,10 @@
 Adafruit-DHT==1.4.0
 Adafruit-Python-DHT==1.4.0
+anyio==2.2.0
+asyncclick==7.1.2.3
+idna==3.1
+importlib-metadata==3.7.3
+python-kasa==0.4.0.dev2
+sniffio==1.2.0
+typing-extensions==3.7.4.3
+zipp==3.4.1
