@@ -10,8 +10,7 @@ class Config:
                     {"name":"ch2", "pin":17, "sensor_type":11, "assigned": False},
                     {"name":"ch4", "pin":22, "sensor_type":11, "assigned": False},
                     {"name":"ch3", "pin":27, "sensor_type":11, "assigned": False}]
-                    
-                        
+            
     # pin number uses gpiozero numbering
     led_config =   [{"name":"led1", "pin":21, "sensor_type":1},
                     {"name":"led2", "pin":20, "sensor_type":1},
@@ -25,4 +24,6 @@ class Config:
     plug_config =  [{"name": "plug1", "ip": "10.0.0.170", "assigned": False},
                     {"name": "plug2", "ip": "10.0.0.171", "assigned": False},
                     {"name": "plug3", "ip": "10.0.0.172", "assigned": False},
-                    {"name": "plug4", "ip": "10.0.0.173", "assigned": False}]
+                    {"name": "plug4", "ip": "10.0.0.2", "assigned": False}]
+
+    database_loc = '/home/mario/ec2/EnvironmentController_2.0/ec2.db'

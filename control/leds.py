@@ -18,7 +18,6 @@ class leds:
 			for led in led_configs:
 				led = LED(led["pin"])
 				led.on()
-				sleep(1)
 
 			log("Status", "Success")
 		else:

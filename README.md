@@ -1,25 +1,22 @@
 # EC_Temperature
 
-
-
 Hardware Platform: Raspberry Pi B+
 
 Rpi Provisioning Steps:
 - Set up Linux OS
-- Raspi-Config
+- raspi-Config
 	- enable i2c, spi, gpio
-- Set up Samba.
-- Set up pip3
-- set up wiringPi
-- python3-gpiozero
-- python-kasa
-- Set up virtualenv with pip
-- anything else?
-
-
+- samba.
+- pip3
+	- wiringPi
+	- sqlite3
+	- python3-gpiozero
+	- python-kasa
+	- virtualenv
+- sqlite3
 - Temperature HW  Config
 
 
-# Libraries Needed
+# Python requirements
 python3 -m pip freeze > requirements.txt
 python3 -m pip install -r requirements.txt
