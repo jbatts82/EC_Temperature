@@ -10,6 +10,7 @@ from support import log
 
 class leds:
 	def __init__(self, config):
+		log("Initializing", "LED Array")
 		night_mode = True
 		if config:
 			led_configs = config.led_config
@@ -22,3 +23,4 @@ class leds:
 			log("Status", "Success")
 		else:
 			log("Status", "No Config Availale")
+		log("Completed", "LED Array")

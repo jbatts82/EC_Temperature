@@ -28,7 +28,7 @@ class KasaPlug:
     def __init__(self, device_list):
         log("Initializing", "Kasa Plug")
         self.error_state = True
-
+        
         if device_list.plug_config:  # is available
             # find unused device
             for device in device_list.plug_config:
