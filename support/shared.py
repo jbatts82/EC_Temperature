@@ -12,7 +12,7 @@ class DHT11_Data:
         self.time_data = time_data
         self.humidity = humidity
         self.temperature_f = temperature_f
-        self.error_state = False
+        self.error_state = True
 
     def print_data(self):
         print("DHT11 Name : ",self.name)
