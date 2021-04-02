@@ -9,5 +9,9 @@ def log(header, body):
     while len(header) < colon_spaces:
         header = header + " "
     header = header + ": "
-    output = header + body
+    output = header + str(body)
     print(output)
+
+def div():
+	print("###############################################################################")
+	
