@@ -9,10 +9,13 @@ from support import log
 class Config:
     log("Initalizing", "Config")
 
+    # temperature sensor configuration
     dht11_config = [{"name":"ch1", "pin":4, "sensor_type":11, "assigned": False},
                     {"name":"ch2", "pin":17, "sensor_type":11, "assigned": False},
                     {"name":"ch3", "pin":27, "sensor_type":11, "assigned": False},
                     {"name":"ch4", "pin":22, "sensor_type":11, "assigned": False}]
+
+    sensor_retrys = 3
             
     # pin number uses gpiozero numbering
     led_config =   [{"name":"led1", "pin":21, "sensor_type":1},
