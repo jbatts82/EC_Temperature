@@ -6,7 +6,9 @@
 
 import Adafruit_DHT
 from support.shared import DHT11_Data
+from support import log
 from datetime import datetime
+
 
 class DHT11:
     sensor_index = 0
@@ -18,40 +20,48 @@ class DHT11:
             self.current_data = DHT11_Data()
             self.previous_data = DHT11_Data() #ie:previous good data
             self.current_data.name = config.dht11_config[self.sensor_index]["name"]
+            self.retrys = config.sensor_retrys
             DHT11.sensor_index += 1
             self.process_sensor()
-            print("Success Processing : Sensor Started Successfully")
+            log("Success Processing", "Sensor Started Successfully")
         else:
-            print("Error              : All Sensors Used or some other error")
+            log("Error", "All Sensors Used or some other error")
         
     def __del__(self): 
         pass
         
     def process_sensor(self):
-        print("Processing         :", self.name)
+        log("Processing", self.name)
         process_start_time = datetime.now()
+
         try:
-            humidity, temperature_c = Adafruit_DHT.read_retry(self.sensor_type, self.pin)
+            humidity, temperature_c = Adafruit_DHT.read_retry(self.sensor_type, self.pin, self.retrys)
+        except:
+            self.current_data.error_state = True
+        else:
+            self.current_data.error_state = False
+
+        if humidity is not None and temperature_c is not None:
             temperature_f = temperature_c * 9/5.0 + 32
             self.current_data.time_data = datetime.now()
             self.current_data.temperature_f = temperature_f
             self.current_data.humidity = humidity
             self.current_data.error_state = False
-        except:
-            print("!!!SIGNAL SNA!!!   :",self.name)
-            self.current_data = self.previous_data
+            log("Time", self.current_data.time_data)
+            log("Temp", self.current_data.temperature_f)
+            log("Humidity", self.current_data.humidity)
+            log("Error State", self.current_data.error_state)
         else:
-            print("Success Processing :", self.name)
-            print("Time               :", self.current_data.time_data)
-            print("Temp               :", self.current_data.temperature_f)
-            print("Humidity           :", self.current_data.humidity)
-            print("Error State        :", self.current_data.error_state)
-            self.previous_data = self.current_data
-        finally:
-            process_end_time = datetime.now()
-            print("Process Time       : {}".format(process_end_time - process_start_time))
-    
+            self.current_data.temperature_f = None
+            self.current_data.time_data = datetime.now()
+            self.current_data.error_state = True
+            log("!!!SIGNAL SNA!!!", self.name)
+
+        process_end_time = datetime.now()
+        log("Process Time", (process_end_time - process_start_time))
+
     def get_current_data(self):
         return self.current_data
 
-#end: class Sensor:
+    def get_previous_data(self):
+        return self.previous_data
