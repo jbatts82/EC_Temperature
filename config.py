@@ -16,6 +16,9 @@ class Config:
                     {"name":"ch4", "pin":22, "sensor_type":11, "assigned": False}]
 
     sensor_retrys = 3
+    plausible_degrees = 5
+    plausible_high = 110
+    plausible_low = 32
             
     # pin number uses gpiozero numbering
     led_config =   [{"name":"led1", "pin":21, "sensor_type":1},
