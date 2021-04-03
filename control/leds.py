@@ -8,19 +8,32 @@ from gpiozero import LED
 from time import sleep
 from support import log
 
+
+led_array = []
+
 class leds:
 	def __init__(self, config):
 		log("Initializing", "LED Array")
 		night_mode = True
 		if config:
 			led_configs = config.led_config
-			led_array = []
-
-			for led in led_configs:
-				led = LED(led["pin"])
+			for config in led_configs:
+				led = LED(config["pin"])
 				led.on()
-
+				led_array.append(led)
+				led.off()
 			log("Status", "Success")
 		else:
 			log("Status", "No Config Availale")
 		log("Completed", "LED Array")
+
+	def toggle(self, index):
+		led_array[index].toggle()
+
+	def turn_on(self, index):
+		led_array[index].on()
+
+	def turn_off(self, index):
+		led_array[index].off()
+
+	

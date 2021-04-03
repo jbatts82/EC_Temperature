@@ -56,19 +56,26 @@ if __name__ == '__main__':
 	div()
 	the_leds = leds(the_config)
 
+
+
+
+
+
 	# initialize temp sensing
 	sensor1 = DHT11(the_config)
 	sensor2 = DHT11(the_config)
 	sensor3 = DHT11(the_config)
 	sensor4 = DHT11(the_config)
+
 	sensor_array = [sensor1, sensor2, sensor3, sensor4]
 
 	error_count = 0
 
 	# Run Sensors
 	while True:
-		for sensor in sensor_array:
+		for idx, sensor in enumerate(sensor_array):
 			div()
+			the_leds.toggle(idx)
 			sensor.process_sensor()
 			current_data = sensor.get_current_data()
 			result = plausiblity_check(current_data)
@@ -78,4 +85,5 @@ if __name__ == '__main__':
 			else:
 				error_count = error_count + 1
 		log("Error Count", error_count)	
+		the_leds.toggle(7)
 		sleep(10)
