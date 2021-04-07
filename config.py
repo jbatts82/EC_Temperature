@@ -10,12 +10,12 @@ class Config:
     log("Initalizing", "Config")
 
     # temperature sensor configuration
-    dht11_config = [{"name":"ch1", "pin":4, "sensor_type":11, "assigned": False},
+    dht11_config = [{"name":"ch1", "pin":4, "sensor_type":22, "assigned": False},
                     {"name":"ch2", "pin":17, "sensor_type":11, "assigned": False},
                     {"name":"ch3", "pin":27, "sensor_type":11, "assigned": False},
                     {"name":"ch4", "pin":22, "sensor_type":11, "assigned": False}]
 
-    sensor_retrys = 3
+    sensor_retrys = 5
     plausible_degrees = 5
     plausible_high = 110
     plausible_low = 32

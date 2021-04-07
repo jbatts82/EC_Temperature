@@ -13,11 +13,10 @@ from support import div
 from data.DB_App import DataBase_App
 from control.leds import leds
 from control.plug import KasaPlug
-
+import threading
 
 last_good_reading = None
 the_config = Config()
-
 
 def plausiblity_check(current_data):
 
@@ -40,8 +39,23 @@ def plausiblity_check(current_data):
 		return False
 	last_good_reading = current_data
 
-
 	return True
+
+
+def read_sensor(idx):
+	div()
+	the_leds.turn_on(idx)
+	sensor_array[idx].process_sensor()
+	current_data = sensor_array[idx].get_current_data()
+	result = plausiblity_check(current_data)
+	if result == True: #clean
+		the_database.write_sensor_data(current_data)
+		log("DB Status", "Saved to database")
+		sleep(1)
+	else:
+		error_count = error_count + 1
+	the_leds.turn_off(idx)
+
 
 
 if __name__ == '__main__':
@@ -56,11 +70,6 @@ if __name__ == '__main__':
 	div()
 	the_leds = leds(the_config)
 
-
-
-
-
-
 	# initialize temp sensing
 	sensor1 = DHT11(the_config)
 	sensor2 = DHT11(the_config)
@@ -69,21 +78,11 @@ if __name__ == '__main__':
 
 	sensor_array = [sensor1, sensor2, sensor3, sensor4]
 
+	cnt = 0
 	error_count = 0
-
-	# Run Sensors
+	
 	while True:
 		for idx, sensor in enumerate(sensor_array):
 			div()
-			the_leds.toggle(idx)
-			sensor.process_sensor()
-			current_data = sensor.get_current_data()
-			result = plausiblity_check(current_data)
-			if result == True: #clean
-				the_database.write_sensor_data(current_data)
-				log("DB Status", "Saved to database")
-			else:
-				error_count = error_count + 1
-		log("Error Count", error_count)	
-		the_leds.toggle(7)
-		sleep(10)
+			read_sensor(idx)
+	#end main loop
