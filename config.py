@@ -37,4 +37,13 @@ class Config:
 
     database_loc = '/home/mario/ec2/EnvironmentController_2.0/ec2.db'
 
+
     log("Completed", "Config")
+
+    time_table = []
+    time_table.append({"hour":0, "name":'Late Night', "temp":68})
+    time_table.append({"hour":4, "name":'Early Morning', "temp":72})
+    time_table.append({"hour":8, "name":'Morning', "temp":74})
+    time_table.append({"hour":12, "name":'After Noon', "temp":76})
+    time_table.append({"hour":16, "name":'Evening', "temp":73})
+    time_table.append({"hour":20, "name":'Night', "temp":70})

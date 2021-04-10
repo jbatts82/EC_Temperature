@@ -7,12 +7,13 @@
 import sys
 import asyncio
 import schedule
+import threading
 from time import sleep
 from config import Config
-from temp_sensing.DHT11 import DHT11
+from temp_sensing.dht11 import DHT11
 from support import log
 from support import div
-from data.DB_App import DataBase_App
+from data.db_app import DataBase_App
 from control.leds import leds
 from control.heater import Heater
 from control.fan import Fan
@@ -88,6 +89,8 @@ if __name__ == '__main__':
 	the_heater = Heater(the_config)
 	the_fan = Fan(the_config)
 
+
+
 	# schedule tasks
 	schedule.every().minute.at(":00").do(read_all_sensors, sensor_array)
 	schedule.every().minute.at(":15").do(read_all_sensors, sensor_array)
@@ -95,10 +98,17 @@ if __name__ == '__main__':
 	schedule.every().minute.at(":45").do(read_all_sensors, sensor_array)
 
 
+
+
+
+
+	# main loop
 	try:
 		while True: #run forever
 			schedule.run_pending()
 			sleep(1)
+	except KeyboardInterrupt:
+		print("---You Killed me.")
 	except:
 		print("System Error")
 		print("Unexpected error:", sys.exc_info()[0])
@@ -106,3 +116,4 @@ if __name__ == '__main__':
 	finally:
 		the_heater.Kill()
 		print("bye..bye")
+		sys.exit(0)
