@@ -102,3 +102,30 @@ class Temperature:
         
     def get_max_temperature(self):
         return self.max_temperature
+
+
+
+# Helper Functions
+
+def plausiblity_check(current_data):
+
+    if current_data.error_state == True:
+        return None
+
+    if current_data.temperature_f > the_config.plausible_high:
+        return False
+
+    if current_data.temperature_f < the_config.plausible_low:
+        return False
+
+    global last_good_reading
+    if last_good_reading == None: 
+        last_good_reading = current_data
+        return True
+
+    difference_f = abs(current_data.temperature_f - last_good_reading.temperature_f)
+    if difference_f > the_config.plausible_degrees:
+        return False
+    last_good_reading = current_data
+
+    return True

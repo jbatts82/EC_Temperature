@@ -10,40 +10,20 @@ import schedule
 import threading
 from time import sleep
 from config import Config
-from temp_sensing.dht11 import DHT11
+from sensors.dht11 import DHT11
 from support import log
 from support import div
-from data.db_app import DataBase_App
+from data.room import Room
 from control.leds import leds
 from control.heater import Heater
 from control.fan import Fan
 
-last_good_reading = None
-the_config = Config()
-error_count = 0
 
-def plausiblity_check(current_data):
 
-	if current_data.error_state == True:
-		return None
 
-	if current_data.temperature_f > the_config.plausible_high:
-		return False
 
-	if current_data.temperature_f < the_config.plausible_low:
-		return False
 
-	global last_good_reading
-	if last_good_reading == None: 
-		last_good_reading = current_data
-		return True
 
-	difference_f = abs(current_data.temperature_f - last_good_reading.temperature_f)
-	if difference_f > the_config.plausible_degrees:
-		return False
-	last_good_reading = current_data
-
-	return True
 
 def read_sensor(idx):
 	global error_count
@@ -70,9 +50,8 @@ if __name__ == '__main__':
 	log("Starting Main System", __file__)
 	div()
 	
-	# initialize database
-	div()
-	the_database = DataBase_App(the_config)
+	the_config = Config()
+	error_count = 0
 
 	# initialize leds
 	div()
@@ -88,6 +67,8 @@ if __name__ == '__main__':
 	# initalize control objects
 	the_heater = Heater(the_config)
 	the_fan = Fan(the_config)
+	the_room = Room(the_config)
+
 
 
 

@@ -8,7 +8,6 @@ from gpiozero import LED
 from time import sleep
 from support import log
 
-
 led_array = []
 
 class leds:
