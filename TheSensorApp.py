@@ -4,7 +4,9 @@
 # Description: 
 ###############################################################################
 
+import sys
 import asyncio
+import schedule
 from time import sleep
 from config import Config
 from temp_sensing.DHT11 import DHT11
@@ -12,11 +14,12 @@ from support import log
 from support import div
 from data.DB_App import DataBase_App
 from control.leds import leds
-from control.plug import KasaPlug
-import threading
+from control.heater import Heater
+from control.fan import Fan
 
 last_good_reading = None
 the_config = Config()
+error_count = 0
 
 def plausiblity_check(current_data):
 
@@ -41,8 +44,8 @@ def plausiblity_check(current_data):
 
 	return True
 
-
 def read_sensor(idx):
+	global error_count
 	div()
 	the_leds.turn_on(idx)
 	sensor_array[idx].process_sensor()
@@ -56,7 +59,11 @@ def read_sensor(idx):
 		error_count = error_count + 1
 	the_leds.turn_off(idx)
 
-
+def read_all_sensors(sensor_array):
+	#do error checking and reporting
+	for idx, sensor in enumerate(sensor_array):
+		div()
+		read_sensor(idx)
 
 if __name__ == '__main__':
 	log("Starting Main System", __file__)
@@ -75,14 +82,27 @@ if __name__ == '__main__':
 	sensor2 = DHT11(the_config)
 	sensor3 = DHT11(the_config)
 	sensor4 = DHT11(the_config)
-
 	sensor_array = [sensor1, sensor2, sensor3, sensor4]
 
-	cnt = 0
-	error_count = 0
-	
-	while True:
-		for idx, sensor in enumerate(sensor_array):
-			div()
-			read_sensor(idx)
-	#end main loop
+	# initalize control objects
+	the_heater = Heater(the_config)
+	the_fan = Fan(the_config)
+
+	# schedule tasks
+	schedule.every().minute.at(":00").do(read_all_sensors, sensor_array)
+	schedule.every().minute.at(":15").do(read_all_sensors, sensor_array)
+	schedule.every().minute.at(":30").do(read_all_sensors, sensor_array)
+	schedule.every().minute.at(":45").do(read_all_sensors, sensor_array)
+
+
+	try:
+		while True: #run forever
+			schedule.run_pending()
+			sleep(1)
+	except:
+		print("System Error")
+		print("Unexpected error:", sys.exc_info()[0])
+		raise
+	finally:
+		the_heater.Kill()
+		print("bye..bye")
