@@ -4,19 +4,26 @@
 # Description : Processes room environment data
 ###############################################################################
 
-import sys
-sys.path.append('..')
-from support.db_handler import DB_Sensor
-from config import Config
+from data.db_app import DataBase_App
+from support import log
+
+class Room:
+    def __init__(self, config):
+        humidity = Humidity(config)
+        temperature = Temperature(config)
+        the_database = DataBase_App(the_config)
+
+    def process_room(self):
+        temperature.process_temperature()
+        humidity.process_humidity()
+
 
 class Humidity:
-    def __init__(self):
+    def __init__(self, config):
         self.max_humidity = 0
         self.min_humidity = 99
         self.avg_humidity = 0
-        self.config = Config()
-        self.sensor1_db = DB_Sensor(self.config, 0)
-        self.sensor2_db = DB_Sensor(self.config, 1)
+        self.config = config
         
     def process_humidity(self):
         self.update_to_latest_record()
@@ -25,7 +32,6 @@ class Humidity:
         self.is_min(self.avg_humidity)
 
     def update_to_latest_record(self):
-        
         self.sensor1_db.update_to_last_record()
         self.instant_humidity1 = self.sensor1_db.get_last_humidity()
         self.sensor2_db.update_to_last_record()
@@ -59,25 +65,17 @@ class Humidity:
 
 
 class Temperature:
-    def __init__(self):
+    def __init__(self, config):
         self.max_temperature = 0
         self.min_temperature = 99
         self.avg_temperature = 0
-        self.config = Config()
-        self.sensor1_db = DB_Sensor(self.config, 0)
-        self.sensor2_db = DB_Sensor(self.config, 1)
+        self.config = config
         
     def process_temperature(self):
         self.update_to_latest_record()
         self.calculate_avg_temperature()
         self.is_max(self.avg_temperature)
         self.is_min(self.avg_temperature)
-
-    def update_to_latest_record(self):
-        self.sensor1_db.update_to_last_record()
-        self.instant_temperature1 = self.sensor1_db.get_last_temperature()
-        self.sensor2_db.update_to_last_record()
-        self.instant_temperature2 = self.sensor2_db.get_last_temperature()
 
     def calculate_avg_temperature(self):
         self.avg_temperature = (self.instant_temperature1 + self.instant_temperature2) / 2
