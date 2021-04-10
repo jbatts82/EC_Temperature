@@ -36,17 +36,18 @@ class KasaPlug:
                     device["assigned"] = True
                     self.name = device["name"]
                     self.ip = device["ip"]
+                    log("Plug Initalized", self.name)
                     break
             else:
-                log("Error", "All Kasa Plugs In Use")
+                log("ERROR", "All Kasa Plugs In Use")
                 return
         else:
-            log("Error", "No Config Available")
+            log("ERROR", "No Config Available")
             return
 
         self.smart_plug = SmartPlug(self.ip)
         self.process_plug()
-        self.set_led_off()
+        self.set_led_on()
 
     def process_plug(self):
         self.error_state = self.plug_update()
@@ -77,7 +78,7 @@ class KasaPlug:
 
     @exception_handler
     def set_plug_off(self):
-        asyncio.run(self.smart_plug.turn_on())
+        asyncio.run(self.smart_plug.turn_off())
 
     def get_led_status(self):
         return self.smart_plug.led
