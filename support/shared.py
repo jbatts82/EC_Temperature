@@ -6,7 +6,7 @@
 
 from datetime import datetime
 
-class DHT11_Data:
+class Sensor_Data:
     def __init__(self, name=None, time_data=0, humidity=0, temperature_f=0):
         self.name = name
         self.time_data = time_data
@@ -35,3 +35,7 @@ class Control_Data:
         print("Hum Stat   : ",self.humidifer_state)
         print("Fan Stat   : ",self.fan_state)
         print("LED Stat   : ",self.light_state)
+
+class Error_Data:
+    def __init__(self):
+        self.error_count = 0

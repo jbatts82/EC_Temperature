@@ -5,7 +5,7 @@
 ###############################################################################
 
 import Adafruit_DHT
-from support.shared import DHT11_Data
+from support.shared import Sensor_Data
 from support import log
 from datetime import datetime
 
@@ -17,7 +17,7 @@ class DHT11:
             self.pin = config.dht11_config[self.sensor_index]["pin"]
             self.name = config.dht11_config[self.sensor_index]["name"]
             self.sensor_type = config.dht11_config[self.sensor_index]["sensor_type"]
-            self.current_data = DHT11_Data()
+            self.current_data = Sensor_Data()
             self.current_data.name = config.dht11_config[self.sensor_index]["name"]
             self.retrys = config.sensor_retrys
             DHT11.sensor_index += 1

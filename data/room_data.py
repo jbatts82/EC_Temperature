@@ -1,5 +1,5 @@
 ###############################################################################
-# Filename    : room.py
+# Filename    : room_data.py
 # Date        : 04/10/2021 
 # Description : Processes room environment data
 ###############################################################################
@@ -7,23 +7,25 @@
 from data.db_app import DataBase_App
 from support import log
 
-class Room:
+class RoomData:
     def __init__(self, config):
         humidity = Humidity(config)
         temperature = Temperature(config)
-        the_database = DataBase_App(the_config)
+        the_database = DataBase_App(config)
+        data_queue = []
 
     def process_room(self):
         temperature.process_temperature()
         humidity.process_humidity()
 
-
 class Humidity:
     def __init__(self, config):
+        self.config = config
         self.max_humidity = 0
         self.min_humidity = 99
         self.avg_humidity = 0
-        self.config = config
+        self.instant_humidity = 0
+        
         
     def process_humidity(self):
         self.update_to_latest_record()

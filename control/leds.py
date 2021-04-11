@@ -10,7 +10,7 @@ from support import log
 
 led_array = []
 
-class leds:
+class Leds:
 	def __init__(self, config):
 		log("Initializing", "LED Array")
 		night_mode = True

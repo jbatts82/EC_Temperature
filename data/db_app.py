@@ -4,14 +4,14 @@
 # Description: Database Application Layer 
 ###############################################################################
 
-from support.shared import DHT11_Data
+from support.shared import Sensor_Data
 from data.db_handler import DB_Sensor, DB_Control
 from data.db_handler import Reading, ControlStatus
 
 
 class DataBase_App:
 	def __init__(self, config=None):
-		self.current_sensor_data = DHT11_Data()
+		self.current_sensor_data = Sensor_Data()
 		self.data_base = DB_Sensor(config)
 		#self.control_base = DB_Control(config)
 	

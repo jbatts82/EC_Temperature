@@ -47,3 +47,5 @@ class Config:
     time_table.append({"hour":12, "name":'After Noon', "temp":76})
     time_table.append({"hour":16, "name":'Evening', "temp":73})
     time_table.append({"hour":20, "name":'Night', "temp":70})
+
+    
