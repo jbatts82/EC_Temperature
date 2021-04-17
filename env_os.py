@@ -25,6 +25,11 @@ if __name__ == '__main__':
 
 	count = 0
 
+
+	schedule.every(10).seconds.do(sa.Process_Sensors)
+	schedule.every(30).seconds.do(sa.print_the_array)
+	
+
 	# main loop
 	try:
 		while True: #run forever
