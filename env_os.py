@@ -14,7 +14,6 @@ from support import log
 from support import div
 import data.room_data as rd
 from datetime import datetime
-import data.room_data as rd
 from control.leds import Leds
 from support.shared import Sensor_Data
 
@@ -23,8 +22,7 @@ if __name__ == '__main__':
 	log("Starting Main System", __file__)
 	the_config = Config()
 
-	count = 0
-
+	the_leds = Leds(the_config)
 
 	schedule.every(10).seconds.do(sa.Process_Sensors)
 	schedule.every(30).seconds.do(sa.print_the_array)
@@ -33,10 +31,11 @@ if __name__ == '__main__':
 	# main loop
 	try:
 		while True: #run forever
-			count = count + 1
 			schedule.run_pending()
 			the_leds.toggle(7)
 			sleep(1)
+	except Exception as e:
+		print("EXCEPTION", str(e))
 	except KeyboardInterrupt:
 		print("---You Killed me.")
 	except:
