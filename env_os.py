@@ -12,33 +12,25 @@ from time import sleep
 from config import Config
 from support import log
 from support import div
-
-from data.room_data import RoomData
+import data.room_data as rd
+from datetime import datetime
+import data.room_data as rd
 from control.leds import Leds
+from support.shared import Sensor_Data
 
 
 if __name__ == '__main__':
 	log("Starting Main System", __file__)
 	the_config = Config()
 
-	# initialize leds
-	the_leds = Leds(the_config)
-
-	# initalize control objects
-	room_data = RoomData(the_config)
-
-	
-	# schedule tasks
-	schedule.every().minute.at(":00").do(sa.Process_Sensors)
-	schedule.every().minute.at(":15").do(sa.Process_Sensors)
-	schedule.every().minute.at(":30").do(sa.Process_Sensors)
-	schedule.every().minute.at(":45").do(sa.Process_Sensors)
-
+	count = 0
 
 	# main loop
 	try:
 		while True: #run forever
+			count = count + 1
 			schedule.run_pending()
+			the_leds.toggle(7)
 			sleep(1)
 	except KeyboardInterrupt:
 		print("---You Killed me.")
@@ -47,6 +39,5 @@ if __name__ == '__main__':
 		print("Unexpected error:", sys.exc_info()[0])
 		raise
 	finally:
-		the_heater.Kill()
 		print("bye..bye")
 		sys.exit(0)

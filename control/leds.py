@@ -34,5 +34,3 @@ class Leds:
 
 	def turn_off(self, index):
 		led_array[index].off()
-
-	

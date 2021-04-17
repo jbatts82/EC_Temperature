@@ -37,10 +37,12 @@ class DHT11:
             humidity, temperature_c = Adafruit_DHT.read_retry(self.sensor_type, self.pin, self.retrys)
             if humidity is not None and temperature_c is not None:
                 temperature_f = temperature_c * 9/5.0 + 32
-                self.current_data.time_data = datetime.now()
+                now = datetime.now()
+                self.current_data.time_data = now.strftime("%m/%d/%Y, %H:%M:%S")
                 self.current_data.temperature_f = temperature_f
                 self.current_data.humidity = humidity
                 self.current_data.error_state = False
+                log("PROCESSED", self.name)
                 log("Time", self.current_data.time_data)
                 log("Temp", self.current_data.temperature_f)
                 log("Humidity", self.current_data.humidity)
