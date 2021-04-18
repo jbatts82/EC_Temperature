@@ -5,40 +5,8 @@
 ###############################################################################
 
 from datetime import datetime
-
-class Sensor_Data:
-    def __init__(self):
-        self.name = None
-        self.time_data = None
-        self.humidity = None
-        self.temperature_f = None
-        self.error_state = True
-
-    def print_data(self):
-        print("DHT11 Name : ",self.name)
-        print("Time       : ",self.time_data)
-        print("Humidity   : ",self.humidity)
-        print("Temperature: ",self.temperature_f)
-        print("Error State: ",self.error_state)
-
-class Control_Data:
-    def __init__(self, time_stamp=None, heater_state=None, humidifer_state=None, fan_state=None, light_state=None):
-        self.time_stamp = time_stamp
-        self.heater_state = heater_state
-        self.humidifer_state = humidifer_state
-        self.fan_state = fan_state
-        self.light_state = light_state
-
-    def print_data(self):
-        print("Time Stamp : ",self.time_stamp)
-        print("Heater Stat: ",self.heater_state)
-        print("Hum Stat   : ",self.humidifer_state)
-        print("Fan Stat   : ",self.fan_state)
-        print("LED Stat   : ",self.light_state)
-
-class Error_Data:
-    def __init__(self):
-        self.error_count = 0
+from support import log
+from support import div
 
 class Temperature:
     def __init__(self, config):
@@ -47,11 +15,16 @@ class Temperature:
         self.avg_temperature = 0
         self.config = config
         
-    def process_temperature(self):
-        self.update_to_latest_record()
-        self.calculate_avg_temperature()
-        self.is_max(self.avg_temperature)
-        self.is_min(self.avg_temperature)
+    def process_new_data(self, temperature, time):
+        # number plausibility check and handle
+        # doing stats on good number
+        div()
+        log("Processing", "Temperature")
+        log("Temperature", temperature)
+        log("Time", time)
+        # self.calculate_avg_humidity()
+        # self.is_max(self.avg_humidity)
+        # self.is_min(self.avg_humidity)
 
     def calculate_avg_temperature(self):
         self.avg_temperature = (self.instant_temperature1 + self.instant_temperature2) / 2
@@ -91,7 +64,8 @@ class Humidity:
     def process_new_data(self, humidity, time):
         # number plausibility check and handle
         # doing stats on good number
-        log("DEBUG", "ProcessHumidityData")
+        div()
+        log("Processing", "Humidity")
         log("Humidity", humidity)
         log("Time", time)
         # self.calculate_avg_humidity()

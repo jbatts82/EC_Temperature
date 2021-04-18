@@ -6,43 +6,44 @@
 
 from data.db_app import DataBase_App
 from support import log
+from support import div
 from support.shared import Temperature
 from support.shared import Humidity
 from datetime import datetime
-from support.shared import Sensor_Data
-error = []
+import sensors.sensor_app as sa
+
+error = {}
 config = None
 humidity =  None
 temperature =  None
 
 
-def init_room(the_config):
+def Init_Room(the_config):
+    global humidity, temperature, error
     config = the_config
     humidity = Humidity(config)
     temperature = Temperature(config)
+
     for sensor_num in range(0, len(config.dht11_config)):
-        error.append(0)
-        
-def process_room(new_data):
-    log("DataArr Af", "boo")
+        name = config.dht11_config[sensor_num]["name"]
+        error[name] = 0
+
+def Process_Room():
+    global humidity, temperature, error
+    div()
+    log("Processing", "Room")
+    new_data = sa.Get_Sensor_Data()
+
     # sensor hw error checks and handle
-    for sensor_num, data in enumerate(new_data):
-        log("ProcRoomData", data)
-        if data.error_state == True:
-            error[sensor_num] = error[sensor_num] + 1
-            log("Error COunt", error[sensor_num])
+    for data in new_data:
+        channel = data["name"]
+        if data["err"] == True:
+            error[channel] = error[channel] + 1
         else:
-            humidity.process_new_data(data.humidity, data.time_data)
-            #temperature.process_new_data(data.temperature, data.time_data)
+            humidity.process_new_data(data["hum"], data["time"])
+            temperature.process_new_data(data["hum"], data["time"])
+        log("Error Count {}".format(channel), error[channel])
     new_data.clear()
-    log("process_room", "clear data")
-
-
-
-
-
-
-
 
 
 

@@ -4,7 +4,7 @@
 # Description: Database Application Layer 
 ###############################################################################
 
-from support.shared import Sensor_Data
+
 from data.db_handler import DB_Sensor, DB_Control
 from data.db_handler import Reading, ControlStatus
 

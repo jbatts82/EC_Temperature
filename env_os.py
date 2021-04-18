@@ -15,18 +15,19 @@ from support import div
 import data.room_data as rd
 from datetime import datetime
 from control.leds import Leds
-from support.shared import Sensor_Data
 
 
 if __name__ == '__main__':
-	log("Starting Main System", __file__)
+	log("Starting System", __file__)
 	the_config = Config()
 
 	the_leds = Leds(the_config)
+	rd.Init_Room(the_config)
 
-	schedule.every(10).seconds.do(sa.Process_Sensors)
-	schedule.every(30).seconds.do(sa.print_the_array)
-	
+
+	schedule.every(15).seconds.do(sa.Process_Sensors)
+	schedule.every(60).seconds.do(rd.Process_Room)
+
 
 	# main loop
 	try:
