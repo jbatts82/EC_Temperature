@@ -19,7 +19,7 @@ class DHT11:
         self.current_data = None
         
     def process_sensor(self):
-        div()
+        #div()
         log("Processing", self.name)
         process_start_time = datetime.now()
         try:
@@ -27,10 +27,10 @@ class DHT11:
             if humidity is not None and temperature_c is not None:
                 temperature_f = temperature_c * 9/5.0 + 32
                 self.current_data = {"name":self.name, "time": datetime.now(), "temp":temperature_f, "hum":humidity, "err":False}
-                log("Time", self.current_data["time"])
-                log("Temp", self.current_data["temp"])
-                log("Humidity", self.current_data["hum"])
-                log("Error State", self.current_data["err"])
+                # log("Time", self.current_data["time"])
+                # log("Temp", self.current_data["temp"])
+                # log("Humidity", self.current_data["hum"])
+                # log("Error State", self.current_data["err"])
             else:
                 self.current_data = {"name":self.name, "time":datetime.now(), "temp":None, "hum":None, "err":True}
         except:

@@ -7,6 +7,8 @@
 from datetime import datetime
 from support import log
 from support import div
+from control.heater import Heater
+from control.humidifier import Humidifier
 
 class Temperature:
     def __init__(self, config):
@@ -14,17 +16,37 @@ class Temperature:
         self.min_temperature = 99
         self.avg_temperature = 0
         self.config = config
+        self.heater = Heater(self.config)
+        self.heater_state = False
+        self.temperature_data = []
+
         
-    def process_new_data(self, temperature, time):
-        # number plausibility check and handle
-        # doing stats on good number
+    def process_new_data(self, data):
         div()
-        log("Processing", "Temperature")
-        log("Temperature", temperature)
-        log("Time", time)
-        # self.calculate_avg_humidity()
-        # self.is_max(self.avg_humidity)
-        # self.is_min(self.avg_humidity)
+        channel = data["name"]
+        temperature = data["temp"]
+        time = data["time"]
+        # self.temperature_data.append(data)
+        # log("TempArr", len(self.temperature_data))
+
+
+        if channel == "ch1":
+            if self.heater_state == False:
+                if temperature < 70:
+                    self.heater.Turn_On()
+                    self.heater_state = True
+            else:
+                if temperature > 75:
+                    self.heater.Turn_Off()
+                    self.heater_state = False
+
+            log("Processing", "Temperature {}".format(channel))
+            log("Temperature", temperature)
+            log("Time",time )
+            log("HEATER", self.heater_state)
+
+        
+
 
     def calculate_avg_temperature(self):
         self.avg_temperature = (self.instant_temperature1 + self.instant_temperature2) / 2
@@ -59,18 +81,28 @@ class Humidity:
         self.min_humidity = 99
         self.five_min_avg_humidity = 0
         self.instant_humidity = 0
-        #self.instant_time = 
-        
-    def process_new_data(self, humidity, time):
-        # number plausibility check and handle
-        # doing stats on good number
-        div()
-        log("Processing", "Humidity")
-        log("Humidity", humidity)
-        log("Time", time)
-        # self.calculate_avg_humidity()
-        # self.is_max(self.avg_humidity)
-        # self.is_min(self.avg_humidity)
+        self.humidifier_state = False
+        self.humidifier = Humidifier(self.config)
+
+    def process_new_data(self, data):
+        channel = data["name"]
+        humidity = data["hum"]
+        time = data["time"]
+
+        if channel == "ch1":
+            if self.humidifier_state == False:
+                if humidity < 45:
+                    self.humidifier.Turn_On()
+                    self.humidifier_state = True
+            else:
+                if humidity > 50:
+                    self.humidifier.Turn_Off()
+                    self.humidifier_state = False
+
+            log("Processing", "Humidity {}".format(channel))
+            log("Humidity", humidity)
+            log("Time",time )
+            log("HUMIDIFIER", self.humidifier_state)
 
     def calculate_avg_humidity(self):
         self.avg_humidity = (self.instant_humidity1 + self.instant_humidity2) / 2
@@ -97,3 +129,6 @@ class Humidity:
         
     def get_max_humidity(self):
         return self.max_humidity
+
+
+

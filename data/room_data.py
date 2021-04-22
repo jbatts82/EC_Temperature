@@ -16,10 +16,10 @@ error = {}
 config = None
 humidity =  None
 temperature =  None
-
+last_good_reading = None
 
 def Init_Room(the_config):
-    global humidity, temperature, error
+    global humidity, temperature, error, config
     config = the_config
     humidity = Humidity(config)
     temperature = Temperature(config)
@@ -40,34 +40,34 @@ def Process_Room():
         if data["err"] == True:
             error[channel] = error[channel] + 1
         else:
-            humidity.process_new_data(data["hum"], data["time"])
-            temperature.process_new_data(data["hum"], data["time"])
+            # do temperature plausibility check here
+            # dont process if bad
+            plausiblity_check(data)
+            temperature.process_new_data(data)
+            humidity.process_new_data(data)
         log("Error Count {}".format(channel), error[channel])
     new_data.clear()
 
-
-
-# Helper Functions
-
-def plausiblity_check(current_data):
-
-    if current_data.error_state == True:
-        return None
-
-    if current_data.temperature_f > the_config.plausible_high:
+# log("Time", self.current_data["time"])
+# log("Temp", self.current_data["temp"])
+# log("Humidity", self.current_data["hum"])
+# log("Error State", self.current_data["err"])
+def plausiblity_check(data):
+    global config
+    if data["temp"] > config.plausible_high:
         return False
 
-    if current_data.temperature_f < the_config.plausible_low:
+    if data["temp"] < config.plausible_low:
         return False
 
     global last_good_reading
     if last_good_reading == None: 
-        last_good_reading = current_data
+        last_good_reading = data
         return True
 
-    difference_f = abs(current_data.temperature_f - last_good_reading.temperature_f)
-    if difference_f > the_config.plausible_degrees:
+    difference_f = abs(data["temp"] - last_good_reading["temp"])
+    if difference_f > config.plausible_degrees:
         return False
-    last_good_reading = current_data
+    last_good_reading = data
 
     return True
