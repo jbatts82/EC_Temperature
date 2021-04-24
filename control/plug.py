@@ -25,21 +25,17 @@ def exception_handler(func):
     return inner_function
 
 class KasaPlug:
-    def __init__(self, device_list):
+    def __init__(self, device):
         log("Initializing", "Kasa Plug")
         self.error_state = True
-        
-        if device_list.plug_config:  # is available
-            # find unused device
-            for device in device_list.plug_config:
-                if not device["assigned"]:
-                    device["assigned"] = True
-                    self.name = device["name"]
-                    self.ip = device["ip"]
-                    log("Plug Initalized", self.name)
-                    break
+        if device:
+            if not device["assigned"]:
+                device["assigned"] = True
+                self.name = device["name"]
+                self.ip = device["ip"]
+                log("Plug Initalized", self.name)
             else:
-                log("ERROR", "All Kasa Plugs In Use")
+                log("ERROR", "Requested Plug In Use")
                 return
         else:
             log("ERROR", "No Config Available")

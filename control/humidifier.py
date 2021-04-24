@@ -12,7 +12,8 @@ class Humidifier:
     def __init__(self, config):
         self.name = "Space Heater"
         self.state = False
-        self.switch = KasaPlug(config)
+        hum_config = next(item for item in config.plug_config if item["name"] == "humidifier")
+        self.switch = KasaPlug(hum_config)
         self.Turn_Off()
 
     def Turn_On(self):

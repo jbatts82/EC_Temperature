@@ -12,7 +12,9 @@ class Heater:
     def __init__(self, config):
         self.name = "Space Heater"
         self.state = False
-        self.switch = KasaPlug(config)
+        print(config.plug_config)
+        heater_config = next(item for item in config.plug_config if item["name"] == "heater")
+        self.switch = KasaPlug(heater_config)
         self.Turn_Off()
 
     def Turn_On(self):

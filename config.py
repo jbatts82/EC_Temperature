@@ -30,9 +30,9 @@ class Config:
                     {"name":"led7", "pin":25, "sensor_type":1},
                     {"name":"led8", "pin":24, "sensor_type":1}]
 
-    plug_config =  [{"name": "plug1", "ip": "10.0.0.171", "assigned": False},
-                    {"name": "plug2", "ip": "10.0.0.172", "assigned": False},
-                    {"name": "plug3", "ip": "10.0.0.172", "assigned": False},
+    plug_config =  [{"name": "heater", "ip": "10.0.0.171", "assigned": False},
+                    {"name": "humidifier", "ip": "10.0.0.172", "assigned": False},
+                    {"name": "exhaust", "ip": "10.0.0.170", "assigned": False},
                     {"name": "plug4", "ip": "10.0.0.173", "assigned": False}]
 
     database_loc = '/home/mario/ec2/EnvironmentController_2.0/ec2.db'

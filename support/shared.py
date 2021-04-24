@@ -95,7 +95,7 @@ class Humidity:
                     self.humidifier.Turn_On()
                     self.humidifier_state = True
             else:
-                if humidity > 50:
+                if humidity > 47:
                     self.humidifier.Turn_Off()
                     self.humidifier_state = False
 
