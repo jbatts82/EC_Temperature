@@ -7,8 +7,8 @@
 from data.db_app import DataBase_App
 from support import log
 from support import div
-from support.shared import Temperature
-from support.shared import Humidity
+from data.temperature import Temperature
+from data.humidity import Humidity
 from datetime import datetime
 import sensors.sensor_app as sa
 
@@ -30,7 +30,7 @@ def Init_Room(the_config):
 
 def Process_Room():
     global humidity, temperature, error
-    div()
+    #div()
     log("Processing", "Room")
     new_data = sa.Get_Sensor_Data()
 
@@ -42,10 +42,10 @@ def Process_Room():
         else:
             # do temperature plausibility check here
             # dont process if bad
-            plausiblity_check(data)
+            plausiblity_check(data) #todo
             temperature.process_new_data(data)
             humidity.process_new_data(data)
-        log("Error Count {}".format(channel), error[channel])
+        #log("Error Count {}".format(channel), error[channel])
     new_data.clear()
 
 # log("Time", self.current_data["time"])

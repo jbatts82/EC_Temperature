@@ -13,7 +13,7 @@ class Dehumidifier:
     def __init__(self, config):
         self.name = "Space Heater"
         self.state = False
-        self.switch = KasaPlug(config)
+        #self.switch = KasaPlug(config)
 
     def Turn_On(self):
         self.state = True

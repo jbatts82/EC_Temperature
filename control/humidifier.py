@@ -10,7 +10,7 @@ from support import log
 
 class Humidifier:
     def __init__(self, config):
-        self.name = "Space Heater"
+        self.name = "humidifier"
         self.state = False
         hum_config = next(item for item in config.plug_config if item["name"] == "humidifier")
         self.switch = KasaPlug(hum_config)
@@ -33,4 +33,5 @@ class Humidifier:
         return self.state
         
     def Kill(self):
+        self.Turn_Off()
         print("Heater Killed")

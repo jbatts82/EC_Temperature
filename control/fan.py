@@ -17,7 +17,8 @@ class Fan:
         self.over_ride_state = False
         self.previous_state = False
         self.device_clock = Device_Clock()
-        self.switch = KasaPlug(config)
+        fan_config = next(item for item in config.plug_config if item["name"] == "exhaust")
+        self.switch = KasaPlug(fan_config)
         self.Process_Fan()
         
     def Turn_On(self):
