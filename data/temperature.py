@@ -8,38 +8,38 @@ from control.heater import Heater
 from datetime import datetime
 from support import log
 from support import div
+import numpy as np
 
 class Temperature:
     def __init__(self, config):
         self.max_temperature = 0
         self.min_temperature = 99
-        self.avg_temperature = 0
+        self.rolling_1min = 0
         self.config = config
         self.heater = Heater(self.config)
         self.heater_state = False
-        self.temperature_data = []
+        self.temp_info = []
 
     def process_new_data(self, data):
+        #self.temp_info.append(data)
         channel = data["name"]
         temperature = data["temp"]
         time = data["time"]
-
-        # self.temperature_data.append(data)
-        # log("TempArr", len(self.temperature_data))
-
-        log("Process {} ".format(channel), "Time: {} Temp: {}".format(time, temperature))
+        #sample_size = len(self.temp_info)
 
         if channel == "ch1":
+            #print(self.temp_info)
+            log("Process {} ".format(channel), "Time: {} Temp: {}".format(time, temperature))
             if self.heater_state == False:
                 if temperature < 70:
                     self.heater.Turn_On()
                     self.heater_state = True
-                    log("HEATER", self.heater_state)
+                    log("!!!HEATER!!!", self.heater_state)
             else:
                 if temperature > 75:
                     self.heater.Turn_Off()
                     self.heater_state = False
-                    log("HEATER", self.heater_state)
+                    log("!!!HEATER!!!", self.heater_state)
 
        
     def calculate_avg_temperature(self):

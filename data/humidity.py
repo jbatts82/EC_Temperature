@@ -24,20 +24,19 @@ class Humidity:
         humidity = data["hum"]
         time = data["time"]
 
-        log("Process {} ".format(channel), "Time: {} Hum: {}".format(time, humidity))
-
-
+        
         if channel == "ch1":
+            log("Process {} ".format(channel), "Time: {} Hum: {}".format(time, humidity))
             if self.humidifier_state == False:
                 if humidity < 43:
                     self.humidifier.Turn_On()
                     self.humidifier_state = True
-                    log("HUMIDIFIER", self.humidifier_state)
+                    log("!!!HUMIDIFIER!!!", self.humidifier_state) 
             else:
                 if humidity > 47:
                     self.humidifier.Turn_Off()
                     self.humidifier_state = False
-                    log("HUMIDIFIER", self.humidifier_state)
+                    log("!!!HUMIDIFIER!!!", self.humidifier_state)
             
 
     def calculate_avg_humidity(self):

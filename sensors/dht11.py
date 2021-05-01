@@ -32,7 +32,7 @@ class DHT11:
             
         process_end_time = datetime.now()
         delta_time = process_end_time - process_start_time
-        log("DHT11 {} Read".format(self.name), "Time: {} Temp: {} Hum: {}".format(self.current_data["time"], self.current_data["temp"], self.current_data["hum"]))
+        #log("DHT11 {} Read".format(self.name), "Time: {} Temp: {} Hum: {}".format(self.current_data["time"], self.current_data["temp"], self.current_data["hum"]))
 
     def get_current_data(self):
         return self.current_data

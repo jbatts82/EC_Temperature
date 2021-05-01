@@ -30,7 +30,6 @@ def Init_Room(the_config):
 
 def Process_Room():
     global humidity, temperature, error
-    #div()
     log("Processing", "Room")
     new_data = sa.Get_Sensor_Data()
 
@@ -48,10 +47,7 @@ def Process_Room():
         #log("Error Count {}".format(channel), error[channel])
     new_data.clear()
 
-# log("Time", self.current_data["time"])
-# log("Temp", self.current_data["temp"])
-# log("Humidity", self.current_data["hum"])
-# log("Error State", self.current_data["err"])
+
 def plausiblity_check(data):
     global config
     if data["temp"] > config.plausible_high:

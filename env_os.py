@@ -8,6 +8,7 @@ import sys
 import asyncio
 import schedule
 import sensors.sensor_app as sa
+import control.room_control as rc
 from time import sleep
 from config import Config
 from support import log
@@ -15,6 +16,7 @@ from support import div
 import data.room_data as rd
 from datetime import datetime
 from control.leds import Leds
+from control.heater import Heater
 
 
 if __name__ == '__main__':
@@ -23,10 +25,11 @@ if __name__ == '__main__':
 
 	the_leds = Leds(the_config)
 	rd.Init_Room(the_config)
-
+	rc.init_room_controller(the_config)
 
 	schedule.every(15).seconds.do(sa.Process_Sensors)
-	schedule.every(60).seconds.do(rd.Process_Room)
+	schedule.every(16).seconds.do(rd.Process_Room)
+	schedule.every(60).seconds.do(rc.init_room_controller)
 
 
 	# main loop
