@@ -4,7 +4,7 @@
 # Description: Humidity Data
 ###############################################################################
 
-from control.humidifier import Humidifier
+import control.room_control as rc
 from datetime import datetime
 from support import log
 from support import div
@@ -17,7 +17,7 @@ class Humidity:
         self.five_min_avg_humidity = 0
         self.instant_humidity = 0
         self.humidifier_state = False
-        self.humidifier = Humidifier(self.config)
+        
 
     def process_new_data(self, data):
         channel = data["name"]
@@ -29,12 +29,12 @@ class Humidity:
             log("Process {} ".format(channel), "Time: {} Hum: {}".format(time, humidity))
             if self.humidifier_state == False:
                 if humidity < 43:
-                    self.humidifier.Turn_On()
+                    rc.Request_Humidifier_On()
                     self.humidifier_state = True
                     log("!!!HUMIDIFIER!!!", self.humidifier_state) 
             else:
                 if humidity > 47:
-                    self.humidifier.Turn_Off()
+                    rc.Request_Humidifier_Off()
                     self.humidifier_state = False
                     log("!!!HUMIDIFIER!!!", self.humidifier_state)
             

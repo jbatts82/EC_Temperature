@@ -4,7 +4,7 @@
 # Description: Humidity Data
 ###############################################################################
 
-from control.heater import Heater
+import control.room_control as rc
 from datetime import datetime
 from support import log
 from support import div
@@ -16,7 +16,6 @@ class Temperature:
         self.min_temperature = 99
         self.rolling_1min = 0
         self.config = config
-        self.heater = Heater(self.config)
         self.heater_state = False
         self.temp_info = []
 
@@ -32,12 +31,12 @@ class Temperature:
             log("Process {} ".format(channel), "Time: {} Temp: {}".format(time, temperature))
             if self.heater_state == False:
                 if temperature < 70:
-                    self.heater.Turn_On()
+                    rc.Request_Heater_On()
                     self.heater_state = True
                     log("!!!HEATER!!!", self.heater_state)
             else:
                 if temperature > 75:
-                    self.heater.Turn_Off()
+                    rc.Request_Heater_Off()
                     self.heater_state = False
                     log("!!!HEATER!!!", self.heater_state)
 

@@ -18,7 +18,7 @@ humidity =  None
 temperature =  None
 last_good_reading = None
 
-def Init_Room(the_config):
+def Init_Room_Data(the_config):
     global humidity, temperature, error, config
     config = the_config
     humidity = Humidity(config)
@@ -28,7 +28,7 @@ def Init_Room(the_config):
         name = config.dht11_config[sensor_num]["name"]
         error[name] = 0
 
-def Process_Room():
+def Process_Room_Data():
     global humidity, temperature, error
     log("Processing", "Room")
     new_data = sa.Get_Sensor_Data()
