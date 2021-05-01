@@ -29,12 +29,12 @@ class Humidity:
             log("Process {} ".format(channel), "Time: {} Hum: {}".format(time, humidity))
             if self.humidifier_state == False:
                 if humidity < 43:
-                    rc.Request_Humidifier_On()
+                    rc.Request_Humidifier_On("humidity")
                     self.humidifier_state = True
                     log("!!!HUMIDIFIER!!!", self.humidifier_state) 
             else:
                 if humidity > 47:
-                    rc.Request_Humidifier_Off()
+                    rc.Request_Humidifier_Off("humidity")
                     self.humidifier_state = False
                     log("!!!HUMIDIFIER!!!", self.humidifier_state)
             

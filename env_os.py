@@ -13,6 +13,7 @@ from time import sleep
 from config import Config
 from support import log
 from support import div
+from support.timeclock import OS_Clock
 import data.room_data as rd
 from datetime import datetime
 from control.leds import Leds
@@ -20,15 +21,18 @@ from control.leds import Leds
 
 if __name__ == '__main__':
 	log("Starting System", __file__)
+	
 	the_config = Config()
+	system_clock = OS_Clock()
 
 	the_leds = Leds(the_config)
 	rd.Init_Room_Data(the_config)
 	rc.Init_Room_Control(the_config)
 
 	schedule.every(15).seconds.do(sa.Process_Sensors)
-	schedule.every(16).seconds.do(rd.Process_Room_Data)
-	schedule.every(60).seconds.do(rc.Process_Room_Control)
+	schedule.every(30).seconds.do(rd.Process_Room_Data)
+	schedule.every(60).seconds.do(rc.Process_Room_Control, system_clock)
+	schedule.every(120).minutes.do(rc.Request_Fan_On, "periodic")
 
 
 	# main loop

@@ -30,7 +30,7 @@ def Init_Room_Data(the_config):
 
 def Process_Room_Data():
     global humidity, temperature, error
-    log("Processing", "Room")
+    log("Processing", "Room Data")
     new_data = sa.Get_Sensor_Data()
 
     # sensor hw error checks and handle

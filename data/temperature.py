@@ -30,13 +30,14 @@ class Temperature:
             #print(self.temp_info)
             log("Process {} ".format(channel), "Time: {} Temp: {}".format(time, temperature))
             if self.heater_state == False:
-                if temperature < 70:
-                    rc.Request_Heater_On()
+                if temperature < 75:
+                    rc.Request_Heater_On("temperature")
                     self.heater_state = True
+                    rc.Request_Fan_Off("temperature")
                     log("!!!HEATER!!!", self.heater_state)
             else:
-                if temperature > 75:
-                    rc.Request_Heater_Off()
+                if temperature > 78:
+                    rc.Request_Heater_Off("temperature")
                     self.heater_state = False
                     log("!!!HEATER!!!", self.heater_state)
 

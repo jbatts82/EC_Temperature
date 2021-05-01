@@ -23,9 +23,11 @@ class Fan:
         
     def Turn_On(self):
         self.switch.set_plug_on()
+        log("Exhaust Fan", "On")
     
     def Turn_Off(self):
         self.switch.set_plug_off()
+        log("Exhaust Fan", "Off")
     
     def Get_Name(self):
         return self.name
@@ -42,17 +44,16 @@ class Fan:
         self.over_ride_state = state
         
     def Process_Fan(self):
-        print("Processing         :", self.name)
+        log("Processing", self.name)
         try: 
             timer_state = self.device_clock.process_clock()
             if timer_state == False:
                 self.Turn_Off()
             self.state = self.switch.error_state
         except: 
-            print("SIGNAL SNA         :", self.name)
+            log("SIGNAL SNA", self.name)
             self.state = self.previous_state
         else:
-            print("Success Processing :", self.name)
             self.previous_state = self.state
         finally:
             pass
