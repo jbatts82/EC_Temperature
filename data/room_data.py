@@ -4,7 +4,6 @@
 # Description : Processes room environment data
 ###############################################################################
 
-from data.db_app import DataBase_App
 from support import log
 from support import div
 from data.temperature import Temperature
@@ -27,6 +26,7 @@ def Init_Room_Data(the_config):
     for sensor_num in range(0, len(config.dht11_config)):
         name = config.dht11_config[sensor_num]["name"]
         error[name] = 0
+
 
 def Process_Room_Data():
     global humidity, temperature, error

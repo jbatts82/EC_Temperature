@@ -15,16 +15,17 @@ from support import log
 from support import div
 from support.timeclock import OS_Clock
 import data.room_data as rd
+import data.db_app as db
 from datetime import datetime
 from control.leds import Leds
 
 
 if __name__ == '__main__':
 	log("Starting System", __file__)
-	
+
 	the_config = Config()
 	system_clock = OS_Clock()
-
+	db.Db_App_Init(the_config)
 	the_leds = Leds(the_config)
 	rd.Init_Room_Data(the_config)
 	rc.Init_Room_Control(the_config)
@@ -32,6 +33,8 @@ if __name__ == '__main__':
 	schedule.every(15).seconds.do(sa.Process_Sensors)
 	schedule.every(30).seconds.do(rd.Process_Room_Data)
 	schedule.every(60).seconds.do(rc.Process_Room_Control, system_clock)
+	schedule.every(90).seconds.do(db.Dump_Instant_Temp)
+
 
 	schedule.every().day.at("01:15").do(rc.Request_Fan_On, "periodic")
 	schedule.every().day.at("03:15").do(rc.Request_Fan_On, "periodic")

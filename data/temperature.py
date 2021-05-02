@@ -9,6 +9,7 @@ from datetime import datetime
 from support import log
 from support import div
 import numpy as np
+import data.db_app as db
 
 
 class Temperature:
@@ -21,12 +22,12 @@ class Temperature:
         self.temp_info = []
 
     def process_new_data(self, data):
-        #self.temp_info.append(data)
         channel = data["name"]
         temperature = data["temp"]
         time = data["time"]
-        #sample_size = len(self.temp_info)
 
+        db.Write_Instant_Temp(time, channel, temperature)
+        
         if channel == "ch1":
             #print(self.temp_info)
             log("Process {} ".format(channel), "Time: {} Temp: {}".format(time, temperature))
