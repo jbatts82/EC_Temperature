@@ -32,8 +32,19 @@ if __name__ == '__main__':
 	schedule.every(15).seconds.do(sa.Process_Sensors)
 	schedule.every(30).seconds.do(rd.Process_Room_Data)
 	schedule.every(60).seconds.do(rc.Process_Room_Control, system_clock)
-	schedule.every(120).minutes.do(rc.Request_Fan_On, "periodic")
 
+	schedule.every().day.at("01:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("03:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("05:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("07:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("09:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("11:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("13:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("15:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("17:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("19:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("21:15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().day.at("23:15").do(rc.Request_Fan_On, "periodic")
 
 	# main loop
 	try:

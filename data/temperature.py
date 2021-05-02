@@ -10,6 +10,7 @@ from support import log
 from support import div
 import numpy as np
 
+
 class Temperature:
     def __init__(self, config):
         self.max_temperature = 0
@@ -30,13 +31,13 @@ class Temperature:
             #print(self.temp_info)
             log("Process {} ".format(channel), "Time: {} Temp: {}".format(time, temperature))
             if self.heater_state == False:
-                if temperature < 75:
+                if temperature < 70:
                     rc.Request_Heater_On("temperature")
                     self.heater_state = True
                     rc.Request_Fan_Off("temperature")
                     log("!!!HEATER!!!", self.heater_state)
             else:
-                if temperature > 78:
+                if temperature > 74:
                     rc.Request_Heater_Off("temperature")
                     self.heater_state = False
                     log("!!!HEATER!!!", self.heater_state)
