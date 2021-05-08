@@ -67,6 +67,13 @@ def insert_instant_hum(reading):
     the_session.add(reading)
     the_session.commit()
     log("Success", "Write Complete")
+
+def insert_control_record(control_data):
+    global the_session
+    log("Processing", "Writing Control to Database...")
+    the_session.add(control_data)
+    the_session.commit()
+    log("Success", "Write Complete")
     
 # def get_last_sensor_rec(self):
 #     query = self.the_session.query(Reading).order_by(Reading.time_stamp.desc())
@@ -103,11 +110,7 @@ def dump_table():
 #     query = self.the_session.query(Reading).filter(Reading.time_stamp >= past_time_stamp, Reading.sensor == sensor_name).all()
 #     return query
 
-# def insert_record(self, control):
-#     print("Processing         : Writing Control to Database...")
-#     self.the_session.add(control)
-#     self.the_session.commit()
-#     print("Success            : Write Complete")
+
 
 # def get_last_record(self):
 #     query = self.the_session.query(ControlStatus).order_by(ControlStatus.time_stamp.desc())

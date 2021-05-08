@@ -10,6 +10,7 @@ from control.fan import Fan
 from datetime import datetime
 from support import log
 from support import div
+import data.db_app as db
 
 heater_state = None
 humidifier_state = None
@@ -49,11 +50,12 @@ def Process_Room_Control(clock):
 	process_humidifier_requests(humidity_request_list)
 	process_fan_requests(exhaust_request_list)
 
+	log("Time", clock.get_current_time_stamp())
 	log("Heater State", heater.Get_State())
 	log("Humidifier State", humidifier.Get_State())
 	log("Fan State", fan.Get_State())
-	
 
+	db.Write_Control_Data(clock.get_current_time_stamp(), heater.Get_State(), humidifier.Get_State(), fan.Get_State(), True)
 
 def Request_Heater_On(requester):
 	global heater_request_list

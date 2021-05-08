@@ -7,6 +7,7 @@
 import data.db_handler as db_hand
 from data.db_handler import Instant_Temperature
 from data.db_handler import Instant_Humidity
+from data.db_handler import ControlStatus
 from support import log
 from support import div
 
@@ -28,18 +29,20 @@ def Write_Instant_Humidity(time, channel, hum):
 	reading.temperature = hum
 	db_hand.insert_instant_hum(reading)
 
+def Write_Control_Data(time_stamp, heater_state, humidifier_state, fan_state, light_state):
+	control_stats = ControlStatus()
+	control_stats.time_stamp = time_stamp
+	control_stats.heater_state = heater_state
+	control_stats.humidifier_state = humidifier_state
+	control_stats.fan_state = fan_state
+	control_stats.light_state = light_state
+	db_hand.insert_control_record(control_stats)
+
 
 def Dump_Instant_Temp():
 	db_hand.dump_table()
 
-# def write_control_data(self, time_stamp, heater_state, humidifier_state, fan_state, light_state):
-# 	control_stats = ControlStatus()
-# 	control_stats.time_stamp = time_stamp
-# 	control_stats.heater_state = heater_state
-# 	control_stats.humidifier_state = humidifier_state
-# 	control_stats.fan_state = fan_state
-# 	control_stats.light_state = light_state
-# 	self.control_base.insert_record(control_stats)
+
 
 # def get_last_sensor_reading(self):
 # 	last_rec = self.data_base.get_last_sensor_rec()

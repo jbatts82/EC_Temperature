@@ -5,17 +5,14 @@
 ###############################################################################
 
 from flask import render_template, flash, redirect, url_for, Flask, send_file, make_response, request, Response
-
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
-
 import io
 import random
-
 from WebApp import forms
 from WebApp import app
-
 from config import Config
+import data.db_app as db
 
 
 @app.route('/')
@@ -35,6 +32,7 @@ def index():
         minutes = graphConfig.time.data
         sensor_name = graphConfig.sensor_name.data
         previous_minutes_back = minutes
+
     time_arr = [1,2,3]
     temp_arr = [2,4,5]
     _data = [32, 50, 0, "hi friend"]
