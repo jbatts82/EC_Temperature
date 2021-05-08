@@ -5,9 +5,11 @@
 ###############################################################################
 
 import control.room_control as rc
+import data.db_app as db
 from datetime import datetime
 from support import log
 from support import div
+
 
 class Humidity:
     def __init__(self, config):
@@ -23,7 +25,7 @@ class Humidity:
         channel = data["name"]
         humidity = data["hum"]
         time = data["time"]
-
+        db.Write_Instant_Humidity(time, channel, humidity)
         
         if channel == "ch1":
             log("Process {} ".format(channel), "Time: {} Hum: {}".format(time, humidity))

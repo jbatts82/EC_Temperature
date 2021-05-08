@@ -4,12 +4,12 @@
 # Description: Humidity Data
 ###############################################################################
 
+
 import control.room_control as rc
+import data.db_app as db
 from datetime import datetime
 from support import log
 from support import div
-import numpy as np
-import data.db_app as db
 
 
 class Temperature:
@@ -26,7 +26,7 @@ class Temperature:
         temperature = data["temp"]
         time = data["time"]
 
-        #db.Write_Instant_Temp(time, channel, temperature)
+        db.Write_Instant_Temp(time, channel, temperature)
 
         if channel == "ch1":
             #print(self.temp_info)

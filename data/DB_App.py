@@ -6,6 +6,7 @@
 
 import data.db_handler as db_hand
 from data.db_handler import Instant_Temperature
+from data.db_handler import Instant_Humidity
 from support import log
 from support import div
 
@@ -19,6 +20,14 @@ def Write_Instant_Temp(time, channel, temp_f):
 	reading.channel = channel
 	reading.temperature = temp_f
 	db_hand.insert_instant_temp(reading)
+
+def Write_Instant_Humidity(time, channel, hum):
+	reading = Instant_Humidity()
+	reading.time_stamp = time
+	reading.channel = channel
+	reading.temperature = hum
+	db_hand.insert_instant_hum(reading)
+
 
 def Dump_Instant_Temp():
 	db_hand.dump_table()

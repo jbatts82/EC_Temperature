@@ -23,6 +23,12 @@ class Instant_Temperature(base):
     channel = Column('Sensor', String(20))
     temperature = Column('Temperature', Float)
 
+class Instant_Humidity(base):
+    __tablename__ = 'Instant_Humidity'
+    time_stamp = Column('TimeDate', DateTime, primary_key=True, index=True)
+    channel = Column('Sensor', String(20))
+    temperature = Column('Humidity', Float)
+
 class ControlStatus(base):
     __tablename__ = 'ControlStats'
     time_stamp = Column('TimeDate', DateTime, primary_key=True, index=True)
@@ -30,7 +36,6 @@ class ControlStatus(base):
     humidifier_state = Column('Humidifier', Boolean)
     fan_state = Column('Fan', Boolean)
     light_state = Column('Light', Boolean)
-
 
 def Init_Database_Engine(config=None):
     global the_session
@@ -49,10 +54,16 @@ def Init_Database_Engine(config=None):
     meta = MetaData()
     meta.create_all(engine)
 
-
 def insert_instant_temp(reading):
     global the_session
-    log("Processing", "Writing Reading to Database...")
+    log("Processing", "Writing Temp to Database...")
+    the_session.add(reading)
+    the_session.commit()
+    log("Success", "Write Complete")
+
+def insert_instant_hum(reading):
+    global the_session
+    log("Processing", "Writing Hum to Database...")
     the_session.add(reading)
     the_session.commit()
     log("Success", "Write Complete")
