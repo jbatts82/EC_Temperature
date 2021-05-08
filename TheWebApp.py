@@ -4,7 +4,7 @@
 # Description: configuration 
 ###############################################################################
 
-from web import app
+from WebApp import app
 
 if __name__ == '__main__':
 	print("Starting           :", __file__)

@@ -1,0 +1,21 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }}:Environment Controls</title>
+        {% else %}
+        <title>Just A Title</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>
+            Garden Monitoring System:
+            <a href="{{ url_for('index') }}">Home</a>
+        </div>
+        <hr>
+        {% block content %}{% endblock %}
+        <hr>
+        {% block input %}{% endblock %}
+        <hr>
+        {% block plot %}{% endblock %}
+    </body>
+</html>

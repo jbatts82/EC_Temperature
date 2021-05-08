@@ -20,3 +20,7 @@ Rpi Provisioning Steps:
 # Python requirements
 python3 -m pip freeze > requirements.txt
 python3 -m pip install -r requirements.txt
+
+
+Matplotlib run this
+sudo apt install libopenjp2-7 libopenjp2-7-dev libopenjp2-tools

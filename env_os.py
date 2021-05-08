@@ -33,7 +33,7 @@ if __name__ == '__main__':
 	schedule.every(15).seconds.do(sa.Process_Sensors)
 	schedule.every(30).seconds.do(rd.Process_Room_Data)
 	schedule.every(60).seconds.do(rc.Process_Room_Control, system_clock)
-	schedule.every(90).seconds.do(db.Dump_Instant_Temp)
+	#schedule.every(90).seconds.do(db.Dump_Instant_Temp)
 
 
 	schedule.every().day.at("01:15").do(rc.Request_Fan_On, "periodic")

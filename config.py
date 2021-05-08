@@ -9,6 +9,12 @@ from support import log
 class Config:
     log("Initalizing", "Config")
 
+    SECRET_KEY = 'you-will-never-guess'
+    #SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+    #'sqlite:///' + os.path.join(basedir, 'app.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MYT = 23
+
     # temperature sensor configuration
     dht11_config = [{"name":"ch1", "pin":4, "sensor_type":22, "assigned": False},
                     {"name":"ch2", "pin":17, "sensor_type":11, "assigned": False},

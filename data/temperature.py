@@ -26,8 +26,8 @@ class Temperature:
         temperature = data["temp"]
         time = data["time"]
 
-        db.Write_Instant_Temp(time, channel, temperature)
-        
+        #db.Write_Instant_Temp(time, channel, temperature)
+
         if channel == "ch1":
             #print(self.temp_info)
             log("Process {} ".format(channel), "Time: {} Temp: {}".format(time, temperature))
