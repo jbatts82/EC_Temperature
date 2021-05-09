@@ -19,25 +19,25 @@ base = declarative_base()
 
 class Instant_Temperature(base):
     __tablename__ = 'Instant_Temperature'
-    time_stamp = Column('TimeDate', DateTime, primary_key=True, index=True)
-    channel = Column('Sensor', String(20))
+    time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
+    channel = Column('Channel', String(20))
     temperature = Column('Temperature', Float)
 
 class Instant_Humidity(base):
     __tablename__ = 'Instant_Humidity'
-    time_stamp = Column('TimeDate', DateTime, primary_key=True, index=True)
-    channel = Column('Sensor', String(20))
+    time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
+    channel = Column('Channel', String(20))
     temperature = Column('Humidity', Float)
 
-class ControlStatus(base):
+class Control_Status(base):
     __tablename__ = 'ControlStats'
-    time_stamp = Column('TimeDate', DateTime, primary_key=True, index=True)
+    time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
     heater_state = Column('Heater', Boolean)
     humidifier_state = Column('Humidifier', Boolean)
     fan_state = Column('Fan', Boolean)
     light_state = Column('Light', Boolean)
 
-def Init_Database_Engine(config=None):
+def init_database_engine(config=None):
     global the_session
     if config:
         database_temp = config.database_loc
@@ -45,8 +45,7 @@ def Init_Database_Engine(config=None):
     else:
         print("Config Unavailable")
         database_loc = None
-
-    engine = create_engine(database_loc, echo=False) #db address
+    engine = create_engine(database_loc, connect_args={'check_same_thread': False}, echo=False)
     log("Connected to", database_loc)
     base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)
@@ -74,53 +73,31 @@ def insert_control_record(control_data):
     the_session.add(control_data)
     the_session.commit()
     log("Success", "Write Complete")
-    
-# def get_last_sensor_rec(self):
-#     query = self.the_session.query(Reading).order_by(Reading.time_stamp.desc())
-#     last_record = query.first()
-#     return last_record
 
-# def get_last_sensor_rec_from(sensor_name):
-#     query = self.the_session.query(Reading).filter(Reading.sensor == sensor_name).order_by(Reading.time_stamp.desc()).all()
-#     last_record = query[0]
-#     return last_record
-
-def get_table():
+def get_last_temp_rec(channel):
     global the_session
-    query = the_session.query(Instant_Temperature).all()
+    query = the_session.query(Instant_Temperature).filter(Instant_Temperature.channel == channel).order_by(Instant_Temperature.time_stamp.desc()).all()
+    last_record = query[0]
+    return last_record
+
+def get_last_temp_list(channel, time):
+    global the_session
+    last_record = get_last_temp_rec(channel)
+    last_time_stamp = last_record.time_stamp
+    past_time_stamp = last_time_stamp - timedelta(minutes = time)
+    query = the_session.query(Instant_Temperature).filter(Instant_Temperature.time_stamp >= past_time_stamp, Instant_Temperature.channel == channel).all()
     return query
 
-# def view_query_dict(self, a_query):
-#     print("Printing Each Record Dictionary")
-#     for each_record in a_query:
-#         print(each_record.__dict__)
+def get_last_humid_rec(channel):
+    global the_session
+    query = the_session.query(Instant_Humidity).filter(Instant_Humidity.channel == channel).order_by(Instant_Humidity.time_stamp.desc()).all()
+    last_record = query[0]
+    return last_record
 
-def dump_table():
-    print("Dumping Table") 
-    table = get_table()
-    for each in table:
-        print("Sensor     : ", each.channel)
-        print("Time       : ", each.time_stamp)
-        print("Temperature: ", each.temperature)
-
-# def get_last_recs_time(self, mins, sensor_name):
-#     last_record = self.get_last_sensor_rec()
-#     last_time_stamp = last_record.time_stamp
-#     past_time_stamp = last_time_stamp - timedelta(minutes = mins)
-#     query = self.the_session.query(Reading).filter(Reading.time_stamp >= past_time_stamp, Reading.sensor == sensor_name).all()
-#     return query
-
-
-
-# def get_last_record(self):
-#     query = self.the_session.query(ControlStatus).order_by(ControlStatus.time_stamp.desc())
-#     last_record = query.first()
-#     print("HUMstate is: {}".format(last_record.humidifier_state))
-#     return last_record
-
-# def get_last_records(self, past_minutes_time):
-#     last_record = self.get_last_record()
-#     last_time_stamp = last_record.time_stamp
-#     past_time_stamp = last_time_stamp - timedelta(minutes = past_minutes_time)
-#     query = self.the_session.query(ControlStatus).filter(ControlStatus.time_stamp >= past_time_stamp).all()
-#     return query
+def get_last_humid_list(channel, time):
+    global the_session
+    last_record = get_last_humid_rec(channel)
+    last_time_stamp = last_record.time_stamp
+    past_time_stamp = last_time_stamp - timedelta(minutes = time)
+    query = the_session.query(Instant_Humidity).filter(Instant_Humidity.time_stamp >= past_time_stamp, Instant_Humidity.channel == channel).all()
+    return query

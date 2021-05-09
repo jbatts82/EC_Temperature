@@ -5,7 +5,15 @@
 ###############################################################################
 
 from WebApp import app
+from support import log
+from support import div
+import data.db_app as db
+from config import Config
+
 
 if __name__ == '__main__':
-	print("Starting           :", __file__)
+	log("Starting", __file__)
+	the_config = Config()
+	db.Db_App_Init(the_config)
+	app.debug = True
 	app.run(host='0.0.0.0')

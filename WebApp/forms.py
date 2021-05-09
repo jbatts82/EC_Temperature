@@ -10,6 +10,6 @@ from wtforms.validators import DataRequired
 from config import Config
 
 class GraphConfigForm(FlaskForm):
-	sensor_name = SelectField(u'Sensor Name', choices=[('plant1', 'Sensor 1'), ('plant2', 'Sensor 2'), ('intake_air', 'Sensor 3'), ('upper_room_air', 'Sensor 4')])
+	channel = SelectField(u'Channel Number', choices=[('ch1', 'Channel 1'), ('ch2', 'Channel 2'), ('ch3', 'Channel 3'), ('ch4', 'Channel 4')])
 	time = IntegerField('Begin Graph X Mins Ago')
 	submit = SubmitField('Submit')

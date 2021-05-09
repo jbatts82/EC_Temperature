@@ -15,29 +15,32 @@ from config import Config
 import data.db_app as db
 
 
+
+
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     global time_arr, temp_arr
-    print("Hello, Me. It's Me again..")
+    time_arr = []
+    temp_arr = []
+    
     config = Config()
     _title = 'Plant Life'
-    
-
+    channel = 'ch1'
+    previous_minutes_back = 60
     graphConfig = forms.GraphConfigForm()
-
     if graphConfig.validate_on_submit():
         minutes = graphConfig.time.data
-        sensor_name = graphConfig.sensor_name.data
+        channel = graphConfig.channel.data
         previous_minutes_back = minutes
 
-    time_arr = [1,2,3]
-    temp_arr = [2,4,5]
-    _data = [32, 50, 0, "hi friend"]
-
-    return render_template('index.html', title=_title, data=_data, form=graphConfig)
+    temp_recs = db.Get_Last_Temp_List(channel, previous_minutes_back)
+    for temp in temp_recs:
+        time_arr.append(temp.time_stamp)
+        temp_arr.append(temp.temperature)
+    return render_template('index.html', title=_title, data = [1, 2, 3, 4], form=graphConfig)
 
 @app.route('/plot.png')
 def plot_png():
