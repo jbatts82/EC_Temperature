@@ -55,24 +55,18 @@ def init_database_engine(config=None):
 
 def insert_instant_temp(reading):
     global the_session
-    log("Processing", "Writing Temp to Database...")
     the_session.add(reading)
     the_session.commit()
-    log("Success", "Write Complete")
 
 def insert_instant_hum(reading):
     global the_session
-    log("Processing", "Writing Hum to Database...")
     the_session.add(reading)
     the_session.commit()
-    log("Success", "Write Complete")
 
 def insert_control_record(control_data):
     global the_session
-    log("Processing", "Writing Control to Database...")
     the_session.add(control_data)
     the_session.commit()
-    log("Success", "Write Complete")
 
 def get_last_temp_rec(channel):
     global the_session

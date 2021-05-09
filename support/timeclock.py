@@ -6,11 +6,6 @@
 
 import datetime
 from datetime import timedelta
-import time
-import logging
-
-import numpy as np
-import pandas as pd
 
 class OS_Clock:
     system_start_time = datetime.datetime.now()
@@ -36,11 +31,6 @@ class OS_Clock:
         now = str(now)
         return(now)
 
-        # this_morning = datetime.datetime(2009, 12, 2, 9, 30)
-        # last_night = datetime.datetime(2009, 12, 1, 20, 0)
-        # this_morning.time() < last_night.time()
-        # today8am = now.replace(hour=8, minute=0, second=0, microsecond=0)
-
 class Device_Clock:
     def __init__(self):
         print("Processing         : Clock Initializing")
@@ -61,16 +51,3 @@ class Device_Clock:
         time_now = datetime.datetime.now()
         self.turn_off_t_stamp = time_now + timedelta(minutes = length_min)
         self.timer_state = True
-
-
-
-if __name__ == '__main__':
-    print("Starting File: ", __file__)
-    device_clock = Device_Clock()
-
-    print("Timer Status: {}".format(device_clock.timer_state))
-    device_clock.set_on_timer(1)
-    while True:
-        device_clock.process_clock()
-        print("Timer Status: {}".format(device_clock.timer_state))
-        time.sleep(1)

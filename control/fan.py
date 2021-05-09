@@ -44,7 +44,6 @@ class Fan:
         self.over_ride_state = state
         
     def Process_Fan(self):
-        log("Processing", self.name)
         try: 
             timer_state = self.device_clock.process_clock()
             if timer_state == False:

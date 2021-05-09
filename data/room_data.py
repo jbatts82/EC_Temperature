@@ -41,12 +41,18 @@ def Process_Room_Data():
         else:
             # do temperature plausibility check here
             # dont process if bad
-            plausiblity_check(data) #todo
-            temperature.process_new_data(data)
-            humidity.process_new_data(data)
-        #log("Error Count {}".format(channel), error[channel])
+            is_plausible = plausiblity_check(data)
+            if is_plausible:
+                temperature.process_new_data(data)
+                humidity.process_new_data(data)
+            else:
+                error[channel] = error[channel] + 1
+
+        log("Error Count {}".format(channel), error[channel])
     new_data.clear()
 
+def get_error_count(channel):
+    return error[channel] 
 
 def plausiblity_check(data):
     global config
