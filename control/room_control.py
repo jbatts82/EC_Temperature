@@ -7,6 +7,7 @@
 from control.humidifier import Humidifier
 from control.heater import Heater
 from control.fan import Fan
+from control.lamp import Lamp
 from datetime import datetime
 from support import log
 from support import div
@@ -34,14 +35,15 @@ exhaust_request_list = {
 }
 
 def Init_Room_Control(the_config):
-	global heater, humidifier, fan
+	global heater, humidifier, fan, lamp
 	log("Room Control", "Init")
 	heater = Heater(the_config)
 	humidifier = Humidifier(the_config)
 	fan = Fan(the_config)
+	lamp = Lamp(the_config)
 	
 def Process_Room_Control(clock):
-	global heater, humidifier, fan, heater_request_list, \
+	global heater, humidifier, fan, lamp, heater_request_list, \
 	humidity_request_list, exhaust_request_list
 
 	log("Processing", "Room Control On Time: {}".format(clock.get_time_since_start()))
@@ -49,11 +51,18 @@ def Process_Room_Control(clock):
 	process_heater_requests(heater_request_list)
 	process_humidifier_requests(humidity_request_list)
 	process_fan_requests(exhaust_request_list)
+	
+	lamp.Process_Lamp()
+	heater.Process_Heater()
+	humidifier.Process_Humidifier()
+	fan.Process_Fan()
+
 
 	log("Time", clock.get_current_time_stamp())
 	log("Heater State", heater.Get_State())
 	log("Humidifier State", humidifier.Get_State())
 	log("Fan State", fan.Get_State())
+	log("Lamp State", lamp.Get_State())
 
 	db.Write_Control_Data(clock.get_current_time_stamp(), heater.Get_State(), humidifier.Get_State(), fan.Get_State(), True)
 

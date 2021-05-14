@@ -15,11 +15,13 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MYT = 23
 
+    NUM_ELMTS = 4
+
     # temperature sensor configuration
     dht11_config = [{"name":"ch1", "pin":4, "sensor_type":22, "assigned": False},
-                    {"name":"ch2", "pin":17, "sensor_type":11, "assigned": False},
-                    {"name":"ch3", "pin":27, "sensor_type":11, "assigned": False},
-                    {"name":"ch4", "pin":22, "sensor_type":11, "assigned": False}]
+                    {"name":"ch2", "pin":17, "sensor_type":22, "assigned": False},
+                    {"name":"ch3", "pin":27, "sensor_type":22, "assigned": False},
+                    {"name":"ch4", "pin":22, "sensor_type":22, "assigned": False}]
 
     sensor_retrys = 5
     plausible_degrees = 5
@@ -39,12 +41,11 @@ class Config:
     plug_config =  [{"name": "heater", "ip": "10.0.0.171", "assigned": False},
                     {"name": "humidifier", "ip": "10.0.0.172", "assigned": False},
                     {"name": "exhaust", "ip": "10.0.0.170", "assigned": False},
-                    {"name": "plug4", "ip": "10.0.0.173", "assigned": False}]
+                    {"name": "lamp", "ip": "10.0.0.169", "assigned": False},
+                    {"name": "breeze", "ip": "10.0.0.173", "assigned": False}]
 
     database_loc = '/home/mario/ec2/EnvironmentController_2.0/ec2.db'
 
-
-    log("Completed", "Config")
 
     time_table = []
     time_table.append({"hour":0, "name":'Late Night', "temp":68})

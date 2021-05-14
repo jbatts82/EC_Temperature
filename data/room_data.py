@@ -38,6 +38,7 @@ def Process_Room_Data():
         channel = data["name"]
         if data["err"] == True:
             error[channel] = error[channel] + 1
+            log("ERROR", "Not Plausible")
         else:
             # do temperature plausibility check here
             # dont process if bad
@@ -47,6 +48,7 @@ def Process_Room_Data():
                 humidity.process_new_data(data)
             else:
                 error[channel] = error[channel] + 1
+                log("ERROR", "Not Plausible")
 
         log("Error Count {}".format(channel), error[channel])
     new_data.clear()
@@ -58,18 +60,7 @@ def plausiblity_check(data):
     global config
     if data["temp"] > config.plausible_high:
         return False
-
     if data["temp"] < config.plausible_low:
         return False
-
-    global last_good_reading
-    if last_good_reading == None: 
-        last_good_reading = data
-        return True
-
-    difference_f = abs(data["temp"] - last_good_reading["temp"])
-    if difference_f > config.plausible_degrees:
-        return False
-    last_good_reading = data
 
     return True

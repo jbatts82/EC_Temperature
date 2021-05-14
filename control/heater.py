@@ -16,6 +16,11 @@ class Heater:
         self.switch = KasaPlug(heater_config)
         self.Turn_Off()
 
+    def Process_Heater(self):
+        error = self.switch.plug_update()
+        if not error:
+            self.state = self.switch.get_is_on()
+
     def Turn_On(self):
         self.state = True
         self.switch.set_plug_on()

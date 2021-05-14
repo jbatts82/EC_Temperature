@@ -14,6 +14,7 @@ from datetime import datetime
 the_config = Config()
 
 # initialize temp sensing
+# initalize here for sensor init errors and not connected, etc.
 sensor1 = DHT11(the_config.dht11_config[0])
 sensor2 = DHT11(the_config.dht11_config[1])
 sensor3 = DHT11(the_config.dht11_config[2])

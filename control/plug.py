@@ -53,16 +53,15 @@ class KasaPlug:
     @exception_handler
     def plug_update(self):
         now = datetime.now()
-        log("Plug Update Start", str(now))
+        #log("Plug Update Start", str(now))
         asyncio.run(self.smart_plug.update())
         after = datetime.now()
-        log("Plug Update Finish", str(after))
-        log("Difference", str(after - now))
+        #log("Plug Update Finish", str(after))
+        #log("Difference", str(after - now))
 
     @exception_handler
     def set_led_on(self):
         result = asyncio.run(self.smart_plug.set_led(True))
-        log("Result", result)
 
     @exception_handler
     def set_led_off(self):
