@@ -9,6 +9,7 @@ import asyncio
 import schedule
 import sensors.sensor_app as sa
 import control.room_control as rc
+import keyboard
 from time import sleep
 from config import Config
 from support import log
@@ -35,6 +36,10 @@ if __name__ == '__main__':
 	schedule.every(60).seconds.do(rc.Process_Room_Control, system_clock)
 
 	schedule.every().hour.at(":20").do(rc.Request_Fan_On, "periodic")
+
+
+
+
 
 
 	# main loop

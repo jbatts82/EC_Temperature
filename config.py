@@ -15,7 +15,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MYT = 23
 
-    NUM_ELMTS = 4
+    ROLLING_AVG_SIZE = 4
+    DEQUE_SIZE = 4
 
     # temperature sensor configuration
     dht11_config = [{"name":"ch1", "pin":4, "sensor_type":22, "assigned": False},
@@ -24,9 +25,6 @@ class Config:
                     {"name":"ch4", "pin":22, "sensor_type":22, "assigned": False}]
 
     sensor_retrys = 5
-    plausible_degrees = 5
-    plausible_high = 110
-    plausible_low = 32
             
     # pin number uses gpiozero numbering
     led_config =   [{"name":"led1", "pin":21, "sensor_type":1},
