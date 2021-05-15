@@ -51,20 +51,24 @@ class Temperature:
         mean = running_mean(self.cache[channel], self.rolling_avg_size)
 
         if mean:
+            average_temp = mean.item()
+            log("{} Average".format(channel), average_temp)
 
-            log(channel, mean.item())
+            db.Write_Instant_Temp(time, channel, average_temp)
 
-            db.Write_Instant_Temp(time, channel, mean.item())
+            temp_setting = self.get_temp_setting()
+            min_temp_threshold = temp_setting['temp']
+            log("Min Temp Thresh", min_temp_threshold)
 
             if channel == "ch1":
                 if self.heater_state == False:
-                    if temperature < 69:
+                    if average_temp < min_temp_threshold:
                         rc.Request_Heater_On("temperature")
                         self.heater_state = True
                         rc.Request_Fan_Off("temperature")
                         log("!!!HEATER!!!", self.heater_state)
                 else:
-                    if temperature > 71:
+                    if average_temp > (min_temp_threshold + 3):
                         rc.Request_Heater_Off("temperature")
                         self.heater_state = False
                         log("!!!HEATER!!!", self.heater_state)
@@ -77,3 +81,16 @@ class Temperature:
 
             if channel == "ch4":
                 pass
+
+    def get_temp_setting(self):
+        time_table = self.the_config.time_table
+        date_time_now = datetime.now()
+        hour_now = date_time_now.hour
+        
+        for hour in time_table[::-1]:
+            if hour_now >= hour["hour"]:
+                break
+
+        temp_setting = hour
+
+        return temp_setting

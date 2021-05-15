@@ -126,7 +126,7 @@ def process_fan_requests(requests):
 	for req in requests.keys():
 		if requests[req] == True:
 			if req == "periodic":
-				fan.Set_Fan_Timer(7)
+				fan.Set_Fan_Timer(10)
 				requests[req] = False
 
 	fan.Process_Fan()

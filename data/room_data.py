@@ -32,7 +32,6 @@ def Process_Room_Data():
     global humidity, temperature, error
     log("Processing", "Room Data")
     new_data = sa.Get_Sensor_Data()
-
     # sensor hw error checks and handle
     for data in new_data:
         channel = data["name"]
@@ -40,16 +39,8 @@ def Process_Room_Data():
             error[channel] = error[channel] + 1
             log("ERROR", "Not Plausible")
         else:
-            # do temperature plausibility check here
-            # dont process if bad
-            is_plausible = plausiblity_check(data)
-            if is_plausible:
-                temperature.process_new_data(data)
-                humidity.process_new_data(data)
-            else:
-                error[channel] = error[channel] + 1
-                log("ERROR", "Not Plausible")
-
+            temperature.process_new_data(data)
+            humidity.process_new_data(data)
         log("Error Count {}".format(channel), error[channel])
     new_data.clear()
 

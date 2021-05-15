@@ -9,7 +9,6 @@ from support import log
 from support import div
 from datetime import datetime
 
-
 class DHT11:
     def __init__(self, config):
         self.pin = config["pin"]
@@ -17,6 +16,7 @@ class DHT11:
         self.sensor_type = config["sensor_type"]
         self.retrys = 5
         self.current_data = None
+        self.count = 0
         
     def process_sensor(self):
         process_start_time = datetime.now()
