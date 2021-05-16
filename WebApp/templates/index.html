@@ -2,23 +2,71 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 
+{% block header %}
+	<header>
+		<h2>Garden Monitoring System</h2>
+		<table>
+		<tr>
+			<td>
+				<div class="sensor">
+					<h2>Sensor 1</h2>
+					<p>Temperature = {{data[0]}}</p>
+				</div> 
+			</td>
+			<td>
+				<div class="sensor">
+					<h2>Sensor 2</h2>
+					<p>Temperature = {{data[1]}}</p>
+				</div>
+			</td>
+			<td>
+				<div class="sensor">
+					<h2>Sensor 3</h2>
+					<p>Temperature = {{data[2]}}</p>
+				</div>
+			</td>
+			<td>
+				<div class="sensor">
+					<h2>Sensor 4</h2>
+					<p>Temperature = {{data[3]}}</p>
+				</div>
+			</td>
+		</tr>
+		</table>
+	</header>
+{% endblock %}
 
-{% block content %}
-    <h1>Last {{data[3]}} Reading</h1>
-    <b>Temperature</b> = {{data[0]}}</br>
-    <b>Humiditiy</b>   = {{data[1]}}</br>
-    <b>Time</b>        = {{data[2]}}</br>
-    <b>Sensor</b>      = {{data[3]}}</br>
+{% block section %}
+	<section>
+		<nav>
+
+			<ul>
+				<li><a href="#">Temperature</a></li>
+				<li><a href="#">Humidity</a></li>
+				<li><a href="#">Lamp</a></li>
+			</ul>
+		</nav>
+
+		<article>
+			<h1>Temperature</h1>
+			<table>
+			<tr>
+			<td><p>Hourly</p></td>
+			<td><p>Daily</p></td>
+			</tr>
+			<tr><td>
+				<h1>Plot</h1>
+				<img src="../plot.png" alt="my plot">
+			</td>
+			</tr>
+			</table>
+		</article>
+
+	</section>
+
+	<footer>
+  		<p>Footer</p>
+	</footer>
 {% endblock %}
 
 
-{% block input %}
-    <h1>Graph Configuration</h1>
-    {{ wtf.quick_form(form) }}
-{% endblock %}
-
-
-{% block plot %}
-	<h1>Plot</h1>
-	<img src="../plot.png" alt="my plot">
-{% endblock %}

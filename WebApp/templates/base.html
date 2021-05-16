@@ -1,21 +1,22 @@
+<!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+
         {% if title %}
         <title>{{ title }}:Environment Controls</title>
         {% else %}
         <title>Just A Title</title>
         {% endif %}
+
     </head>
+
     <body>
-        <div>
-            Garden Monitoring System:
-            <a href="{{ url_for('index') }}">Home</a>
-        </div>
-        <hr>
-        {% block content %}{% endblock %}
-        <hr>
-        {% block input %}{% endblock %}
-        <hr>
+        {% block header %}{% endblock %}
+        {% block section %}{% endblock %}
         {% block plot %}{% endblock %}
     </body>
+
 </html>
