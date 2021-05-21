@@ -1,7 +1,7 @@
 ###############################################################################
 # File Name  : temperature.py
 # Date       : 04/24/2021
-# Description: Humidity Data
+# Description: Temperature Data
 ###############################################################################
 
 
@@ -13,20 +13,24 @@ from support import div
 import collections
 import numpy as np
 
-global temp_data, cache, count
-
 
 def Init_Temperature(config):
-    global temp_data, cache, count
+    global temp_data, cache, count, time_table, rolling_avg_size
 
-    temp_data = {
-        'rolling_avg_size' : config.ROLLING_AVG_SIZE,
-        'max_temperature' : 0,
-        'min_temperature' : 0,
-        'rolling_1min' : 0,
-        'heater_state' : False,
-        'time_table' : config.time_table
-    }
+    sensor_cnt = len(config.dht11_config)
+    rolling_avg_size = config.ROLLING_AVG_SIZE
+    time_table = config.time_table
+
+    temp_data = {}
+    for sensor in range(sensor_cnt):
+        channel = config.dht11_config[sensor]['name']
+        temp_data[channel] = {
+            'max_temperature' : 0,
+            'min_temperature' : 0,
+            'rolling_avg' : 0,
+            'minute_avg' : 0,
+            'heater_state' : False,
+        }
 
     cache = {}
     count = {}
@@ -35,13 +39,14 @@ def Init_Temperature(config):
         count[each["name"]] = 0
 
 def Process_Temperature(new_data):
-    global temp_data, cache, count
+    global temp_data, cache, count, rolling_avg_size
     channel = new_data["name"]
     temperature = new_data["temp"]
     time = new_data["time"]
 
     cache[channel].append(temperature)
-    mean = running_mean(cache[channel], temp_data['rolling_avg_size'])
+
+    mean = running_mean(cache[channel], rolling_avg_size)
     count[channel] = count[channel] + 1
 
     if not mean:
@@ -61,32 +66,22 @@ def Process_Temperature(new_data):
     temp_setting = get_temp_setting()
     min_temp_threshold = temp_setting['temp']
 
-
     if channel == "ch1":
-        if temp_data['heater_state'] == False:
+        if temp_data[channel]['heater_state'] == False:
             if average_temp < min_temp_threshold:
                 rc.Request_Heater_On("temperature")
-                temp_data['heater_state'] = True
+                temp_data[channel]['heater_state'] = True
                 rc.Request_Fan_Off("temperature")
-                log("!!!HEATER!!!", temp_data['heater_state'])
+                log("!!!HEATER!!!", temp_data[channel]['heater_state'])
         else:
-            if average_temp > (min_temp_threshold + 3):
+            if average_temp > (min_temp_threshold + 2):
                 rc.Request_Heater_Off("temperature")
-                temp_data['heater_state'] = False
-                log("!!!HEATER!!!", temp_data['heater_state'])
+                temp_data[channel]['heater_state'] = False
+                log("!!!HEATER!!!", temp_data[channel]['heater_state'])
 
-    if channel == "ch2":
-        pass
-
-    if channel == "ch3":
-        pass
-
-    if channel == "ch4":
-        pass
 
 def get_temp_setting():
-    global temp_data
-    time_table = temp_data['time_table']
+    global temp_data, time_table
     date_time_now = datetime.now()
     hour_now = date_time_now.hour
     for hour in time_table[::-1]:
