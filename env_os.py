@@ -19,6 +19,7 @@ import data.room_data as rd
 import data.db_app as db
 from datetime import datetime
 from control.leds import Leds
+import traceback
 
 
 if __name__ == '__main__':
@@ -38,23 +39,18 @@ if __name__ == '__main__':
 	schedule.every().hour.at(":20").do(rc.Request_Fan_On, "periodic")
 
 
-
-
-
-
 	# main loop
 	try:
 		while True: #run forever
 			schedule.run_pending()
 			the_leds.toggle(7)
 			sleep(1)
-	except Exception as e:
-		print("EXCEPTION", str(e))
 	except KeyboardInterrupt:
 		print("---You Killed me.")
 	except:
 		print("System Error")
-		print("Unexpected error:", sys.exc_info()[0])
+		print("Unexpected error: ", sys.exc_info())
+		print("Trackback: ", traceback.format_exc())
 		raise
 	finally:
 		rc.Kill_Everything()
