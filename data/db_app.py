@@ -7,6 +7,7 @@
 import data.db_handler as db_hand
 from data.db_handler import Instant_Temperature
 from data.db_handler import Instant_Humidity
+from data.db_handler import Instant_Sensor
 from data.db_handler import Control_Status
 from support import log
 from support import div
@@ -14,6 +15,14 @@ from support import div
 
 def Db_App_Init(the_config):
 	db_hand.init_database_engine(the_config)
+
+def Write_Temp_Sensor_Data(time, channel, temp_f, hum):
+	reading = Instant_Sensor()
+	reading.time_stamp = time
+	reading.channel = channel
+	reading.temperature = temp_f
+	reading.humidity = hum
+	db_hand.insert_instant_sensor(reading)
 
 def Write_Instant_Temp(time, channel, temp_f):
 	reading = Instant_Temperature()
@@ -26,7 +35,7 @@ def Write_Instant_Humidity(time, channel, hum):
 	reading = Instant_Humidity()
 	reading.time_stamp = time
 	reading.channel = channel
-	reading.temperature = hum
+	reading.humidity = hum
 	db_hand.insert_instant_hum(reading)
 
 def Write_Control_Data(time_stamp, heater_state, humidifier_state, fan_state, light_state):
@@ -37,6 +46,14 @@ def Write_Control_Data(time_stamp, heater_state, humidifier_state, fan_state, li
 	control_stats.fan_state = fan_state
 	control_stats.light_state = light_state
 	db_hand.insert_control_record(control_stats)
+
+def Get_Last_Sensor_Rec(channel):
+	record = db_hand.get_last_sensor_rec(channel)
+	return record
+
+def Get_Last_Sensor_List(channel, time):
+	records = db_hand.get_last_sensor_list(channel, time)
+	return records
 
 def Get_Last_Temp_Rec(channel):
 	record = db_hand.get_last_temp_rec(channel)
@@ -57,3 +74,13 @@ def Get_Last_Humid_Rec(channel):
 def Get_Last_Humid_List(channel, time):
 	records = db_hand.get_last_humid_list(channel, time)
 	return records
+
+def Get_Last_Control_Rec():
+	record = db_hand.get_last_control_rec()
+	return record
+
+def Get_Last_Control_List(time):
+	records = db_hand.get_last_control_list(time)
+	return records
+
+	

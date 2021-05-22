@@ -27,7 +27,14 @@ class Instant_Humidity(base):
     __tablename__ = 'Instant_Humidity'
     time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
     channel = Column('Channel', String(20))
-    temperature = Column('Humidity', Float)
+    humidity = Column('Humidity', Float)
+
+class Instant_Sensor(base):
+    __tablename__ = 'Instant_Sensor'
+    time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
+    channel = Column('Channel', String(20))
+    temperature = Column('Temperature', Float)
+    humidity = Column('Humidity', Float)
 
 class Control_Status(base):
     __tablename__ = 'ControlStats'
@@ -53,7 +60,7 @@ def init_database_engine(config=None):
     meta = MetaData()
     meta.create_all(engine)
 
-def insert_instant_temp(reading):
+def insert_instant_sensor(reading):
     global the_session
     the_session.add(reading)
     the_session.commit()
@@ -74,9 +81,23 @@ def get_last_temp_rec(channel):
     last_record = query[0]
     return last_record
 
+def get_last_sensor_rec(channel):
+    global the_session
+    query = the_session.query(Instant_Sensor).filter(Instant_Sensor.channel == channel).order_by(Instant_Sensor.time_stamp.desc()).all()
+    last_record = query[0]
+    return last_record
+
+def get_last_sensor_list(channel, time):
+    global the_session
+    last_record = get_last_sensor_rec(channel)
+    last_time_stamp = last_record.time_stamp
+    past_time_stamp = last_time_stamp - timedelta(minutes = time)
+    query = the_session.query(Instant_Sensor).filter(Instant_Sensor.time_stamp >= past_time_stamp, Instant_Sensor.channel == channel).all()
+    return query
+
 def get_last_temp_list(channel, time):
     global the_session
-    last_record = get_last_temp_rec(channel)
+    last_record = get_last_sensor_rec(channel)
     last_time_stamp = last_record.time_stamp
     past_time_stamp = last_time_stamp - timedelta(minutes = time)
     query = the_session.query(Instant_Temperature).filter(Instant_Temperature.time_stamp >= past_time_stamp, Instant_Temperature.channel == channel).all()
@@ -94,4 +115,18 @@ def get_last_humid_list(channel, time):
     last_time_stamp = last_record.time_stamp
     past_time_stamp = last_time_stamp - timedelta(minutes = time)
     query = the_session.query(Instant_Humidity).filter(Instant_Humidity.time_stamp >= past_time_stamp, Instant_Humidity.channel == channel).all()
+    return query
+
+def get_last_control_rec():
+    global the_session
+    query = the_session.query(Control_Status).order_by(Control_Status.time_stamp.desc())
+    last_record = query[0]
+    return last_record
+
+def get_last_control_list(time):
+    global the_session
+    last_record = get_last_control_rec()
+    last_time_stamp = last_record.time_stamp
+    past_time_stamp = last_time_stamp - timedelta(minutes = time)
+    query = the_session.query(Control_Status).filter(Control_Status.time_stamp >= past_time_stamp).all()
     return query

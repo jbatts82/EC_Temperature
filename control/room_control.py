@@ -57,7 +57,6 @@ def Process_Room_Control(clock):
 	humidifier.Process_Humidifier()
 	fan.Process_Fan()
 
-
 	log("Time", clock.get_current_time_stamp())
 	log("Heater State", heater.Get_State())
 	log("Humidifier State", humidifier.Get_State())
