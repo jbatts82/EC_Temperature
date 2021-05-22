@@ -61,7 +61,7 @@ def Process_Temperature(new_data):
 
     log("{} Average".format(channel), average_temp)
 
-    db.Write_Instant_Temp(time, channel, average_temp)
+    #db.Write_Instant_Temp(time, channel, average_temp)
 
     temp_setting = get_temp_setting()
     min_temp_threshold = temp_setting['temp']

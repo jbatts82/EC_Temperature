@@ -10,6 +10,7 @@ import data.temperature as temp
 from data.humidity import Humidity
 from datetime import datetime
 import sensors.sensor_app as sa
+import data.db_app as db
 
 error = {}
 config = None
@@ -33,12 +34,18 @@ def Process_Room_Data():
     # sensor hw error checks and handle
     for data in new_data:
         channel = data["name"]
+        # plausible check
         if data["err"] == True:
             error[channel] = error[channel] + 1
         else:
+            db.Write_Temp_Sensor_Data(data["time"], data["name"], data["temp"], data["hum"])
             temp.Process_Temperature(data)
             humidity.process_new_data(data)
     new_data.clear()
+
+
+def get_last_temp(sensor):
+    return 69
 
 def get_error_count(channel):
     return error[channel] 

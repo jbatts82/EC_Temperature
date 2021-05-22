@@ -24,7 +24,7 @@ class Humidity:
         channel = data["name"]
         humidity = data["hum"]
         time = data["time"]
-        db.Write_Instant_Humidity(time, channel, humidity)
+        #db.Write_Instant_Humidity(time, channel, humidity)
         
         if channel == "ch1":
             #log("Process {} ".format(channel), "Time: {} Hum: {}".format(time, humidity))
