@@ -14,33 +14,70 @@ from WebApp import app
 from config import Config
 import data.db_app as db
 
+from support import log
+from support import div
+
+
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    global time_arr, temp_arr
+
+    global time_arr, temp_arr, hum_arr, heat_state_arr, hum_state_arr, fan_state_arr, light_state_arr, control_time_arr
     time_arr = []
     temp_arr = []
-    
+    hum_arr = []
+
+    heat_state_arr = []
+    hum_state_arr = []
+    fan_state_arr = []
+    light_state_arr = []
+    control_time_arr = []
+
     config = Config()
     _title = 'Plant Life'
     channel = 'ch1'
-    previous_minutes_back = 60
+    previous_minutes_back = 600
 
+    # User Input
     graphConfig = forms.GraphConfigForm()
     if graphConfig.validate_on_submit():
         minutes = graphConfig.time.data
         channel = graphConfig.channel.data
         previous_minutes_back = minutes
 
-    temp_recs = db.Get_Last_Temp_List(channel, previous_minutes_back)
-
+    # Sensor Data
+    temp_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
     for temp in temp_recs:
         time_arr.append(temp.time_stamp)
         temp_arr.append(temp.temperature)
+        hum_arr.append(temp.humidity)
 
-    return render_template('index.html', title=_title, data = [1, 2, 3, 4], form=graphConfig)
+
+    # control_stats.time_stamp = time_stamp
+    # control_stats.heater_state = heater_state
+    # control_stats.humidifier_state = humidifier_state
+    # control_stats.fan_state = fan_state
+    # control_stats.light_state = light_state
+
+    # Control Data
+    control_recs = db.Get_Last_Control_List(previous_minutes_back)
+    for rec in control_recs:
+        heat_state_arr.append(rec.heater_state)
+        hum_state_arr.append(rec.humidifier_state)
+        fan_state_arr.append(rec.fan_state)
+        light_state_arr.append(rec.light_state)
+        control_time_arr.append(rec.time_stamp)
+
+    # Sensor Data
+    sensor_data = {}
+    for each in config.dht11_config:
+        channel = each['name']
+        record = db.Get_Last_Sensor_Rec(channel)
+        sensor_data[channel] = {"temp":record.temperature, "humidity":record.humidity, "time_temp":record.time_stamp}
+
+    return render_template('index.html', title=_title, data = sensor_data, form=graphConfig)
 
 @app.route('/plot.png')
 def plot_png():
@@ -50,32 +87,32 @@ def plot_png():
     return Response(output.getvalue(), mimetype='image/png')
 
 def create_figure():
-    global time_arr, temp_arr
-    fig = Figure(figsize=(1,1))
+    global time_arr, temp_arr, hum_arr
+    fig = Figure(figsize=(10,20))
     xs = time_arr
     ys = temp_arr
     axis = fig.add_subplot(6, 1, 1, xlabel='Time', ylabel='Temperature')
     axis.plot(xs, ys)
 
-    # ys = hum_arr
-    # axis = fig.add_subplot(6, 1, 2, xlabel='Time', ylabel='Humidity')
-    # axis.plot(xs, ys)
+    ys = hum_arr
+    axis = fig.add_subplot(6, 1, 2, xlabel='Time', ylabel='Humidity')
+    axis.plot(xs, ys)
 
-    # xs = control_time
-    # ys = heater_state
-    # axis = fig.add_subplot(6, 1, 3, xlabel='Control Time', ylabel='Heater State', yticks=(0,1))
-    # axis.plot(xs, ys)
+    xs = control_time_arr
+    ys = heat_state_arr
+    axis = fig.add_subplot(6, 1, 3, xlabel='Control Time', ylabel='Heater State', yticks=(0,1))
+    axis.plot(xs, ys)
 
-    # ys = humidifier_state
-    # axis = fig.add_subplot(6, 1, 4, xlabel='Control Time', ylabel='Humidifier State', yticks=(0,1))
-    # axis.plot(xs, ys)
+    ys = hum_state_arr
+    axis = fig.add_subplot(6, 1, 4, xlabel='Control Time', ylabel='Humidifier State', yticks=(0,1))
+    axis.plot(xs, ys)
 
-    # ys = fan_state
-    # axis = fig.add_subplot(6, 1, 5, xlabel='Control Time', ylabel='Fan State', yticks=(0,1))
-    # axis.plot(xs, ys)
+    ys = fan_state_arr
+    axis = fig.add_subplot(6, 1, 5, xlabel='Control Time', ylabel='Fan State', yticks=(0,1))
+    axis.plot(xs, ys)
     
-    # ys = light_state
-    # axis = fig.add_subplot(6, 1, 6, xlabel='Control Time', ylabel='Light State', yticks=(0,1))
-    # axis.plot(xs, ys)
+    ys = light_state_arr
+    axis = fig.add_subplot(6, 1, 6, xlabel='Control Time', ylabel='Light State', yticks=(0,1))
+    axis.plot(xs, ys)
 
     return fig

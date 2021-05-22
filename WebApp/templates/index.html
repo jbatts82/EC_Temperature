@@ -10,25 +10,29 @@
 			<td>
 				<div class="sensor">
 					<h2>Sensor 1</h2>
-					<p>Temperature = {{data[0]}}</p>
+					<p>Temperature = {{data["ch1"]["temp"]}}</p>
+					<p>Humidity = {{data["ch1"]["humidity"]}}</p>
 				</div> 
 			</td>
 			<td>
 				<div class="sensor">
 					<h2>Sensor 2</h2>
-					<p>Temperature = {{data[1]}}</p>
+					<p>Temperature = {{data["ch2"]["temp"]}}</p>
+					<p>Humidity = {{data["ch2"]["humidity"]}}</p>
 				</div>
 			</td>
 			<td>
 				<div class="sensor">
 					<h2>Sensor 3</h2>
-					<p>Temperature = {{data[2]}}</p>
+					<p>Temperature = {{data["ch3"]["temp"]}}</p>
+					<p>Humidity = {{data["ch3"]["humidity"]}}</p>
 				</div>
 			</td>
 			<td>
 				<div class="sensor">
 					<h2>Sensor 4</h2>
-					<p>Temperature = {{data[3]}}</p>
+					<p>Temperature = {{data["ch4"]["temp"]}}</p>
+					<p>Humidity = {{data["ch4"]["humidity"]}}</p>
 				</div>
 			</td>
 		</tr>
@@ -56,7 +60,8 @@
 			</tr>
 			<tr><td>
 				<h1>Plot</h1>
-				<img src="../plot.png" alt="my plot">
+				<img src="../plot.png" alt="Chart">
+				
 			</td>
 			</tr>
 			</table>
