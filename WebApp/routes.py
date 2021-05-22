@@ -38,7 +38,7 @@ def index():
     config = Config()
     _title = 'Plant Life'
     channel = 'ch1'
-    previous_minutes_back = 600
+    previous_minutes_back = 200
 
     # User Input
     graphConfig = forms.GraphConfigForm()
@@ -48,18 +48,11 @@ def index():
         previous_minutes_back = minutes
 
     # Sensor Data
-    temp_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
-    for temp in temp_recs:
-        time_arr.append(temp.time_stamp)
-        temp_arr.append(temp.temperature)
-        hum_arr.append(temp.humidity)
-
-
-    # control_stats.time_stamp = time_stamp
-    # control_stats.heater_state = heater_state
-    # control_stats.humidifier_state = humidifier_state
-    # control_stats.fan_state = fan_state
-    # control_stats.light_state = light_state
+    sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
+    for record in sensor_recs:
+        time_arr.append(record.time_stamp)
+        temp_arr.append(record.temperature)
+        hum_arr.append(record.humidity)
 
     # Control Data
     control_recs = db.Get_Last_Control_List(previous_minutes_back)

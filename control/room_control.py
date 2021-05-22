@@ -63,7 +63,7 @@ def Process_Room_Control(clock):
 	log("Fan State", fan.Get_State())
 	log("Lamp State", lamp.Get_State())
 
-	db.Write_Control_Data(clock.get_current_time_stamp(), heater.Get_State(), humidifier.Get_State(), fan.Get_State(), True)
+	db.Write_Control_Data(clock.get_current_time_stamp(), heater.Get_State(), humidifier.Get_State(), fan.Get_State(), lamp.Get_State())
 
 def Request_Heater_On(requester):
 	global heater_request_list

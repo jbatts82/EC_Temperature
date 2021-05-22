@@ -25,8 +25,9 @@ def Init_Temperature(config):
     for sensor in range(sensor_cnt):
         channel = config.dht11_config[sensor]['name']
         temp_data[channel] = {
+            'previous_temperature' : None,
             'max_temperature' : 0,
-            'min_temperature' : 0,
+            'min_temperature' : 99,
             'rolling_avg' : 0,
             'minute_avg' : 0,
             'heater_state' : False,
@@ -40,20 +41,37 @@ def Init_Temperature(config):
 
 def Process_Temperature(new_data):
     global temp_data, cache, count, rolling_avg_size
+
     channel = new_data["name"]
     temperature = new_data["temp"]
     time = new_data["time"]
+    write_to_db = False
+
+    if temp_data[channel]['previous_temperature'] == None:
+        temp_data[channel]['previous_temperature'] = temperature
+        return write_to_db
+
+    delta = abs(temp_data[channel]['previous_temperature'] - temperature)
+
+    if delta > 5:
+        print("!!!!!!!!!!!!!!!!!NOT PLAUSIBLE!!!!!!!!!!!!!!!!!!!!!")
+        return write_to_db
+
+    temp_data[channel]['previous_temperature'] = temperature
 
     cache[channel].append(temperature)
 
     mean = running_mean(cache[channel], rolling_avg_size)
+
     count[channel] = count[channel] + 1
 
     if not mean:
-        return
+        return write_to_db
 
     if (count[channel] % 4) != 0:
-        return
+        return write_to_db
+
+    write_to_db = True
 
     log("{} Readings".format(channel), count[channel])
 
@@ -61,9 +79,8 @@ def Process_Temperature(new_data):
 
     log("{} Average".format(channel), average_temp)
 
-    #db.Write_Instant_Temp(time, channel, average_temp)
-
     temp_setting = get_temp_setting()
+
     min_temp_threshold = temp_setting['temp']
 
     if channel == "ch1":
@@ -79,6 +96,7 @@ def Process_Temperature(new_data):
                 temp_data[channel]['heater_state'] = False
                 log("!!!HEATER!!!", temp_data[channel]['heater_state'])
 
+    return write_to_db
 
 def get_temp_setting():
     global temp_data, time_table
