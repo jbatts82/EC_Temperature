@@ -40,10 +40,11 @@
 	</header>
 {% endblock %}
 
+
+
 {% block section %}
 	<section>
 		<nav>
-
 			<ul>
 				<li><a href="#">Temperature</a></li>
 				<li><a href="#">Humidity</a></li>
@@ -55,14 +56,13 @@
 			<h1>Temperature</h1>
 			<table>
 			<tr>
-			<td><p>Hourly</p></td>
-			<td><p>Daily</p></td>
+				<td><p>Hourly</p></td>
+				<td><p>Daily</p></td>
 			</tr>
-			<tr><td>
-				<h1>Plot</h1>
-				<img src="../plot.png" alt="Chart">
-				
-			</td>
+			<tr>
+				<td>
+					hello
+				</td>
 			</tr>
 			</table>
 		</article>
@@ -70,8 +70,22 @@
 	</section>
 
 	<footer>
-  		<p>Footer</p>
+		<h1>Plot</h1>
+  		<p><img src="../plot.png" alt="Chart"></p>
 	</footer>
 {% endblock %}
 
+{% block control_input %}
+	<div class="control_input">
+	    <h1>Control Input</h1>
+	     {{ wtf.quick_form(control_form) }}
+ 	</div>
+{% endblock %}
 
+
+{% block graph_input %}
+	<div class="graph_input">
+	    <h1>Graph Configuration</h1>
+	     {{ wtf.quick_form(graph_form) }}
+ 	</div>
+{% endblock %}

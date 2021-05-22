@@ -13,8 +13,7 @@ class Fan:
     def __init__(self, config):
         self.name = "Exhaust Fan"
         self.state = False
-        self.over_ride = False
-        self.over_ride_state = False
+        self.mode = "Auto"
         self.previous_state = False
         self.device_clock = Device_Clock()
         fan_config = next(item for item in config.plug_config if item["name"] == "exhaust")
@@ -43,10 +42,6 @@ class Fan:
     def Set_Fan_Timer(self, time_min):
         self.device_clock.set_on_timer(time_min)
         self.Turn_On()
-
-    def Set_Fan_Override(self, over_ride, state):
-        self.over_ride = over_ride
-        self.over_ride_state = state
         
     def Process_Fan(self):
         try: 

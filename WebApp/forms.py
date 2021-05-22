@@ -13,3 +13,7 @@ class GraphConfigForm(FlaskForm):
 	channel = SelectField(u'Channel Number', choices=[('ch1', 'Channel 1'), ('ch2', 'Channel 2'), ('ch3', 'Channel 3'), ('ch4', 'Channel 4')])
 	time = IntegerField('Begin Graph X Mins Ago')
 	submit = SubmitField('Submit')
+
+
+class Data_To_Show(FlaskForm):
+	show_hum = BooleanField("Humidifier")

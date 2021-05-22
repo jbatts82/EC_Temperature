@@ -96,11 +96,14 @@ def Kill_Everything():
 	fan.Turn_Off()
 
 def process_heater_requests(requests):
-	global heater
+	global heater, fan
 	on_req = 0
 	for req in requests.values():
 		if req == True:
 			on_req = on_req + 1
+
+	if fan.Get_State == True:
+		return
 
 	if on_req == 0:
 		heater.Turn_Off()
@@ -114,6 +117,9 @@ def process_humidifier_requests(requests):
 		if req == True:
 			on_req = on_req + 1
 
+	if fan.Get_State == True:
+		return
+
 	if on_req == 0:
 		humidifier.Turn_Off()
 	else:
@@ -125,7 +131,7 @@ def process_fan_requests(requests):
 	for req in requests.keys():
 		if requests[req] == True:
 			if req == "periodic":
-				fan.Set_Fan_Timer(10)
+				fan.Set_Fan_Timer(20)
 				requests[req] = False
 
 	fan.Process_Fan()
