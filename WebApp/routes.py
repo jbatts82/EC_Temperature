@@ -29,7 +29,6 @@ def index():
     time_arr = []
     temp_arr = []
     hum_arr = []
-
     heat_state_arr = []
     hum_state_arr = []
     fan_state_arr = []
@@ -41,16 +40,6 @@ def index():
     channel = 'ch1'
     previous_minutes_back = 200
 
-    # User Input
-    data_to_show = forms.Data_To_Show()
-
-    graphConfig = forms.GraphConfigForm()
-    if graphConfig.validate_on_submit():
-        minutes = graphConfig.time.data
-        channel = graphConfig.channel.data
-        previous_minutes_back = minutes
-
-    
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
     for record in sensor_recs:
@@ -74,20 +63,35 @@ def index():
         record = db.Get_Last_Sensor_Rec(channel)
         sensor_data[channel] = {"temp":record.temperature, "humidity":record.humidity, "time_temp":record.time_stamp}
 
+    # User Input
+    data_to_show = forms.Data_To_Show()
+
+    graphConfig = forms.GraphConfigForm()
+    if graphConfig.validate_on_submit():
+        minutes = graphConfig.time.data
+        channel = graphConfig.channel.data
+        previous_minutes_back = minutes
+
     g64 = {}
 
     figure = create_figure(time_arr, temp_arr, "Time", "Temperature")
+
     g64["temp"] = plot_png(figure)
 
     figure = create_figure(time_arr, hum_arr, "Time", "Humidity")
     g64["hum"] = plot_png(figure)
 
+
+
     return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, control_form=data_to_show, graph1b64=g64)
 
+
 @app.route('/build_graph', methods=['GET', 'POST'])
-def build_graph(var):
+def build_graph():
+
     log("Build Graph", var)
-    return True
+
+    return 23
 
 def plot_png(fig):
     output = io.BytesIO()
@@ -97,9 +101,12 @@ def plot_png(fig):
     return data
 
 def create_figure(xs, ys, xlabel, ylabel):
+    global hum_arr
     fig = Figure(figsize=(10,5))
     axis = fig.add_subplot(1, 1, 1, xlabel=xlabel, ylabel=ylabel)
-    axis.plot(xs, ys)
+    log("Axis Type", axis)
+    lines = axis.plot(xs, ys)
+    log("Lines Type", lines)
     return fig
 
 
