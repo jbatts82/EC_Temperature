@@ -50,36 +50,63 @@
 				<li><a href="#">Humidity</a></li>
 				<li><a href="#">Lamp</a></li>
 			</ul>
-		</nav>
 
+		</nav>
 		<article>
-			<h1>Temperature</h1>
+			<h1>Graphs</h1>
+
 			<table>
 			<tr>
-				<td><p>Hourly</p></td>
-				<td><p>Daily</p></td>
+				<td>
+					<p>Temperature</p>
+				</td>
+				<td class="graph_wrap">
+					<p><img class="imgg" src="data:image/png;base64,{{ graph1b64["temp"] }}" alt="graph1 in base64" /></p>
+				</td>
 			</tr>
 			<tr>
 				<td>
-					hello
+					<p>Humidity</p>
+				</td>
+				<td class="graph_wrap">
+					<p><img id=the_hum class="imgg" src="data:image/png;base64,{{ graph1b64["hum"] }}" alt="graph1 in base64" /></p>
 				</td>
 			</tr>
 			</table>
 		</article>
-
 	</section>
 
 	<footer>
-		<h1>Plot</h1>
-  		<p><img src="../plot.png" alt="Chart"></p>
+		<h1>Plots</h1>
 	</footer>
+
+
 {% endblock %}
 
 {% block control_input %}
-	<div class="control_input">
-	    <h1>Control Input</h1>
-	     {{ wtf.quick_form(control_form) }}
- 	</div>
+	<form method="POST" action="/">
+	    {{ control_form.hidden_tag() }}
+	    {{ control_form.show_heater.label }} {{ control_form.show_heater(onchange="do_something()") }}
+	    
+	    
+	</form>
+
+	<script type="text/javascript">
+		function do_something(){
+			// send msg to python to include new graph
+			// command to build graph
+			// command to get data
+			// swap images?
+			
+			
+		}
+
+
+
+	</script>
+<p id="huum"></p>
+<p id="demo"></p>
+
 {% endblock %}
 
 

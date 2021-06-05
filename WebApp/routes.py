@@ -8,6 +8,7 @@ from flask import render_template, flash, redirect, url_for, Flask, send_file, m
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 import io
+import base64
 import random
 from WebApp import forms
 from WebApp import app
@@ -40,18 +41,16 @@ def index():
     channel = 'ch1'
     previous_minutes_back = 200
 
-
-
     # User Input
     data_to_show = forms.Data_To_Show()
+
     graphConfig = forms.GraphConfigForm()
     if graphConfig.validate_on_submit():
         minutes = graphConfig.time.data
         channel = graphConfig.channel.data
         previous_minutes_back = minutes
-        is_hum = data_to_show.show_hum.data
-    
 
+    
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
     for record in sensor_recs:
@@ -75,42 +74,54 @@ def index():
         record = db.Get_Last_Sensor_Rec(channel)
         sensor_data[channel] = {"temp":record.temperature, "humidity":record.humidity, "time_temp":record.time_stamp}
 
-    return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, control_form=data_to_show)
+    g64 = {}
 
-@app.route('/plot.png')
-def plot_png():
-    fig = create_figure()
+    figure = create_figure(time_arr, temp_arr, "Time", "Temperature")
+    g64["temp"] = plot_png(figure)
+
+    figure = create_figure(time_arr, hum_arr, "Time", "Humidity")
+    g64["hum"] = plot_png(figure)
+
+    return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, control_form=data_to_show, graph1b64=g64)
+
+@app.route('/build_graph', methods=['GET', 'POST'])
+def build_graph(var):
+    log("Build Graph", var)
+    return True
+
+def plot_png(fig):
     output = io.BytesIO()
     FigureCanvasAgg(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+    stbytes = output.getvalue()
+    data = base64.b64encode(stbytes).decode("ascii")
+    return data
 
-def create_figure():
-    global time_arr, temp_arr, hum_arr
-    fig = Figure(figsize=(10,20))
-    xs = time_arr
-    ys = temp_arr
-    axis = fig.add_subplot(6, 1, 1, xlabel='Time', ylabel='Temperature')
+def create_figure(xs, ys, xlabel, ylabel):
+    fig = Figure(figsize=(10,5))
+    axis = fig.add_subplot(1, 1, 1, xlabel=xlabel, ylabel=ylabel)
     axis.plot(xs, ys)
-
-    ys = hum_arr
-    axis = fig.add_subplot(6, 1, 2, xlabel='Time', ylabel='Humidity')
-    axis.plot(xs, ys)
-
-    xs = control_time_arr
-    ys = heat_state_arr
-    axis = fig.add_subplot(6, 1, 3, xlabel='Control Time', ylabel='Heater State', yticks=(0,1))
-    axis.plot(xs, ys)
-
-    ys = hum_state_arr
-    axis = fig.add_subplot(6, 1, 4, xlabel='Control Time', ylabel='Humidifier State', yticks=(0,1))
-    axis.plot(xs, ys)
-
-    ys = fan_state_arr
-    axis = fig.add_subplot(6, 1, 5, xlabel='Control Time', ylabel='Fan State', yticks=(0,1))
-    axis.plot(xs, ys)
-    
-    ys = light_state_arr
-    axis = fig.add_subplot(6, 1, 6, xlabel='Control Time', ylabel='Light State', yticks=(0,1))
-    axis.plot(xs, ys)
-
     return fig
+
+
+    # ys = hum_arr
+    # axis = fig.add_subplot(6, 1, 2, xlabel='Time', ylabel='Humidity')
+    # axis.plot(xs, ys)
+
+    # xs = control_time_arr
+    # ys = heat_state_arr
+    # axis = fig.add_subplot(6, 1, 3, xlabel='Control Time', ylabel='Heater State', yticks=(0,1))
+    # axis.plot(xs, ys)
+
+    # ys = hum_state_arr
+    # axis = fig.add_subplot(6, 1, 4, xlabel='Control Time', ylabel='Humidifier State', yticks=(0,1))
+    # axis.plot(xs, ys)
+
+    # ys = fan_state_arr
+    # axis = fig.add_subplot(6, 1, 5, xlabel='Control Time', ylabel='Fan State', yticks=(0,1))
+    # axis.plot(xs, ys)
+    
+    # ys = light_state_arr
+    # axis = fig.add_subplot(6, 1, 6, xlabel='Control Time', ylabel='Light State', yticks=(0,1))
+    # axis.plot(xs, ys)
+
+

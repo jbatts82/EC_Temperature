@@ -16,4 +16,5 @@ class GraphConfigForm(FlaskForm):
 
 
 class Data_To_Show(FlaskForm):
+	show_heater = BooleanField("Heater")
 	show_hum = BooleanField("Humidifier")
