@@ -54,22 +54,25 @@
 		</nav>
 		<article>
 			<h1>Graphs</h1>
+				<form method="POST" action="/">
+				    {{ data_to_show.hidden_tag() }}
+				    {{ data_to_show.show_temperature.label }} {{ data_to_show.show_temperature(checked=True) }}
+				    {{ data_to_show.show_humidity.label }} {{ data_to_show.show_humidity(onchange="toggle_hum()") }}
+				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater() }}
+				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light() }}
+				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan() }}
+				</form>
 
+
+
+				<p id="demo"></p>
 			<table>
 			<tr>
 				<td>
-					<p>Temperature</p>
+					<p>Grow 5</p>
 				</td>
 				<td class="graph_wrap">
 					<p><img class="imgg" src="data:image/png;base64,{{ graph1b64["temp"] }}" alt="graph1 in base64" /></p>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<p>Humidity</p>
-				</td>
-				<td class="graph_wrap">
-					<p><img id=the_hum class="imgg" src="data:image/png;base64,{{ graph1b64["hum"] }}" alt="graph1 in base64" /></p>
 				</td>
 			</tr>
 			</table>
@@ -81,33 +84,4 @@
 	</footer>
 
 
-{% endblock %}
-
-{% block control_input %}
-	<form method="POST" action="/">
-	    {{ control_form.hidden_tag() }}
-	    {{ control_form.show_heater.label }} {{ control_form.show_heater(onchange="do_something()") }}
-	    
-	    
-	</form>
-
-	<script type="text/javascript">
-		function do_something(){
-			var newData = getData()
-		}
-
-
-
-	</script>
-<p id="huum"></p>
-<p id="demo"></p>
-
-{% endblock %}
-
-
-{% block graph_input %}
-	<div class="graph_input">
-	    <h1>Graph Configuration</h1>
-	     {{ wtf.quick_form(graph_form) }}
- 	</div>
 {% endblock %}

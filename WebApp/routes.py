@@ -17,6 +17,7 @@ import data.db_app as db
 
 from support import log
 from support import div
+import json
 
 
 @app.route('/')
@@ -38,7 +39,7 @@ def index():
     config = Config()
     _title = 'Plant Life'
     channel = 'ch1'
-    previous_minutes_back = 200
+    previous_minutes_back = 240
 
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
@@ -65,6 +66,8 @@ def index():
 
     # User Input
     data_to_show = forms.Data_To_Show()
+    show_temperature = data_to_show.show_temperature.data
+    show_heater = data_to_show.show_heater.data
 
     graphConfig = forms.GraphConfigForm()
     if graphConfig.validate_on_submit():
@@ -72,26 +75,48 @@ def index():
         channel = graphConfig.channel.data
         previous_minutes_back = minutes
 
+
     g64 = {}
-
-    figure = create_figure(time_arr, temp_arr, "Time", "Temperature")
-
+    figure = create_figure(10, 5)
+    axes = add_axes(figure, "The Graph", "Time", "Temperature" )
+    add_line(axes, time_arr, temp_arr, "temp")
     g64["temp"] = plot_png(figure)
 
-    figure = create_figure(time_arr, hum_arr, "Time", "Humidity")
-    g64["hum"] = plot_png(figure)
+    return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, data_to_show=data_to_show, graph1b64=g64)
+
+@app.route('/toggle_humidity_graph', methods=['GET', 'POST'])
+def toggle_humidity_graph():
+    json_data = request.form['graph_data']
+    the_data = json.loads(json_data) 
+    show_graph = the_data["show_humidity"]
+
+    if show_graph:
+        log("Graph", "on")
+    else:
+        log("Graph", "off")
+
+    ret_val = { 'error' : False }
+    
+    return json.dumps(ret_val)
 
 
+def create_figure(x_size, y_size):
+    global hum_arr
+    figure = Figure(figsize=(x_size, y_size))
+    return figure
 
-    return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, control_form=data_to_show, graph1b64=g64)
+def add_axes(figure, title, x_label, y_label):
+    axis = figure.add_subplot(1, 1, 1, xlabel=x_label, ylabel=y_label)
+    return axis
 
+def add_line(axis, xs, ys, id):
+    lines = axis.plot(xs, ys, gid=id)
+    return lines
 
-@app.route('/build_graph', methods=['GET', 'POST'])
-def build_graph():
-
-    log("Build Graph", var)
-
-    return 23
+def remove_line(axis, id):
+    for line in axis.lines():
+        if line.get_gid() == id:
+            line.remove()
 
 def plot_png(fig):
     output = io.BytesIO()
@@ -99,36 +124,3 @@ def plot_png(fig):
     stbytes = output.getvalue()
     data = base64.b64encode(stbytes).decode("ascii")
     return data
-
-def create_figure(xs, ys, xlabel, ylabel):
-    global hum_arr
-    fig = Figure(figsize=(10,5))
-    axis = fig.add_subplot(1, 1, 1, xlabel=xlabel, ylabel=ylabel)
-    log("Axis Type", axis)
-    lines = axis.plot(xs, ys)
-    log("Lines Type", lines)
-    return fig
-
-
-    # ys = hum_arr
-    # axis = fig.add_subplot(6, 1, 2, xlabel='Time', ylabel='Humidity')
-    # axis.plot(xs, ys)
-
-    # xs = control_time_arr
-    # ys = heat_state_arr
-    # axis = fig.add_subplot(6, 1, 3, xlabel='Control Time', ylabel='Heater State', yticks=(0,1))
-    # axis.plot(xs, ys)
-
-    # ys = hum_state_arr
-    # axis = fig.add_subplot(6, 1, 4, xlabel='Control Time', ylabel='Humidifier State', yticks=(0,1))
-    # axis.plot(xs, ys)
-
-    # ys = fan_state_arr
-    # axis = fig.add_subplot(6, 1, 5, xlabel='Control Time', ylabel='Fan State', yticks=(0,1))
-    # axis.plot(xs, ys)
-    
-    # ys = light_state_arr
-    # axis = fig.add_subplot(6, 1, 6, xlabel='Control Time', ylabel='Light State', yticks=(0,1))
-    # axis.plot(xs, ys)
-
-
