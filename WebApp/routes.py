@@ -18,7 +18,7 @@ import data.db_app as db
 from support import log
 from support import div
 import json
-
+from WebApp.mat_graph import MatGraph
 
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
@@ -26,7 +26,7 @@ import json
 @app.route('/index', methods=['GET', 'POST'])
 def index():
 
-    global time_arr, temp_arr, hum_arr, heat_state_arr, hum_state_arr, fan_state_arr, light_state_arr, control_time_arr
+    global time_arr, temp_arr, hum_arr, heat_state_arr, hum_state_arr, fan_state_arr, light_state_arr, control_time_arr, the_graph
     time_arr = []
     temp_arr = []
     hum_arr = []
@@ -37,9 +37,14 @@ def index():
     control_time_arr = []
 
     config = Config()
+
+
+    the_graph = MatGraph(config)
+    the_graph.add_axes("A Tit", "Time", "Garden Gaden")
+
     _title = 'Plant Life'
     channel = 'ch1'
-    previous_minutes_back = 240
+    previous_minutes_back = 600
 
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
@@ -76,51 +81,25 @@ def index():
         previous_minutes_back = minutes
 
 
-    g64 = {}
-    figure = create_figure(10, 5)
-    axes = add_axes(figure, "The Graph", "Time", "Temperature" )
-    add_line(axes, time_arr, temp_arr, "temp")
-    g64["temp"] = plot_png(figure)
+    return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, data_to_show=data_to_show, graph1b64 = None)
 
-    return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, data_to_show=data_to_show, graph1b64=g64)
 
 @app.route('/toggle_humidity_graph', methods=['GET', 'POST'])
 def toggle_humidity_graph():
+    global the_graph, time_arr, hum_arr
     json_data = request.form['graph_data']
     the_data = json.loads(json_data) 
     show_graph = the_data["show_humidity"]
 
     if show_graph:
         log("Graph", "on")
+        the_graph.add_line(time_arr, hum_arr, "hum")
+        png64data = the_graph.plot_png()
+        data_string = "data:image/png;base64,{}".format(png64data)
+
     else:
         log("Graph", "off")
+        data_string = ""
 
-    ret_val = { 'error' : False }
-    
+    ret_val = { 'error' : False, 'the_graph' :  data_string}
     return json.dumps(ret_val)
-
-
-def create_figure(x_size, y_size):
-    global hum_arr
-    figure = Figure(figsize=(x_size, y_size))
-    return figure
-
-def add_axes(figure, title, x_label, y_label):
-    axis = figure.add_subplot(1, 1, 1, xlabel=x_label, ylabel=y_label)
-    return axis
-
-def add_line(axis, xs, ys, id):
-    lines = axis.plot(xs, ys, gid=id)
-    return lines
-
-def remove_line(axis, id):
-    for line in axis.lines():
-        if line.get_gid() == id:
-            line.remove()
-
-def plot_png(fig):
-    output = io.BytesIO()
-    FigureCanvasAgg(fig).print_png(output)
-    stbytes = output.getvalue()
-    data = base64.b64encode(stbytes).decode("ascii")
-    return data
