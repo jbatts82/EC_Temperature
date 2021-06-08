@@ -14,11 +14,26 @@ from WebApp import forms
 from WebApp import app
 from config import Config
 import data.db_app as db
-
 from support import log
 from support import div
 import json
 from WebApp.mat_graph import MatGraph
+
+
+data_arr = {
+    "time_arr":[],
+    "time2_arr":[],
+    "temp_arr":[],
+    "hum_arr":[],
+    "heat_state_arr":[],
+    "hum_state_arr":[],
+    "fan_state_arr":[],
+    "light_state_arr":[],
+    "control_time_arr":[]
+}
+
+config = Config()
+the_graph = MatGraph(config)
 
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
@@ -26,22 +41,7 @@ from WebApp.mat_graph import MatGraph
 @app.route('/index', methods=['GET', 'POST'])
 def index():
 
-    global time_arr, temp_arr, hum_arr, heat_state_arr, hum_state_arr, fan_state_arr, light_state_arr, control_time_arr, the_graph
-    time_arr = []
-    temp_arr = []
-    hum_arr = []
-    heat_state_arr = []
-    hum_state_arr = []
-    fan_state_arr = []
-    light_state_arr = []
-    control_time_arr = []
-
-    config = Config()
-
-
-    the_graph = MatGraph(config)
-    the_graph.add_axes("A Tit", "Time", "Garden Gaden")
-
+    global data_arr, config, the_graph
     _title = 'Plant Life'
     channel = 'ch1'
     previous_minutes_back = 600
@@ -49,18 +49,18 @@ def index():
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
     for record in sensor_recs:
-        time_arr.append(record.time_stamp)
-        temp_arr.append(record.temperature)
-        hum_arr.append(record.humidity)
+        data_arr["time_arr"].append(record.time_stamp)
+        data_arr["temp_arr"].append(record.temperature)
+        data_arr["hum_arr"].append(record.humidity)
 
     # Control Data
     control_recs = db.Get_Last_Control_List(previous_minutes_back)
     for rec in control_recs:
-        heat_state_arr.append(rec.heater_state)
-        hum_state_arr.append(rec.humidifier_state)
-        fan_state_arr.append(rec.fan_state)
-        light_state_arr.append(rec.light_state)
-        control_time_arr.append(rec.time_stamp)
+        data_arr["heat_state_arr"].append(rec.heater_state)
+        data_arr["hum_state_arr"].append(rec.humidifier_state)
+        data_arr["fan_state_arr"].append(rec.fan_state)
+        data_arr["light_state_arr"].append(rec.light_state)
+        data_arr["time2_arr"].append(rec.time_stamp)
 
     # Sensor Data
     sensor_data = {}
@@ -80,23 +80,41 @@ def index():
         channel = graphConfig.channel.data
         previous_minutes_back = minutes
 
+    # graphing
+    the_graph.add_axes("Room Data", "Time", "Garden Data")
+
+
 
     return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, data_to_show=data_to_show, graph1b64 = None)
 
 
+
+
+@app.route('/set_graph_lines', methods=['GET', 'POST'])
+def set_graph_lines():
+    global data_arr
+
+
+
+
+
+    log("Set Graph Lines")
+
+
+
+
 @app.route('/toggle_humidity_graph', methods=['GET', 'POST'])
 def toggle_humidity_graph():
-    global the_graph, time_arr, hum_arr
+    global data_arr, the_graph
     json_data = request.form['graph_data']
     the_data = json.loads(json_data) 
     show_graph = the_data["show_humidity"]
 
     if show_graph:
         log("Graph", "on")
-        the_graph.add_line(time_arr, hum_arr, "hum")
+        the_graph.add_line(data_arr["time_arr"], data_arr["temp_arr"], "hum")
         png64data = the_graph.plot_png()
         data_string = "data:image/png;base64,{}".format(png64data)
-
     else:
         log("Graph", "off")
         data_string = ""

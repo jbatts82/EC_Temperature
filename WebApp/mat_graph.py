@@ -15,7 +15,7 @@ x_width = 10
 y_width = 5
 
 
-# MatGraph should have only 1 figure, can have multiple axes
+
 class MatGraph:
 	def __init__(self, config):
 		self.figure = Figure(figsize=(x_width, y_width))
