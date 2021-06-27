@@ -42,7 +42,7 @@ def Process_Room_Data():
         humidity_data = data["hum"]
 
         if hw_error == True:
-            error[channel]['hwErr'] = error[channel]['hwErr'] + 1
+            error[channel]['hw_err'] = error[channel]['hw_err'] + 1
         elif temp.Process_Temperature(data) == False:
             error[channel]['plaus_err'] = error[channel]['plaus_err']  + 1
         else:

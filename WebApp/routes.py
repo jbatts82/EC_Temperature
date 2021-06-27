@@ -34,6 +34,7 @@ data_arr = {
 
 config = Config()
 the_graph = MatGraph(config)
+the_graph.add_axes("Room Data", "Time", "Garden Data")
 
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
@@ -44,7 +45,7 @@ def index():
     global data_arr, config, the_graph
     _title = 'Plant Life'
     channel = 'ch1'
-    previous_minutes_back = 600
+    previous_minutes_back = 120
 
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
@@ -80,44 +81,34 @@ def index():
         channel = graphConfig.channel.data
         previous_minutes_back = minutes
 
-    # graphing
-    the_graph.add_axes("Room Data", "Time", "Garden Data")
-
-
+    
 
     return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, data_to_show=data_to_show, graph1b64 = None)
 
 
 
-
 @app.route('/set_graph_lines', methods=['GET', 'POST'])
 def set_graph_lines():
-    global data_arr
-
-
-
-
-
-    log("Set Graph Lines")
-
-
-
-
-@app.route('/toggle_humidity_graph', methods=['GET', 'POST'])
-def toggle_humidity_graph():
-    global data_arr, the_graph
     json_data = request.form['graph_data']
-    the_data = json.loads(json_data) 
-    show_graph = the_data["show_humidity"]
-
-    if show_graph:
-        log("Graph", "on")
-        the_graph.add_line(data_arr["time_arr"], data_arr["temp_arr"], "hum")
-        png64data = the_graph.plot_png()
-        data_string = "data:image/png;base64,{}".format(png64data)
-    else:
-        log("Graph", "off")
-        data_string = ""
-
+    the_data = json.loads(json_data)
+    update_graph_lines(the_data)
+    png64data = the_graph.plot_png()
+    data_string = "data:image/png;base64,{}".format(png64data)
     ret_val = { 'error' : False, 'the_graph' :  data_string}
     return json.dumps(ret_val)
+
+
+def update_graph_lines(graph_lines):
+    global data_arr
+
+    if graph_lines["temp"]:
+        the_graph.add_line(data_arr["time_arr"], data_arr["temp_arr"], "temp", "blue")
+    else:
+        the_graph.remove_line("temp")
+
+
+    if graph_lines["heater"]:
+        the_graph.add_line(data_arr["time2_arr"], data_arr["heat_state_arr"], "heater", "red")
+    else:
+        the_graph.remove_line("heater")
+

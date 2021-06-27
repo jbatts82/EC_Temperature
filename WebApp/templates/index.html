@@ -56,15 +56,12 @@
 			<h1>Graphs</h1>
 				<form method="POST" action="/">
 				    {{ data_to_show.hidden_tag() }}
-				    {{ data_to_show.show_temperature.label }} {{ data_to_show.show_temperature(checked=True) }}
-				    {{ data_to_show.show_humidity.label }} {{ data_to_show.show_humidity(onchange="toggle_hum()") }}
-				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater() }}
+				    {{ data_to_show.show_temperature.label }} {{ data_to_show.show_temperature(checked=True, onchange="update_graph()") }}
+				    {{ data_to_show.show_humidity.label }} {{ data_to_show.show_humidity() }}
+				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
 				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light() }}
 				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan() }}
 				</form>
-
-
-
 				<p id="demo"></p>
 			<table>
 			<tr>
