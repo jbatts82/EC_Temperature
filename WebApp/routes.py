@@ -35,6 +35,7 @@ data_arr = {
 config = Config()
 the_graph = MatGraph(config)
 the_graph.add_axes("Room Data", "Time", "Garden Data")
+png_graph_state = None
 
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
@@ -89,26 +90,39 @@ def index():
 
 @app.route('/set_graph_lines', methods=['GET', 'POST'])
 def set_graph_lines():
+
     json_data = request.form['graph_data']
     the_data = json.loads(json_data)
+
     update_graph_lines(the_data)
+
     png64data = the_graph.plot_png()
     data_string = "data:image/png;base64,{}".format(png64data)
     ret_val = { 'error' : False, 'the_graph' :  data_string}
     return json.dumps(ret_val)
 
 
-def update_graph_lines(graph_lines):
-    global data_arr
+def update_graph_lines(req_graph_lines):
+    global data_arr, the_graph, png_graph_state
 
-    if graph_lines["temp"]:
+
+    if png_graph_state == req_graph_lines:
+        print("Same Graph Requested")
+        return
+
+    if req_graph_lines["temp"]:
         the_graph.add_line(data_arr["time_arr"], data_arr["temp_arr"], "temp", "blue")
     else:
         the_graph.remove_line("temp")
 
 
-    if graph_lines["heater"]:
-        the_graph.add_line(data_arr["time2_arr"], data_arr["heat_state_arr"], "heater", "red")
-    else:
-        the_graph.remove_line("heater")
 
+    # if req_graph_lines["heater"]:
+    #     the_graph.add_line(data_arr["time2_arr"], data_arr["heat_state_arr"], "heater", "red")
+    # else:
+    #     the_graph.remove_line("heater")
+    png_graph_state = req_graph_lines
+
+
+def update_fahrenheit_graph():
+    pass

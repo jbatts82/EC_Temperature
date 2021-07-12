@@ -36,7 +36,10 @@ if __name__ == '__main__':
 	schedule.every(30).seconds.do(rd.Process_Room_Data)
 	schedule.every(60).seconds.do(rc.Process_Room_Control, system_clock)
 
-	schedule.every().hour.at(":20").do(rc.Request_Fan_On, "periodic")
+	schedule.every().hour.at(":00").do(rc.Request_Fan_On, "periodic")
+	schedule.every().hour.at(":15").do(rc.Request_Fan_On, "periodic")
+	schedule.every().hour.at(":30").do(rc.Request_Fan_On, "periodic")
+	schedule.every().hour.at(":45").do(rc.Request_Fan_On, "periodic")
 
 
 	# main loop

@@ -13,8 +13,7 @@ var graph_lines = { //to show
 
 // after page loads
 $(document).ready(function() {
-	update_graph_lines();
-	set_graph_lines();
+	update_graph()
 });
 
 function update_graph_lines() {

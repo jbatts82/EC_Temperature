@@ -42,7 +42,7 @@ class Config:
                     {"name": "lamp", "ip": "10.0.0.169", "assigned": False},
                     {"name": "breeze", "ip": "10.0.0.173", "assigned": False}]
 
-    database_loc = '/home/mario/ec2/EnvironmentController_2.0/ec2.db'
+    database_loc = '/home/mario/ec2/EnvironmentController_2.0/ec_11_7_21.db'
 
 
     time_table = []
