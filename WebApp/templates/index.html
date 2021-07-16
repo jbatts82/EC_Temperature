@@ -50,17 +50,18 @@
 				<li><a href="#">Humidity</a></li>
 				<li><a href="#">Lamp</a></li>
 			</ul>
+			<ul>
+				<li>{{wtf.quick_form(graph_form)}}</li>
+			</ul>
 
 		</nav>
 		<article>
 			<h1>Graphs</h1>
 				<form method="POST" action="/">
 				    {{ data_to_show.hidden_tag() }}
-				    {{ data_to_show.show_temperature.label }} {{ data_to_show.show_temperature(checked=True, onchange="update_graph()") }}
-				    {{ data_to_show.show_humidity.label }} {{ data_to_show.show_humidity() }}
 				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
-				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light() }}
-				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan() }}
+				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light(onchange="update_graph()") }}
+				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}
 				</form>
 				<p id="demo"></p>
 			<table>

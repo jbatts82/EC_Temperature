@@ -15,8 +15,6 @@ class GraphConfigForm(FlaskForm):
 	submit = SubmitField('Submit')
 
 class Data_To_Show(FlaskForm):
-	show_temperature = BooleanField("Temperature")
-	show_humidity = BooleanField("Humidity")
 	show_heater = BooleanField("Heater")
 	show_light = BooleanField("Light")
 	show_fan = BooleanField("Fan")

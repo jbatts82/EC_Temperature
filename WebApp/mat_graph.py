@@ -11,45 +11,47 @@ from support import log
 import io
 import base64
 
-x_width = 10
-y_width = 5
+x_width = 15
+y_width = 7.5
+
+graph_layout = {
+	"temp": {"temp":False, "heater":False, "light":False, "fan":False},
+	"hum": {"temp":False, "heater":False, "light":False, "fan":False}
+}
+
+'''
+Create a Figure object. , then add an Axes, ax and figure.axes[0] are same object. 
 
 
 '''
-Create a Figure object. , then add an Axes, ax and fig.axes[0] are same object. 
 
 
-'''
 
 class MatGraph:
 	def __init__(self, config):
 		self.figure = Figure(figsize=(x_width, y_width))
-		self.line_states = {
-			"temp": False,
-			"hum": False,
-			"heater": False,
-			"light": False,
-			"fan": False,
-		}
-
-		self.ax = None
-
-	def add_axes(self, title, x_label, y_label):
-		self.ax = self.figure.add_subplot(1, 1, 1, title = title, xlabel=x_label, ylabel=y_label)
+		self.axe_temp = self.figure.add_subplot(2, 1, 1, title = "Room Data", xlabel="Time", ylabel="Temperature (F)")
+		self.axe_humid = self.figure.add_subplot(2, 1, 2, title = "Room Data", xlabel="Time", ylabel="Humidity (%)")
 
 
-	def add_line(self, xs, ys, id, color):
-		#check if already added
-		self.line_states[id] =  True
-		lines = self.ax.plot(xs, ys, gid=id, color=color)
+	def add_line_temp(self, xs, ys, id, color):
+		self.axe_temp.plot(xs, ys, gid=id, color=color)
 
 
-	def remove_line(self, id):
-		self.line_states[id] =  False
-		for line in self.ax.lines:
+	def add_line_humid(self, xs, ys, id, color):
+		self.axe_humid.plot(xs, ys, gid=id, color=color)
+
+
+	def remove_line_temp(self, id):
+		for line in self.axe_temp.lines:
 			if line.get_gid() == id:
-				print("found")
 				line.remove()
+
+	def remove_line_humid(self, id):
+		for line in self.axe_humid.lines:
+			if line.get_gid() == id:
+				line.remove()
+
 
 	def plot_png(self):
 		output = io.BytesIO()

@@ -20,22 +20,8 @@ import json
 from WebApp.mat_graph import MatGraph
 
 
-data_arr = {
-    "time_arr":[],
-    "time2_arr":[],
-    "temp_arr":[],
-    "hum_arr":[],
-    "heat_state_arr":[],
-    "hum_state_arr":[],
-    "fan_state_arr":[],
-    "light_state_arr":[],
-    "control_time_arr":[]
-}
-
 config = Config()
-the_graph = MatGraph(config)
-the_graph.add_axes("Room Data", "Time", "Garden Data")
-png_graph_state = None
+
 
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
@@ -43,10 +29,30 @@ png_graph_state = None
 @app.route('/index', methods=['GET', 'POST'])
 def index():
 
-    global data_arr, config, the_graph
+    global data_arr, config
+
+    data_arr = {
+        "time_arr":[],
+        "time2_arr":[],
+        "temp_arr":[],
+        "hum_arr":[],
+        "heat_state_arr":[],
+        "hum_state_arr":[],
+        "fan_state_arr":[],
+        "light_state_arr":[],
+        "control_time_arr":[]
+    }
+
     _title = 'Plant Life'
     channel = 'ch1'
     previous_minutes_back = 120
+
+    graphConfig = forms.GraphConfigForm()
+    if graphConfig.validate_on_submit():
+        minutes = graphConfig.time.data
+        channel = graphConfig.channel.data
+        previous_minutes_back = minutes
+
 
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
@@ -73,56 +79,31 @@ def index():
 
     # User Input
     data_to_show = forms.Data_To_Show()
-    show_temperature = data_to_show.show_temperature.data
-    show_heater = data_to_show.show_heater.data
 
-    graphConfig = forms.GraphConfigForm()
-    if graphConfig.validate_on_submit():
-        minutes = graphConfig.time.data
-        channel = graphConfig.channel.data
-        previous_minutes_back = minutes
-
-    
 
     return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, data_to_show=data_to_show, graph1b64 = None)
 
 
-
 @app.route('/set_graph_lines', methods=['GET', 'POST'])
 def set_graph_lines():
-
+    global the_graph
     json_data = request.form['graph_data']
     the_data = json.loads(json_data)
-
-    update_graph_lines(the_data)
-
+    the_graph = MatGraph(config)
+    update_temperature_graph(the_data)
+    update_humidity_graph(the_data)
     png64data = the_graph.plot_png()
     data_string = "data:image/png;base64,{}".format(png64data)
     ret_val = { 'error' : False, 'the_graph' :  data_string}
     return json.dumps(ret_val)
 
 
-def update_graph_lines(req_graph_lines):
-    global data_arr, the_graph, png_graph_state
+# entry point
+def update_temperature_graph(req_graph_lines):
+    global data_arr, the_graph
+    the_graph.add_line_temp(data_arr["time_arr"], data_arr["temp_arr"], "temp", "black")
 
 
-    if png_graph_state == req_graph_lines:
-        print("Same Graph Requested")
-        return
-
-    if req_graph_lines["temp"]:
-        the_graph.add_line(data_arr["time_arr"], data_arr["temp_arr"], "temp", "blue")
-    else:
-        the_graph.remove_line("temp")
-
-
-
-    # if req_graph_lines["heater"]:
-    #     the_graph.add_line(data_arr["time2_arr"], data_arr["heat_state_arr"], "heater", "red")
-    # else:
-    #     the_graph.remove_line("heater")
-    png_graph_state = req_graph_lines
-
-
-def update_fahrenheit_graph():
-    pass
+def update_humidity_graph(req_graph_lines):
+    global data_arr, the_graph
+    the_graph.add_line_humid(data_arr["time_arr"], data_arr["hum_arr"], "hum", "black")

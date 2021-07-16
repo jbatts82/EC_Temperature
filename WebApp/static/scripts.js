@@ -18,20 +18,6 @@ $(document).ready(function() {
 
 function update_graph_lines() {
 
-	if ($('#show_temperature').is(":checked")) {
-		graph_lines.temp = true;
-	}
-	else {
-		graph_lines.temp = false;
-	}
-
-	if ($('#show_humidity').is(":checked")) {
-		graph_lines.hum = true;
-	}
-	else {
-		graph_lines.hum = false;
-	}
-
 	if ($('#show_heater').is(":checked")) {
 		graph_lines.heater = true;
 	}
@@ -68,6 +54,7 @@ function set_graph_lines() {
 		else
 		{
 			$("#graph1").attr("src", the_64data.the_graph);
+			aler("no Error")
 		}
 	});
 }
