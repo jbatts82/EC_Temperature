@@ -90,8 +90,7 @@ def set_graph_lines():
     json_data = request.form['graph_data']
     the_data = json.loads(json_data)
     the_graph = MatGraph(config)
-    update_temperature_graph(the_data)
-    update_humidity_graph(the_data)
+    update_graph(the_data)
     png64data = the_graph.plot_png()
     data_string = "data:image/png;base64,{}".format(png64data)
     ret_val = { 'error' : False, 'the_graph' :  data_string}
@@ -99,11 +98,6 @@ def set_graph_lines():
 
 
 # entry point
-def update_temperature_graph(req_graph_lines):
+def update_graph(req_graph_lines):
     global data_arr, the_graph
-    the_graph.add_line_temp(data_arr["time_arr"], data_arr["temp_arr"], "temp", "black")
-
-
-def update_humidity_graph(req_graph_lines):
-    global data_arr, the_graph
-    the_graph.add_line_humid(data_arr["time_arr"], data_arr["hum_arr"], "hum", "black")
+    the_graph.update_graph(req_graph_lines, data_arr)

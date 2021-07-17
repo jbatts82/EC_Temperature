@@ -12,12 +12,9 @@ import io
 import base64
 
 x_width = 15
-y_width = 7.5
+y_width = 15
 
-graph_layout = {
-	"temp": {"temp":False, "heater":False, "light":False, "fan":False},
-	"hum": {"temp":False, "heater":False, "light":False, "fan":False}
-}
+
 
 '''
 Create a Figure object. , then add an Axes, ax and figure.axes[0] are same object. 
@@ -30,25 +27,55 @@ Create a Figure object. , then add an Axes, ax and figure.axes[0] are same objec
 class MatGraph:
 	def __init__(self, config):
 		self.figure = Figure(figsize=(x_width, y_width))
-		self.axe_temp = self.figure.add_subplot(2, 1, 1, title = "Room Data", xlabel="Time", ylabel="Temperature (F)")
-		self.axe_humid = self.figure.add_subplot(2, 1, 2, title = "Room Data", xlabel="Time", ylabel="Humidity (%)")
+
+		self.plot_axes = {
+			"fehr": self.figure.add_subplot(3, 1, 1, title = "Room Data", xlabel="Time", ylabel="Temperature (F)"),
+			"percent": self.figure.add_subplot(3, 1, 2, title = "Room Data", xlabel="Time", ylabel="Humidity (%)"),
+			"bool" : self.figure.add_subplot(3, 1, 3, title = "Room Data", xlabel="Time", ylabel="Device States (bool)"),
+		}
+
+	def update_graph(self, req_graph_lines, data_arr):
+
+		self.add_line_fehr(data_arr["time_arr"], data_arr["temp_arr"], "temp", "black")
+		self.add_line_percent(data_arr["time_arr"], data_arr["hum_arr"], "hum", "black")
+
+		if req_graph_lines["heater"]:
+			self.add_line_bool(data_arr["time2_arr"], data_arr["heat_state_arr"], "heater", "red")
+		else:
+			self.remove_line_bool("temp")
+
+		if req_graph_lines["light"]:
+			self.add_line_bool(data_arr["time2_arr"], data_arr["light_state_arr"], "light", "blue")
+		else:
+			self.remove_line_bool("light")
+
+		if req_graph_lines["fan"]:
+			self.add_line_bool(data_arr["time2_arr"], data_arr["fan_state_arr"], "fan", "green")
+		else:
+			self.remove_line_bool("fan")
 
 
-	def add_line_temp(self, xs, ys, id, color):
-		self.axe_temp.plot(xs, ys, gid=id, color=color)
+	def add_line_fehr(self, xs, ys, id, color):
+		self.plot_axes["fehr"].plot(xs, ys, gid=id, color=color)
 
+	def add_line_percent(self, xs, ys, id, color):
+		self.plot_axes["percent"].plot(xs, ys, gid=id, color=color)
 
-	def add_line_humid(self, xs, ys, id, color):
-		self.axe_humid.plot(xs, ys, gid=id, color=color)
+	def add_line_bool(self, xs, ys, id, color):
+		self.plot_axes["bool"].plot(xs, ys, gid=id, color=color)
 
-
-	def remove_line_temp(self, id):
-		for line in self.axe_temp.lines:
+	def remove_line_bool(self, id):
+		for line in self.plot_axes["bool"].lines: 
 			if line.get_gid() == id:
 				line.remove()
 
-	def remove_line_humid(self, id):
-		for line in self.axe_humid.lines:
+	def remove_line_fehr(self, id):
+		for line in self.plot_axes["fehr"].lines:
+			if line.get_gid() == id:
+				line.remove()
+
+	def remove_line_percent(self, id):
+		for line in self.plot_axes["percent"].lines: 
 			if line.get_gid() == id:
 				line.remove()
 
