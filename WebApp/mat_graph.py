@@ -11,7 +11,7 @@ from support import log
 import io
 import base64
 
-x_width = 15
+x_width = 20
 y_width = 15
 
 

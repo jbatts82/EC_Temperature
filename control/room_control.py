@@ -19,6 +19,7 @@ heater = None
 humidifier = None
 fan = None
 timer = 0
+fan_on_time = 10
 
 heater_request_list = {
 	"temperature":False
@@ -126,12 +127,12 @@ def process_humidifier_requests(requests):
 		humidifier.Turn_On()
 
 def process_fan_requests(requests):
-	global fan
+	global fan, fan_on_time
 	on_req = 0
 	for req in requests.keys():
 		if requests[req] == True:
 			if req == "periodic":
-				fan.Set_Fan_Timer(10)
+				fan.Set_Fan_Timer(fan_on_time)
 				requests[req] = False
 
 	fan.Process_Fan()

@@ -40,34 +40,63 @@
 	</header>
 {% endblock %}
 
+{% block control_1 %}
+	<section>
+		<h2>Room Control</h2>
+		<table>
+		<tr>
+			<td>Temp Thresh</td>
+			<td>X</td>
+		</tr>
+		<tr>
+			<td>Humidity Thresh</td>
+			<td>Y</td>
+		</tr>
+		<tr>
+			<td>Fan Override</td>
+			<td>Controls</td>
+		</tr>
+		<tr>
+			<td>Heater Override</td>
+			<td>Controls</td>
+		</tr>
+		</table>
+	</section>
+{% endblock %}
 
 
 {% block section %}
 	<section>
-		<nav>
-			<ul>
-				<li><a href="#">Temperature</a></li>
-				<li><a href="#">Humidity</a></li>
-				<li><a href="#">Lamp</a></li>
-			</ul>
-			<ul>
-				<li>{{wtf.quick_form(graph_form)}}</li>
-			</ul>
 
-		</nav>
 		<article>
-			<h1>Graphs</h1>
-				<form method="POST" action="/">
+			<h2>Data Display</h2>
+			{{wtf.quick_form(graph_form)}}
+			<table>
+			<tr>
+				<td>
+					<p>Channel 1</p>
+					<form method="POST" action="/">
+				    {{ data_to_show.hidden_tag() }}
+				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
+				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light(onchange="update_graph()") }}
+				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}
+					</form>
+				<p id="demo"></p>
+				</td>
+				<td class="graph_wrap">
+					<p><img id = "graph1", alt="graph1" /></p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>Channel 2</p>
+					<form method="POST" action="/">
 				    {{ data_to_show.hidden_tag() }}
 				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
 				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light(onchange="update_graph()") }}
 				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}
 				</form>
 				<p id="demo"></p>
-			<table>
-			<tr>
-				<td>
-					<p>Grow 5</p>
 				</td>
 				<td class="graph_wrap">
 					<p><img id = "graph1", alt="graph1" /></p>
@@ -80,6 +109,4 @@
 	<footer>
 		<h1>Plots</h1>
 	</footer>
-
-
 {% endblock %}

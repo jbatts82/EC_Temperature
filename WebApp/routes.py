@@ -22,6 +22,13 @@ from WebApp.mat_graph import MatGraph
 
 config = Config()
 
+premade_view_route = {
+    'view_24h' : False,
+    'view_12h' : False,
+    'view_6h' : False
+}
+
+
 
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
@@ -50,7 +57,7 @@ def index():
     graphConfig = forms.GraphConfigForm()
     if graphConfig.validate_on_submit():
         minutes = graphConfig.time.data
-        channel = graphConfig.channel.data
+        # channel = graphConfig.channel.data
         previous_minutes_back = minutes
 
 
@@ -101,3 +108,25 @@ def set_graph_lines():
 def update_graph(req_graph_lines):
     global data_arr, the_graph
     the_graph.update_graph(req_graph_lines, data_arr)
+
+
+@app.route('/view_24h')
+def view24_set():
+    global premade_view_route
+    premade_view_route = dict.fromkeys(premade_view_route, False)
+    premade_view_route['view_24h'] = True
+    return index()
+
+@app.route('/view_12h')
+def view_12set():
+    global premade_view_route
+    premade_view_route = dict.fromkeys(premade_view_route, False)
+    premade_view_route['view_12h'] = True
+    return index()
+
+@app.route('/view_6h')
+def view6_set():
+    global premade_view_route
+    premade_view_route = dict.fromkeys(premade_view_route, False)
+    premade_view_route['view_6h'] = True
+    return index()
