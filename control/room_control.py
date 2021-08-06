@@ -52,6 +52,8 @@ def Process_Room_Control(clock):
 
 	log("Processing", "Room Control On Time: {}".format(clock.get_time_since_start()))
 
+
+	process_web_requests()
 	process_heater_requests(heater_request_list)
 	process_humidifier_requests(humidity_request_list)
 	process_fan_requests(exhaust_request_list)
@@ -98,6 +100,16 @@ def Kill_Everything():
 	heater.Turn_Off()
 	humidifier.Turn_Off()
 	fan.Turn_Off()
+
+def process_web_requests():
+	web_control = db.Get_Last_Web_Control_Rec()
+	time = web_control.time_stamp
+	log("Web Req Time", time)
+	log("Heater Web Request",web_control.heater_req)
+	log("Humdifier Web Request",web_control.humidifier_req)
+	log("Ex Fan Web Request",web_control.fan_req)
+	log("Light Web Request",web_control.light_req)
+
 
 def process_heater_requests(requests):
 	global heater, fan

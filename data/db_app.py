@@ -8,7 +8,7 @@ import data.db_handler as db_hand
 from data.db_handler import Instant_Temperature
 from data.db_handler import Instant_Humidity
 from data.db_handler import Instant_Sensor
-from data.db_handler import Control_Status
+from data.db_handler import Control_Status, Web_Control_Request
 from support import log
 from support import div
 
@@ -56,6 +56,11 @@ def Write_Web_Control_Request(time_stamp, heater_req, humidifier_req, fan_req, l
 	control_stats.fan_req = fan_req
 	control_stats.light_req = light_req
 	db_hand.insert_web_control_record(control_stats)
+
+def Get_Last_Web_Control_Rec():
+	record = db_hand.get_web_control_recrd()
+	return record
+
 
 def Get_Last_Sensor_Rec(channel):
 	record = db_hand.get_last_sensor_rec(channel)
