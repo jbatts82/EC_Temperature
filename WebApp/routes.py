@@ -87,9 +87,25 @@ def index():
     # User Input
     data_to_show = forms.Data_To_Show()
 
+    fan_override = forms.FanOverride()
 
-    return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, data_to_show=data_to_show, graph1b64 = None)
 
+    return render_template('index.html', 
+        title=_title, 
+        data = sensor_data, 
+        graph_form=graphConfig, 
+        data_to_show=data_to_show, 
+        graph1b64 = None,
+        fan_override=fan_override)
+
+@app.route('/set_fan_override', methods=['GET', 'POST'])
+def set_fan_override():
+    json_data = request.form['data']
+    the_data = json.loads(json_data)
+    # toggle fan
+    update_fan_override(the_data)
+    ret_val = {'error' : False}
+    return json.dumps(ret_val)
 
 @app.route('/set_graph_lines', methods=['GET', 'POST'])
 def set_graph_lines():
@@ -103,6 +119,9 @@ def set_graph_lines():
     ret_val = { 'error' : False, 'the_graph' :  data_string}
     return json.dumps(ret_val)
 
+
+def update_fan_override(req_data):
+    log("fan override", "state")
 
 # entry point
 def update_graph(req_graph_lines):

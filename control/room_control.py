@@ -32,7 +32,9 @@ humidity_request_list = {
 exhaust_request_list = {
 	"temperature":False,
 	"humidity":False,
-	"periodic":False
+	"periodic":False,
+	"override":False,
+	"web_override":False
 }
 
 def Init_Room_Control(the_config):
@@ -42,6 +44,7 @@ def Init_Room_Control(the_config):
 	humidifier = Humidifier(the_config)
 	fan = Fan(the_config)
 	lamp = Lamp(the_config)
+	
 	
 def Process_Room_Control(clock):
 	global heater, humidifier, fan, lamp, heater_request_list, \

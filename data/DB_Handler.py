@@ -44,6 +44,14 @@ class Control_Status(base):
     fan_state = Column('Fan', Boolean)
     light_state = Column('Light', Boolean)
 
+class Web_Control_Request(base):
+    __tablename__ = 'WebControl'
+    time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
+    heater_req = Column('Heater', Boolean)
+    humidifier_req = Column('Humidifier', Boolean)
+    fan_req = Column('Fan', Boolean)
+    light_req = Column('Light', Boolean)
+
 def init_database_engine(config=None):
     global the_session
     if config:
@@ -74,6 +82,18 @@ def insert_control_record(control_data):
     global the_session
     the_session.add(control_data)
     the_session.commit()
+
+def insert_web_control_record(control_data):
+    global the_session
+    the_session.add(control_data)
+    the_session.commit()
+
+def get_web_control_recrd():
+    global the_session
+    query = the_session.query(Web_Control_Request).order_by(Web_Control_Request.time_stamp.desc())
+    last_record = query[0]
+    return last_record
+
 
 def get_last_temp_rec(channel):
     global the_session

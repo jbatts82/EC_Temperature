@@ -47,6 +47,16 @@ def Write_Control_Data(time_stamp, heater_state, humidifier_state, fan_state, li
 	control_stats.light_state = light_state
 	db_hand.insert_control_record(control_stats)
 
+
+def Write_Web_Control_Request(time_stamp, heater_req, humidifier_req, fan_req, light_req):
+	control_stats = Web_Control_Request()
+	control_stats.time_stamp = time_stamp
+	control_stats.heater_req = heater_req
+	control_stats.humidifier_req = humidifier_req
+	control_stats.fan_req = fan_req
+	control_stats.light_req = light_req
+	db_hand.insert_web_control_record(control_stats)
+
 def Get_Last_Sensor_Rec(channel):
 	record = db_hand.get_last_sensor_rec(channel)
 	return record
