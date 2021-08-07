@@ -102,13 +102,21 @@ def Kill_Everything():
 	fan.Turn_Off()
 
 def process_web_requests():
+	global last_time
+
 	web_control = db.Get_Last_Web_Control_Rec()
+
 	time = web_control.time_stamp
+
+	# if time == last_time:
+	# 	return
+
 	log("Web Req Time", time)
 	log("Heater Web Request",web_control.heater_req)
 	log("Humdifier Web Request",web_control.humidifier_req)
 	log("Ex Fan Web Request",web_control.fan_req)
 	log("Light Web Request",web_control.light_req)
+	last_time = time
 
 
 def process_heater_requests(requests):
@@ -126,6 +134,7 @@ def process_heater_requests(requests):
 	else:
 		heater.Turn_On()
 
+
 def process_humidifier_requests(requests):
 	global humidifier
 	on_req = 0
@@ -140,6 +149,7 @@ def process_humidifier_requests(requests):
 		humidifier.Turn_Off()
 	else:
 		humidifier.Turn_On()
+
 
 def process_fan_requests(requests):
 	global fan, fan_on_time

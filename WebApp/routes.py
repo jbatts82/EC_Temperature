@@ -14,11 +14,10 @@ from WebApp import forms
 from WebApp import app
 from config import Config
 import data.db_app as db
-from support import log
-from support import div
+from support import log, div
 import json
 from WebApp.mat_graph import MatGraph
-
+import WebApp.web_control as wc
 
 config = Config()
 
@@ -27,7 +26,6 @@ premade_view_route = {
     'view_12h' : False,
     'view_6h' : False
 }
-
 
 
 @app.route('/')
@@ -98,14 +96,17 @@ def index():
         graph1b64 = None,
         fan_override=fan_override)
 
-@app.route('/set_fan_override', methods=['GET', 'POST'])
-def set_fan_override():
+
+@app.route('/set_web_req', methods=['GET', 'POST'])
+def set_web_req():
+    log("Enter", "Set Web Req")
     json_data = request.form['data']
     the_data = json.loads(json_data)
-    # toggle fan
-    update_fan_override(the_data)
+    # set web control table
+    wc.Update_Web_Control_Table(the_data)
     ret_val = {'error' : False}
     return json.dumps(ret_val)
+
 
 @app.route('/set_graph_lines', methods=['GET', 'POST'])
 def set_graph_lines():
@@ -120,10 +121,6 @@ def set_graph_lines():
     return json.dumps(ret_val)
 
 
-def update_fan_override(req_data):
-    log("fan override", "state")
-
-# entry point
 def update_graph(req_graph_lines):
     global data_arr, the_graph
     the_graph.update_graph(req_graph_lines, data_arr)

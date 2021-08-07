@@ -47,18 +47,22 @@ class Control_Status(base):
 class Web_Control_Request(base):
     __tablename__ = 'WebControl'
     time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
-    heater_req = Column('Heater', Boolean)
-    humidifier_req = Column('Humidifier', Boolean)
-    fan_req = Column('Fan', Boolean)
-    light_req = Column('Light', Boolean)
+    heater_req = Column('Heater_Req', Boolean)
+    heater_state = Column('Heater_State', Boolean)
+    humidifier_req = Column('Humidifier_Req', Boolean)
+    humidifier_state = Column('Humidifier_State', Boolean)
+    fan_req = Column('Fan_Req', Boolean)
+    fan_state = Column('Fan_State', Boolean)
+    light_req = Column('Light_Req', Boolean)
+    light_state = Column('Light_State', Boolean)
 
 def init_database_engine(config=None):
-    global the_session
+    global the_session, engine
     if config:
         database_temp = config.database_loc
         database_loc = "sqlite:///{}".format(database_temp)
     else:
-        print("Config Unavailable")
+        log("Init Error", "Config Unavailable")
         database_loc = None
     engine = create_engine(database_loc, connect_args={'check_same_thread': False}, echo=False)
     log("Connected to", database_loc)
@@ -150,3 +154,11 @@ def get_last_control_list(time):
     past_time_stamp = last_time_stamp - timedelta(minutes = time)
     query = the_session.query(Control_Status).filter(Control_Status.time_stamp >= past_time_stamp).all()
     return query
+
+def delete_table(table_class):
+    global engine
+    table_class.__table__.drop(engine)
+
+def table_exists(table_class):
+    global engine
+    print(table_class.__table__.exists(engine))
