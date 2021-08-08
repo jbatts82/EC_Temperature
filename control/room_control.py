@@ -176,8 +176,3 @@ def process_fan_requests(requests):
 			fan.Turn_Off()
 		
 		return
-
-
-
-
-	fan.Process_Fan()
