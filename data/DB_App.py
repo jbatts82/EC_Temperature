@@ -125,15 +125,14 @@ def Get_Last_Control_List(time):
 	records = db_hand.get_last_control_list(time)
 	return records
 
+
 def Delete_Table(table_class):
 	db_hand.delete_table(table_class)
 
+
 def Init_Data_Control_Table():
-	log("Table Exists", db_hand.table_exists(Web_Control_Request))
 	if db_hand.table_exists(Web_Control_Request):
 		Delete_Table(Web_Control_Request)
 		Write_Web_Control_Request(datetime.now(), False, False, False, False, False, False, False, False)
 	else:
 		Write_Web_Control_Request(datetime.now(), False, False, False, False, False, False, False, False)
-
-	

@@ -53,11 +53,9 @@ def Init_Room_Control(the_config):
 	
 	
 def Process_Room_Control(clock):
+	log("Processing", "Room Control On Time: {}".format(clock.get_time_since_start()))
 	global heater, humidifier, fan, lamp, heater_request_list, \
 	humidity_request_list, exhaust_request_list
-
-	log("!!!Processing", "Room Control On Time: {}".format(clock.get_time_since_start()))
-
 
 	process_web_requests()
 	process_heater_requests(heater_request_list)
@@ -74,7 +72,6 @@ def Process_Room_Control(clock):
 	log("Humidifier State", humidifier.Get_State())
 	log("Fan State", fan.Get_State())
 	log("Lamp State", lamp.Get_State())
-
 	db.Write_Control_Data(clock.get_current_time_stamp(), heater.Get_State(), humidifier.Get_State(), fan.Get_State(), lamp.Get_State())
 
 def Request_Heater_On(requester):
@@ -124,7 +121,6 @@ def process_web_requests():
 	heater_request_list["web_override"] = web_control_req.heater_req
 	heater_request_list["web_override"] = web_control_req.heater_state
 
-
 	humidifier_state = web_control_req.humidifier_state
 	light_req = web_control_req.light_req
 	light_state = web_control_req.light_state
@@ -167,12 +163,10 @@ def process_humidifier_requests(requests):
 
 def process_fan_requests(requests):
 	global fan, fan_on_time
-	log("process_fan_requests", requests)
 
 	if requests["web_override"]:
 		if requests["web_state"]:
 			fan.Turn_On()
 		else:
 			fan.Turn_Off()
-		
 		return

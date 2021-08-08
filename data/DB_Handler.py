@@ -23,11 +23,13 @@ class Instant_Temperature(base):
     channel = Column('Channel', String(20))
     temperature = Column('Temperature', Float)
 
+
 class Instant_Humidity(base):
     __tablename__ = 'Instant_Humidity'
     time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
     channel = Column('Channel', String(20))
     humidity = Column('Humidity', Float)
+
 
 class Instant_Sensor(base):
     __tablename__ = 'Instant_Sensor'
@@ -36,6 +38,7 @@ class Instant_Sensor(base):
     temperature = Column('Temperature', Float)
     humidity = Column('Humidity', Float)
 
+
 class Control_Status(base):
     __tablename__ = 'ControlStats'
     time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
@@ -43,6 +46,7 @@ class Control_Status(base):
     humidifier_state = Column('Humidifier', Boolean)
     fan_state = Column('Fan', Boolean)
     light_state = Column('Light', Boolean)
+
 
 class Web_Control_Request(base):
     __tablename__ = 'WebControl'
@@ -55,6 +59,7 @@ class Web_Control_Request(base):
     fan_state = Column('Fan_State', Boolean)
     light_req = Column('Light_Req', Boolean)
     light_state = Column('Light_State', Boolean)
+
 
 def init_database_engine(config=None):
     global the_session, engine
@@ -72,25 +77,30 @@ def init_database_engine(config=None):
     meta = MetaData()
     meta.create_all(engine)
 
+
 def insert_instant_sensor(reading):
     global the_session
     the_session.add(reading)
     the_session.commit()
+
 
 def insert_instant_hum(reading):
     global the_session
     the_session.add(reading)
     the_session.commit()
 
+
 def insert_control_record(control_data):
     global the_session
     the_session.add(control_data)
     the_session.commit()
 
+
 def insert_web_control_record(control_data):
     global the_session
     the_session.add(control_data)
     the_session.commit()
+
 
 def get_web_control_recrd():
     global the_session
@@ -105,11 +115,13 @@ def get_last_temp_rec(channel):
     last_record = query[0]
     return last_record
 
+
 def get_last_sensor_rec(channel):
     global the_session
     query = the_session.query(Instant_Sensor).filter(Instant_Sensor.channel == channel).order_by(Instant_Sensor.time_stamp.desc()).all()
     last_record = query[0]
     return last_record
+
 
 def get_last_sensor_list(channel, time):
     global the_session
@@ -119,6 +131,7 @@ def get_last_sensor_list(channel, time):
     query = the_session.query(Instant_Sensor).filter(Instant_Sensor.time_stamp >= past_time_stamp, Instant_Sensor.channel == channel).all()
     return query
 
+
 def get_last_temp_list(channel, time):
     global the_session
     last_record = get_last_sensor_rec(channel)
@@ -127,11 +140,13 @@ def get_last_temp_list(channel, time):
     query = the_session.query(Instant_Temperature).filter(Instant_Temperature.time_stamp >= past_time_stamp, Instant_Temperature.channel == channel).all()
     return query
 
+
 def get_last_humid_rec(channel):
     global the_session
     query = the_session.query(Instant_Humidity).filter(Instant_Humidity.channel == channel).order_by(Instant_Humidity.time_stamp.desc()).all()
     last_record = query[0]
     return last_record
+
 
 def get_last_humid_list(channel, time):
     global the_session
@@ -141,11 +156,13 @@ def get_last_humid_list(channel, time):
     query = the_session.query(Instant_Humidity).filter(Instant_Humidity.time_stamp >= past_time_stamp, Instant_Humidity.channel == channel).all()
     return query
 
+
 def get_last_control_rec():
     global the_session
     query = the_session.query(Control_Status).order_by(Control_Status.time_stamp.desc())
     last_record = query[0]
     return last_record
+
 
 def get_last_control_list(time):
     global the_session
@@ -155,10 +172,12 @@ def get_last_control_list(time):
     query = the_session.query(Control_Status).filter(Control_Status.time_stamp >= past_time_stamp).all()
     return query
 
+
 def delete_table(table_class):
     global engine
     table_class.__table__.drop(engine)
 
+
 def table_exists(table_class):
     global engine
-    print(table_class.__table__.exists(engine))
+    table_class.__table__.exists(engine)
