@@ -20,13 +20,18 @@ humidifier = None
 fan = None
 timer = 0
 fan_on_time = 10
+last_time = False
 
 heater_request_list = {
-	"temperature":False
+	"temperature":False,
+	"web_override":False,
+	"web_state":False,
 }
 
 humidity_request_list = {
-	"humidity":False
+	"humidity":False,
+	"web_override":False,
+	"web_state":False,
 }
 
 exhaust_request_list = {
@@ -34,7 +39,8 @@ exhaust_request_list = {
 	"humidity":False,
 	"periodic":False,
 	"override":False,
-	"web_override":False
+	"web_override":False,
+	"web_state":False,
 }
 
 def Init_Room_Control(the_config):
@@ -50,7 +56,7 @@ def Process_Room_Control(clock):
 	global heater, humidifier, fan, lamp, heater_request_list, \
 	humidity_request_list, exhaust_request_list
 
-	log("Processing", "Room Control On Time: {}".format(clock.get_time_since_start()))
+	log("!!!Processing", "Room Control On Time: {}".format(clock.get_time_since_start()))
 
 
 	process_web_requests()
@@ -104,24 +110,32 @@ def Kill_Everything():
 def process_web_requests():
 	global last_time
 
-	web_control = db.Get_Last_Web_Control_Rec()
+	web_control_req = db.Get_Last_Web_Control_Rec()
 
-	time = web_control.time_stamp
+	time_stamp = web_control_req.time_stamp
 
-	# if time == last_time:
-	# 	return
+	if time_stamp == last_time:
+		return
 
-	log("Web Req Time", time)
-	log("Heater Web Request",web_control.heater_req)
-	log("Humdifier Web Request",web_control.humidifier_req)
-	log("Ex Fan Web Request",web_control.fan_req)
-	log("Light Web Request",web_control.light_req)
-	last_time = time
+
+	exhaust_request_list["web_override"] = web_control_req.fan_req
+	exhaust_request_list["web_state"] = web_control_req.fan_state
+
+	heater_request_list["web_override"] = web_control_req.heater_req
+	heater_request_list["web_override"] = web_control_req.heater_state
+
+
+	humidifier_state = web_control_req.humidifier_state
+	light_req = web_control_req.light_req
+	light_state = web_control_req.light_state
+
+	last_time = time_stamp
 
 
 def process_heater_requests(requests):
 	global heater, fan
 	on_req = 0
+
 	for req in requests.values():
 		if req == True:
 			on_req = on_req + 1
@@ -153,11 +167,17 @@ def process_humidifier_requests(requests):
 
 def process_fan_requests(requests):
 	global fan, fan_on_time
-	on_req = 0
-	for req in requests.keys():
-		if requests[req] == True:
-			if req == "periodic":
-				fan.Set_Fan_Timer(fan_on_time)
-				requests[req] = False
+	log("process_fan_requests", requests)
+
+	if requests["web_override"]:
+		if requests["web_state"]:
+			fan.Turn_On()
+		else:
+			fan.Turn_Off()
+		
+		return
+
+
+
 
 	fan.Process_Fan()
