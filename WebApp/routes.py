@@ -99,7 +99,6 @@ def index():
 
 @app.route('/set_web_req', methods=['GET', 'POST'])
 def set_web_req():
-    log("Enter", "Set Web Req")
     json_data = request.form['data']
     the_data = json.loads(json_data)
     # set web control table
