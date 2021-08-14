@@ -6,6 +6,7 @@
 
 import datetime
 from datetime import timedelta
+from support import log, div
 
 class OS_Clock:
     system_start_time = datetime.datetime.now()
@@ -33,7 +34,7 @@ class OS_Clock:
 
 class Device_Clock:
     def __init__(self):
-        print("Processing         : Clock Initializing")
+        log("Processing", "Clock Initializing")
         self.clock_start_time = datetime.datetime.now()
         self.turn_off_t_stamp = self.clock_start_time
         self.timer_state = False

@@ -9,9 +9,9 @@ from control.heater import Heater
 from control.fan import Fan
 from control.lamp import Lamp
 from datetime import datetime
-from support import log
-from support import div
+from support import log, div
 import data.db_app as db
+from support.timeclock import Device_Clock
 
 heater_state = None
 humidifier_state = None
@@ -21,6 +21,8 @@ fan = None
 timer = 0
 fan_on_time = 10
 last_time = False
+periodic_init = True
+
 
 heater_request_list = {
 	"temperature":False,
@@ -162,7 +164,7 @@ def process_humidifier_requests(requests):
 
 
 def process_fan_requests(requests):
-	global fan, fan_on_time
+	global fan, fan_on_time, fan_timer, periodic_init
 
 	if requests["web_override"]:
 		if requests["web_state"]:
@@ -170,3 +172,16 @@ def process_fan_requests(requests):
 		else:
 			fan.Turn_Off()
 		return
+
+	if requests["periodic"]:
+		if periodic_init:
+			fan_timer = Device_Clock()
+			fan_timer.set_on_timer(10)
+			fan.Turn_On()
+			periodic_init = False
+		else:
+			is_timer_on = fan_timer.process_clock() 
+			if not is_timer_on:
+				fan.Turn_Off()
+				requests["periodic"] = False
+				periodic_init = True
