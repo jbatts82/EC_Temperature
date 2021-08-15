@@ -118,8 +118,8 @@ def get_last_temp_rec(channel):
 
 def get_last_sensor_rec(channel):
     global the_session
-    query = the_session.query(Instant_Sensor).filter(Instant_Sensor.channel == channel).order_by(Instant_Sensor.time_stamp.desc()).all()
-    last_record = query[0]
+    query = the_session.query(Instant_Sensor).filter(Instant_Sensor.channel == channel).order_by(Instant_Sensor.time_stamp.desc()).first()
+    last_record = query
     return last_record
 
 
