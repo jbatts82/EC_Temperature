@@ -18,6 +18,7 @@ from support import log, div
 import json
 from WebApp.mat_graph import MatGraph
 import WebApp.web_control as wc
+from support.timeclock import OS_Clock
 
 config = Config()
 
@@ -58,6 +59,10 @@ def index():
         # channel = graphConfig.channel.data
         previous_minutes_back = minutes
 
+    clock = OS_Clock()
+
+
+    time_now = clock.get_current_time_stamp()
 
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
@@ -66,6 +71,11 @@ def index():
         data_arr["temp_arr"].append(record.temperature)
         data_arr["hum_arr"].append(record.humidity)
 
+    time_later = clock.get_current_time_stamp()
+    delta1 = time_later - time_now
+
+    log("Sensor Data Read Time", delta1)
+    time_now = clock.get_current_time_stamp()
     # Control Data
     control_recs = db.Get_Last_Control_List(previous_minutes_back)
     for rec in control_recs:
@@ -75,6 +85,13 @@ def index():
         data_arr["light_state_arr"].append(rec.light_state)
         data_arr["time2_arr"].append(rec.time_stamp)
 
+    time_later = clock.get_current_time_stamp()
+    delta2 = time_later - time_now
+    log("Control Data read Time", delta2)
+    time_now = clock.get_current_time_stamp()
+
+
+
     # Sensor Data
     sensor_data = {}
     for each in config.dht11_config:
@@ -82,10 +99,16 @@ def index():
         record = db.Get_Last_Sensor_Rec(channel)
         sensor_data[channel] = {"temp":record.temperature, "humidity":record.humidity, "time_temp":record.time_stamp}
 
+    time_later = clock.get_current_time_stamp()
+    delta3 = time_later - time_now
+    log("Sensor2 Data Read Time", delta3)
+
+
     # User Input
     data_to_show = forms.Data_To_Show()
 
     fan_override = forms.FanOverride()
+    heater_override = forms.HeaterOverride()
 
 
     return render_template('index.html', 
@@ -94,7 +117,8 @@ def index():
         graph_form=graphConfig, 
         data_to_show=data_to_show, 
         graph1b64 = None,
-        fan_override=fan_override)
+        fan_override=fan_override,
+        heater_override = heater_override)
 
 
 @app.route('/set_web_req', methods=['GET', 'POST'])
