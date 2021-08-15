@@ -9,9 +9,9 @@ from control.heater import Heater
 from control.fan import Fan
 from control.lamp import Lamp
 from datetime import datetime
-from support import log
-from support import div
+from support import log, div
 import data.db_app as db
+from support.timeclock import Device_Clock
 
 heater_state = None
 humidifier_state = None
@@ -20,19 +20,29 @@ humidifier = None
 fan = None
 timer = 0
 fan_on_time = 10
+last_time = False
+periodic_init = True
+
 
 heater_request_list = {
-	"temperature":False
+	"temperature":False,
+	"web_override":False,
+	"web_state":False,
 }
 
 humidity_request_list = {
-	"humidity":False
+	"humidity":False,
+	"web_override":False,
+	"web_state":False,
 }
 
 exhaust_request_list = {
 	"temperature":False,
 	"humidity":False,
-	"periodic":False
+	"periodic":False,
+	"override":False,
+	"web_override":False,
+	"web_state":False,
 }
 
 def Init_Room_Control(the_config):
@@ -43,12 +53,13 @@ def Init_Room_Control(the_config):
 	fan = Fan(the_config)
 	lamp = Lamp(the_config)
 	
+	
 def Process_Room_Control(clock):
+	log("Processing", "Room Control On Time: {}".format(clock.get_time_since_start()))
 	global heater, humidifier, fan, lamp, heater_request_list, \
 	humidity_request_list, exhaust_request_list
 
-	log("Processing", "Room Control On Time: {}".format(clock.get_time_since_start()))
-
+	process_web_requests()
 	process_heater_requests(heater_request_list)
 	process_humidifier_requests(humidity_request_list)
 	process_fan_requests(exhaust_request_list)
@@ -63,7 +74,6 @@ def Process_Room_Control(clock):
 	log("Humidifier State", humidifier.Get_State())
 	log("Fan State", fan.Get_State())
 	log("Lamp State", lamp.Get_State())
-
 	db.Write_Control_Data(clock.get_current_time_stamp(), heater.Get_State(), humidifier.Get_State(), fan.Get_State(), lamp.Get_State())
 
 def Request_Heater_On(requester):
@@ -96,9 +106,34 @@ def Kill_Everything():
 	humidifier.Turn_Off()
 	fan.Turn_Off()
 
+def process_web_requests():
+	global last_time
+
+	web_control_req = db.Get_Last_Web_Control_Rec()
+
+	time_stamp = web_control_req.time_stamp
+
+	if time_stamp == last_time:
+		return
+
+
+	exhaust_request_list["web_override"] = web_control_req.fan_req
+	exhaust_request_list["web_state"] = web_control_req.fan_state
+
+	heater_request_list["web_override"] = web_control_req.heater_req
+	heater_request_list["web_override"] = web_control_req.heater_state
+
+	humidifier_state = web_control_req.humidifier_state
+	light_req = web_control_req.light_req
+	light_state = web_control_req.light_state
+
+	last_time = time_stamp
+
+
 def process_heater_requests(requests):
 	global heater, fan
 	on_req = 0
+
 	for req in requests.values():
 		if req == True:
 			on_req = on_req + 1
@@ -110,6 +145,7 @@ def process_heater_requests(requests):
 		heater.Turn_Off()
 	else:
 		heater.Turn_On()
+
 
 def process_humidifier_requests(requests):
 	global humidifier
@@ -126,13 +162,26 @@ def process_humidifier_requests(requests):
 	else:
 		humidifier.Turn_On()
 
-def process_fan_requests(requests):
-	global fan, fan_on_time
-	on_req = 0
-	for req in requests.keys():
-		if requests[req] == True:
-			if req == "periodic":
-				fan.Set_Fan_Timer(fan_on_time)
-				requests[req] = False
 
-	fan.Process_Fan()
+def process_fan_requests(requests):
+	global fan, fan_on_time, fan_timer, periodic_init
+
+	if requests["web_override"]:
+		if requests["web_state"]:
+			fan.Turn_On()
+		else:
+			fan.Turn_Off()
+		return
+
+	if requests["periodic"]:
+		if periodic_init:
+			fan_timer = Device_Clock()
+			fan_timer.set_on_timer(10)
+			fan.Turn_On()
+			periodic_init = False
+		else:
+			is_timer_on = fan_timer.process_clock() 
+			if not is_timer_on:
+				fan.Turn_Off()
+				requests["periodic"] = False
+				periodic_init = True

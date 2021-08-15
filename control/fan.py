@@ -20,11 +20,6 @@ class Fan:
         self.switch = KasaPlug(fan_config)
         self.Process_Fan()
 
-    def Process_Fan(self):
-        error = self.switch.plug_update()
-        if not error:
-            self.state = self.switch.get_is_on()
-
     def Turn_On(self):
         self.switch.set_plug_on()
         log("Exhaust Fan", "On")
@@ -48,9 +43,6 @@ class Fan:
             error = self.switch.plug_update()
             if not error:
                 self.state = self.switch.get_is_on()
-            timer_state = self.device_clock.process_clock()
-            if timer_state == False:
-                self.Turn_Off()
         except: 
             log("SIGNAL SNA", self.name)
             self.state = self.previous_state

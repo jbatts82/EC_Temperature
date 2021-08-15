@@ -12,7 +12,6 @@ from config import Config
 
 
 if __name__ == '__main__':
-	log("Starting", __file__)
 	the_config = Config()
 	db.Db_App_Init(the_config)
 	app.debug = True

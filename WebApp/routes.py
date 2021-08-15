@@ -14,11 +14,11 @@ from WebApp import forms
 from WebApp import app
 from config import Config
 import data.db_app as db
-from support import log
-from support import div
+from support import log, div
 import json
 from WebApp.mat_graph import MatGraph
-
+import WebApp.web_control as wc
+from support.timeclock import OS_Clock
 
 config = Config()
 
@@ -27,7 +27,6 @@ premade_view_route = {
     'view_12h' : False,
     'view_6h' : False
 }
-
 
 
 @app.route('/')
@@ -60,6 +59,10 @@ def index():
         # channel = graphConfig.channel.data
         previous_minutes_back = minutes
 
+    clock = OS_Clock()
+
+
+    time_now = clock.get_current_time_stamp()
 
     # Sensor Data
     sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
@@ -68,6 +71,11 @@ def index():
         data_arr["temp_arr"].append(record.temperature)
         data_arr["hum_arr"].append(record.humidity)
 
+    time_later = clock.get_current_time_stamp()
+    delta1 = time_later - time_now
+
+    log("Sensor Data Read Time", delta1)
+    time_now = clock.get_current_time_stamp()
     # Control Data
     control_recs = db.Get_Last_Control_List(previous_minutes_back)
     for rec in control_recs:
@@ -77,6 +85,13 @@ def index():
         data_arr["light_state_arr"].append(rec.light_state)
         data_arr["time2_arr"].append(rec.time_stamp)
 
+    time_later = clock.get_current_time_stamp()
+    delta2 = time_later - time_now
+    log("Control Data read Time", delta2)
+    time_now = clock.get_current_time_stamp()
+
+
+
     # Sensor Data
     sensor_data = {}
     for each in config.dht11_config:
@@ -84,11 +99,36 @@ def index():
         record = db.Get_Last_Sensor_Rec(channel)
         sensor_data[channel] = {"temp":record.temperature, "humidity":record.humidity, "time_temp":record.time_stamp}
 
+    time_later = clock.get_current_time_stamp()
+    delta3 = time_later - time_now
+    log("Sensor2 Data Read Time", delta3)
+
+
     # User Input
     data_to_show = forms.Data_To_Show()
 
+    fan_override = forms.FanOverride()
+    heater_override = forms.HeaterOverride()
 
-    return render_template('index.html', title=_title, data = sensor_data, graph_form=graphConfig, data_to_show=data_to_show, graph1b64 = None)
+
+    return render_template('index.html', 
+        title=_title, 
+        data = sensor_data, 
+        graph_form=graphConfig, 
+        data_to_show=data_to_show, 
+        graph1b64 = None,
+        fan_override=fan_override,
+        heater_override = heater_override)
+
+
+@app.route('/set_web_req', methods=['GET', 'POST'])
+def set_web_req():
+    json_data = request.form['data']
+    the_data = json.loads(json_data)
+    # set web control table
+    wc.Update_Web_Control_Table(the_data)
+    ret_val = {'error' : False}
+    return json.dumps(ret_val)
 
 
 @app.route('/set_graph_lines', methods=['GET', 'POST'])
@@ -104,7 +144,6 @@ def set_graph_lines():
     return json.dumps(ret_val)
 
 
-# entry point
 def update_graph(req_graph_lines):
     global data_arr, the_graph
     the_graph.update_graph(req_graph_lines, data_arr)

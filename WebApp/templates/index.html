@@ -54,11 +54,25 @@
 		</tr>
 		<tr>
 			<td>Fan Override</td>
-			<td>Controls</td>
+			<td>					
+				<form method="POST" action="/">
+				    {{ fan_override.hidden_tag() }}
+				    {{ fan_override.is_fan_override.label }} {{ fan_override.is_fan_override(onchange="update_web_control()") }}
+				    {{ fan_override.fan_override_state.label }} {{ fan_override.fan_override_state(onchange="update_web_control()") }}
+				</form>
+			</td>
 		</tr>
 		<tr>
 			<td>Heater Override</td>
-			<td>Controls</td>
+
+			<td>	
+				<form method="POST" action="/">
+				    {{ heater_override.hidden_tag() }}
+				    {{ heater_override.is_heater_override.label }} {{ heater_override.is_heater_override(onchange="update_web_control()") }}
+				    {{ heater_override.heater_override_state.label }} {{ heater_override.heater_override_state(onchange="update_web_control()") }}
+				</form> 
+			</td>
+			
 		</tr>
 		</table>
 	</section>
@@ -95,8 +109,8 @@
 				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
 				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light(onchange="update_graph()") }}
 				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}
-				</form>
-				<p id="demo"></p>
+					</form>
+					<p id="demo"></p>
 				</td>
 				<td class="graph_wrap">
 					<p><img id = "graph1", alt="graph1" /></p>

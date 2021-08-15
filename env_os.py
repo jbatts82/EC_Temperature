@@ -44,7 +44,7 @@ if __name__ == '__main__':
 	try:
 		while True: #run forever
 			schedule.run_pending()
-			the_leds.toggle(7)
+			# the_leds.toggle(7)
 			sleep(1)
 	except KeyboardInterrupt:
 		print("---You Killed me.")

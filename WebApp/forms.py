@@ -22,3 +22,7 @@ class Data_To_Show(FlaskForm):
 class FanOverride(FlaskForm):
 	is_fan_override = BooleanField("Fan Override")
 	fan_override_state = BooleanField("Fan State")
+
+class HeaterOverride(FlaskForm):
+	is_heater_override = BooleanField("Heater Override")
+	heater_override_state = BooleanField("Heater State")
