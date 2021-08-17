@@ -2,16 +2,14 @@
 
 
 
-var graph_lines = { //to show
-	"temp": false,
-	"hum": false,
-	"heater": false,
-	"light": false,
-	"fan": false
-};
 
 
-var web_control = {
+var The_Model = {
+	"graph_lines": [{"temp": false, "hum": false, "heater": false, "light": false,"fan": false}, //ch1
+					{"temp": false, "hum": false, "heater": false, "light": false,"fan": false}, //ch2
+					{"temp": false, "hum": false, "heater": false, "light": false,"fan": false}, //ch3
+					{"temp": false, "hum": false, "heater": false, "light": false,"fan": false},], //ch4
+	"web_control": {
     "heater_req": false,
     "heater_state": false,
     "humidifier_req": false,
@@ -20,12 +18,13 @@ var web_control = {
     "fan_state": false,
     "light_req": false,
     "light_state": false,
-}
+	}
+};
 
 
 // after page loads
 $(document).ready(function() {
-	update_graph()
+	//update_graph();
 });
 
 
