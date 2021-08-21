@@ -88,7 +88,7 @@
 			<table>
 			<tr>
 				<td>
-					<p>Channel 1</p>
+					<p>Graph Data</p>
 					<form method="POST" action="/">
 				    {{ data_to_show.hidden_tag() }}
 				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
@@ -96,21 +96,6 @@
 				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}
 					</form>
 				<p id="demo"></p>
-				</td>
-				<td class="graph_wrap">
-					<p><img id = "graph1", alt="graph1" /></p>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<p>Channel 2</p>
-					<form method="POST" action="/">
-				    {{ data_to_show.hidden_tag() }}
-				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
-				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light(onchange="update_graph()") }}
-				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}
-					</form>
-					<p id="demo"></p>
 				</td>
 				<td class="graph_wrap">
 					<p><img id = "graph1", alt="graph1" /></p>

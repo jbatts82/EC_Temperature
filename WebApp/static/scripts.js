@@ -1,7 +1,7 @@
 // helper_script.js
 
 
-
+var test_var = 0;
 
 
 var The_Model = {
@@ -24,32 +24,60 @@ var The_Model = {
 
 // after page loads
 $(document).ready(function() {
-	//update_graph();
-});
+	update_model();
+}
+
+
+function update_model() {
+	update_web_control();
+	update_graph_control();
+}
+
 
 
 // html functions
 function update_web_control() {
-	update_fan_override_state();
-	send_data('/set_web_req', web_control);
+
+}
+
+function update_graph_control() {
+
 }
 
 
+
 // Data functions
-function update_fan_override_state() {
+function get_fan_override() {
 
 	if ($('#is_fan_override').is(":checked")) {
-		web_control.fan_req = true;
+		The_Model.web_control.fan_req = true;
 	}
 	else {
-		web_control.fan_req= false;
+		The_Model.web_control.fan_req = false;
 	}
 
 	if ($('#fan_override_state').is(":checked")) {
-		web_control.fan_state = true;
+		The_Model.web_control.fan_state = true;
 	}
 	else {
-		web_control.fan_state= false;
+		The_Model.web_control.fan_state = false;
+	}
+
+}
+
+function get_heater_override() {
+	if ($('#is_heater_override').is(":checked")) {
+		The_Model.web_control.heater_req = true;
+	}
+	else {
+		The_Model.web_control.heater_req = false;
+	}
+
+	if ($('#heater_override_state').is(":checked")) {
+		The_Model.web_control.heater_state = false;
+	}
+	else {
+		The_Model.web_control.heater_state = false;
 	}
 }
 
@@ -114,11 +142,4 @@ function send_data(loc, data_to_send) {
 
 		}
 	});
-
-}
-
-
-function update_graph() {
-	update_graph_lines();
-	set_graph_lines("/set_fan_override", );
 }
