@@ -43,7 +43,7 @@ class KasaPlug:
 
         self.smart_plug = SmartPlug(self.ip)
         self.process_plug()
-        self.set_led_on()
+        self.set_led_off()
 
     def process_plug(self):
         self.error_state = self.plug_update()
