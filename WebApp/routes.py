@@ -17,7 +17,7 @@ import data.db_app as db
 from support import log, div
 import json
 from WebApp.mat_graph import MatGraph
-import WebApp.web_control as wc
+import WebApp.models as wc
 from support.timeclock import OS_Clock
 
 config = Config()
