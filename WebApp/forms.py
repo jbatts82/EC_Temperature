@@ -10,7 +10,6 @@ from wtforms.validators import DataRequired
 from config import Config
 
 class GraphConfigForm(FlaskForm):
-	# channel = SelectField(u'Channel Number', choices=[('ch1', 'Channel 1'), ('ch2', 'Channel 2'), ('ch3', 'Channel 3'), ('ch4', 'Channel 4')])
 	time = IntegerField('Minutes To Graph')
 	submit = SubmitField('Submit')
 
@@ -18,6 +17,11 @@ class Data_To_Show(FlaskForm):
 	show_heater = BooleanField("Heater")
 	show_light = BooleanField("Light")
 	show_fan = BooleanField("Fan")
+	show_ch1 = BooleanField("Channel 1")
+	show_ch2 = BooleanField("Channel 2")
+	show_ch3 = BooleanField("Channel 3")
+	show_ch4 = BooleanField("Channel 4")
+	time = IntegerField('Minutes To Graph')
 
 class FanOverride(FlaskForm):
 	is_fan_override = BooleanField("Fan Override")

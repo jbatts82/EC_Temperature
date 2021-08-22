@@ -45,15 +45,6 @@
 		<h2>Room Control</h2>
 		<table>
 		<tr>
-			<td>Temp Thresh</td>
-			<td>X</td>
-		</tr>
-		<tr>
-			<td>Humidity Thresh</td>
-			<td>Y</td>
-		</tr>
-		<tr>
-			<td>Fan Override</td>
 			<td>					
 				<form method="POST" action="/">
 				    {{ fan_override.hidden_tag() }}
@@ -63,8 +54,6 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Heater Override</td>
-
 			<td>	
 				<form method="POST" action="/">
 				    {{ heater_override.hidden_tag() }}
@@ -72,7 +61,6 @@
 				    {{ heater_override.heater_override_state.label }} {{ heater_override.heater_override_state(onchange="update_web_control()") }}
 				</form> 
 			</td>
-			
 		</tr>
 		</table>
 	</section>
@@ -81,26 +69,30 @@
 
 {% block section %}
 	<section>
-
 		<article>
 			<h2>Data Display</h2>
-			{{wtf.quick_form(graph_form)}}
 			<table>
 			<tr>
 				<td>
-					<p>Graph Data</p>
+					<p>Graph Configuration</p>
 					<form method="POST" action="/">
 				    {{ data_to_show.hidden_tag() }}
 				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
 				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light(onchange="update_graph()") }}
-				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}
+				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}<br>
+				    {{ data_to_show.show_ch1.label }} {{ data_to_show.show_ch1(onchange="update_graph()") }}
+				    {{ data_to_show.show_ch2.label }} {{ data_to_show.show_ch2(onchange="update_graph()") }}<br>
+				    {{ data_to_show.show_ch3.label }} {{ data_to_show.show_ch3(onchange="update_graph()") }}
+				    {{ data_to_show.show_ch4.label }} {{ data_to_show.show_ch4(onchange="update_graph()") }}<br>
+				    {{ data_to_show.time.label }} {{ data_to_show.time(onchange="update_graph()") }}
 					</form>
+
 				<p id="demo"></p>
 				</td>
 				<td class="graph_wrap">
 					<p><img id = "graph1", alt="graph1" /></p>
 				</td>
-			</tr>
+
 			</table>
 		</article>
 	</section>
