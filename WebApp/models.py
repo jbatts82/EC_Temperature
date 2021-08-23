@@ -11,10 +11,7 @@ from datetime import datetime
 
 
 The_Model = {
-	"graph_lines": [{"temp": False, "hum": False, "heater": False, "light": False, "fan": False},
-					{"temp": False, "hum": False, "heater": False, "light": False, "fan": False},
-					{"temp": False, "hum": False, "heater": False, "light": False, "fan": False},
-					{"temp": False, "hum": False, "heater": False, "light": False, "fan": False},],
+	"graph_lines": {"ch1": True, "ch2": False, "ch3": False, "ch4": False, "heater": False, "light": True, "fan": False},
 
 	"web_control": {
 					"heater_req": False,
@@ -29,8 +26,13 @@ The_Model = {
 def Init_WebControl():
 	db.Init_Data_Control_Table()
 
+def update_client_webcontrol(web_control):
+	The_Model['web_control'] = web_control
+	log("WebControll", The_Model)
 
 
+def get_web_model():
+	return The_Model['web_control']
 
 def Update_Web_Control_Table(req_data):
 	log("req_data", str(req_data))

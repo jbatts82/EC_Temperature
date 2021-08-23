@@ -25,7 +25,11 @@ $(document).ready(function() {
     get_server_model();
     update_client_model();
     draw_graph_lines();
+    set_web_control();
 });
+
+
+
 
 function get_server_model(){
     return Server_Model;
@@ -34,6 +38,7 @@ function get_server_model(){
 function update_client_model() {
     update_web_control();
     update_graph_lines();
+	
 }
 
 function update_web_control() {
@@ -46,7 +51,6 @@ function update_graph_lines() {
 }
 
 function draw_graph_lines() {
-    update_graph_lines();
     set_graph_lines();
 }
 
@@ -177,4 +181,8 @@ function send_data(loc, data_to_send) {
 
 		}
 	});
+}
+
+function set_web_control(){
+    send_data("/update_model", Client_Model.web_control);
 }

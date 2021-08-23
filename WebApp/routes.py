@@ -119,3 +119,14 @@ def set_graph_lines():
 def update_graph(req_graph_lines):
     global data_arr, the_graph
     the_graph.update_graph(req_graph_lines, data_arr)
+
+
+@app.route('/update_model', methods=['GET', 'POST'])
+def update_model():
+    json_data = request.form['data']
+    log("json_data", json_data)
+    web_control = json.loads(json_data)
+    wc.update_client_webcontrol(web_control)
+    server_model = wc.get_web_model()
+    ret_val = { 'error' : False, 'data' :  server_model}
+    return json.dumps(ret_val)
