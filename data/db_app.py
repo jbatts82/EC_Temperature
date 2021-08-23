@@ -13,7 +13,7 @@ from support import log
 from support import div
 from time import sleep
 from datetime import datetime
-import WebApp.web_control as wc
+import WebApp.models as wc
 
 
 
