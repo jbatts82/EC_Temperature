@@ -19,7 +19,7 @@ heater = None
 humidifier = None
 fan = None
 timer = 0
-fan_on_time = 10
+fan_on_time = 15
 last_time = False
 periodic_init = True
 

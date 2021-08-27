@@ -21,18 +21,15 @@ The_Model = {
 }
 
 
-
-
 def Init_WebControl():
 	db.Init_Data_Control_Table()
 
-def update_client_webcontrol(web_control):
-	The_Model['web_control'] = web_control
+def update_client_model(client_model):
+	The_Model = client_model
 	log("WebControll", The_Model)
 
-
-def get_web_model():
-	return The_Model['web_control']
+def get_model():
+	return The_Model
 
 def Update_Web_Control_Table(req_data):
 	log("req_data", str(req_data))

@@ -48,8 +48,8 @@
 			<td>					
 				<form method="POST" action="/">
 				    {{ fan_override.hidden_tag() }}
-				    {{ fan_override.is_fan_override.label }} {{ fan_override.is_fan_override(onchange="update_web_control()") }}
-				    {{ fan_override.fan_override_state.label }} {{ fan_override.fan_override_state(onchange="update_web_control()") }}
+				    {{ fan_override.is_fan_override.label }} {{ fan_override.is_fan_override(onchange="update_model()") }}
+				    {{ fan_override.fan_override_state.label }} {{ fan_override.fan_override_state(onchange="update_model()") }}
 				</form>
 			</td>
 		</tr>
@@ -57,8 +57,8 @@
 			<td>	
 				<form method="POST" action="/">
 				    {{ heater_override.hidden_tag() }}
-				    {{ heater_override.is_heater_override.label }} {{ heater_override.is_heater_override(onchange="update_web_control()") }}
-				    {{ heater_override.heater_override_state.label }} {{ heater_override.heater_override_state(onchange="update_web_control()") }}
+				    {{ heater_override.is_heater_override.label }} {{ heater_override.is_heater_override(onchange="update_model()") }}
+				    {{ heater_override.heater_override_state.label }} {{ heater_override.heater_override_state(onchange="update_model()") }}
 				</form> 
 			</td>
 		</tr>
@@ -71,23 +71,26 @@
 	<section>
 		<article>
 			<h2>Data Display</h2>
+			<p id="demo"></p>
+			<p id="demo1"></p>
+			<p id="demo2"></p>
 			<table>
 			<tr>
 				<td>
 					<p>Graph Configuration</p>
 					<form method="POST" action="/">
 				    {{ data_to_show.hidden_tag() }}
-				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_graph()") }}
-				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light(onchange="update_graph()") }}
-				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_graph()") }}<br>
-				    {{ data_to_show.show_ch1.label }} {{ data_to_show.show_ch1(onchange="update_graph()") }}
-				    {{ data_to_show.show_ch2.label }} {{ data_to_show.show_ch2(onchange="update_graph()") }}<br>
-				    {{ data_to_show.show_ch3.label }} {{ data_to_show.show_ch3(onchange="update_graph()") }}
-				    {{ data_to_show.show_ch4.label }} {{ data_to_show.show_ch4(onchange="update_graph()") }}<br>
-				    {{ data_to_show.time.label }} {{ data_to_show.time(onchange="update_graph()") }}
+				    {{ data_to_show.show_heater.label }} {{ data_to_show.show_heater(onchange="update_model()") }}
+				    {{ data_to_show.show_light.label }} {{ data_to_show.show_light(onchange="update_model()") }}
+				    {{ data_to_show.show_fan.label }} {{ data_to_show.show_fan(onchange="update_model()") }}<br>
+				    {{ data_to_show.show_ch1.label }} {{ data_to_show.show_ch1(onchange="update_model()") }}
+				    {{ data_to_show.show_ch2.label }} {{ data_to_show.show_ch2(onchange="update_model()") }}<br>
+				    {{ data_to_show.show_ch3.label }} {{ data_to_show.show_ch3(onchange="update_model()") }}
+				    {{ data_to_show.show_ch4.label }} {{ data_to_show.show_ch4(onchange="update_model()") }}<br>
+				    {{ data_to_show.time.label }} {{ data_to_show.time(onchange="update_model()") }}
 					</form>
 
-				<p id="demo"></p>
+				
 				</td>
 				<td class="graph_wrap">
 					<p><img id = "graph1", alt="graph1" /></p>

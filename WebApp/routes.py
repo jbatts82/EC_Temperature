@@ -45,11 +45,11 @@ def index():
 
     _title = 'Plant Life'
     channel = 'ch1'
-    previous_minutes_back = 120
+    previous_minutes_back = 1440
 
     graphConfig = forms.GraphConfigForm()
     if graphConfig.validate_on_submit():
-        log("GraphCOnfig", "Sumbit")
+        log("GraphConfig", "Sumbit")
         previous_minutes_back = graphConfig.time.data
 
 
@@ -103,8 +103,8 @@ def set_web_req():
     return json.dumps(ret_val)
 
 
-@app.route('/set_graph_lines', methods=['GET', 'POST'])
-def set_graph_lines():
+@app.route('/set_graph_data', methods=['GET', 'POST'])
+def set_graph_data():
     global the_graph
     json_data = request.form['graph_data']
     the_data = json.loads(json_data)
@@ -112,7 +112,7 @@ def set_graph_lines():
     update_graph(the_data)
     png64data = the_graph.plot_png()
     data_string = "data:image/png;base64,{}".format(png64data)
-    ret_val = { 'error' : False, 'the_graph' :  data_string}
+    ret_val = {'error' : False, 'the_graph' :  data_string}
     return json.dumps(ret_val)
 
 
@@ -125,8 +125,30 @@ def update_graph(req_graph_lines):
 def update_model():
     json_data = request.form['data']
     log("json_data", json_data)
-    web_control = json.loads(json_data)
+    client_model = json.loads(json_data)
     wc.update_client_webcontrol(web_control)
     server_model = wc.get_web_model()
-    ret_val = { 'error' : False, 'data' :  server_model}
+    ret_val = {'error' : False, 'data' :  server_model}
     return json.dumps(ret_val)
+
+@app.route('/get_server_model', methods=['GET', 'POST'])
+def get_server_model():
+    json_data = request.form['cmd']
+    log("json_data", json_data)
+    server_model = wc.get_model()
+    ret_val = {'error' : False, 'server_model' : server_model}
+    return json.dumps(ret_val)
+
+@app.route('/send_client_model', methods=['GET', 'POST'])
+def send_client_model():
+    json_data = request.form['client_model']
+    log("clientModel", json_data)
+    client_model = json.loads(json_data)
+    wc.update_client_model(client_model)
+
+    # send new model
+    server_model = wc.get_model()
+    ret_val = {'error' : False, 'server_model' : server_model}
+    return json.dumps(ret_val)
+
+

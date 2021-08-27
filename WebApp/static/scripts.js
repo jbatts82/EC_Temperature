@@ -23,22 +23,24 @@ var Server_Model = {
 // after page loads
 $(document).ready(function() {
     get_server_model();
-    update_client_model();
+    update_client_model(Server_Model);
     draw_graph_lines();
-    set_web_control();
+    set_page_elements();
 });
 
 
-
-
-function get_server_model(){
-    return Server_Model;
+function update_model() {
+	get_all_elements();
+	send_client_model();
 }
 
-function update_client_model() {
-    update_web_control();
+function update_client_model(new_model) {
+    Client_Model = new_model;
+}
+
+function update_client_model_page() {
+	update_web_control();
     update_graph_lines();
-	
 }
 
 function update_web_control() {
@@ -51,9 +53,14 @@ function update_graph_lines() {
 }
 
 function draw_graph_lines() {
-    set_graph_lines();
+    send_graph_data();
 }
 
+function get_all_elements() {
+	get_fan_override();
+	get_heater_override();
+	get_graph_lines();
+}
 
 
 // Data Getter functions for HTML pages
@@ -146,8 +153,8 @@ function get_graph_lines() {
 }
 
 
-function set_graph_lines() {
-	$.post( "/set_graph_lines", {
+function send_graph_data() {
+	$.post( "/set_graph_data", {
 	  graph_data: JSON.stringify(Client_Model.graph_lines)
 	}, function(resp){
 
@@ -164,6 +171,84 @@ function set_graph_lines() {
 	});
 }
 
+function get_server_model(){
+	$.post( "/get_server_model", {
+	  "cmd": "GET_SERVER_MODEL"
+	}, function(resp){
+
+		var response = JSON.parse(resp);
+
+		if (response.error === true)
+		{
+
+		}
+		else
+		{
+			Server_Model = response.server_model;
+			$("#demo").text(JSON.stringify(Server_Model));
+		}
+	});
+
+}
+
+function set_page_elements() {
+
+	if (Client_Model.graph_lines.ch1 == true)
+	{
+		$("#show_ch1").attr("checked", true);
+	}
+	else
+	{
+		$("#show_ch1").attr("checked", false);
+	}
+
+	if (Client_Model.graph_lines.ch2 == true)
+	{
+		$("#show_ch2").attr("checked", true);
+	}
+	else
+	{
+		$("#show_ch2").attr("checked", false);
+	}
+
+	if (Client_Model.graph_lines.ch3 == true)
+	{
+		$("#show_ch3").attr("checked", true);
+	}
+	else
+	{
+		$("#show_ch3").attr("checked", false);
+	}
+
+	if (Client_Model.graph_lines.ch4 == true)
+	{
+		$("#show_ch4").attr("checked", true);
+	}
+	else
+	{
+		$("#show_ch4").attr("checked", false);
+	}
+}
+
+function send_client_model(){
+	$.post( "/send_client_model", {
+	  "client_model": JSON.stringify(Client_Model)
+	}, function(resp){
+
+		var response = JSON.parse(resp);
+
+		if (response.error === true)
+		{
+
+		}
+		else
+		{
+			Server_Model = response.server_model;
+			Client_Model = Server_Model;
+			$("#demo2").text(JSON.stringify(Server_Model));
+		}
+	});
+}
 
 function send_data(loc, data_to_send) {
 	$.post( loc, {
@@ -183,6 +268,3 @@ function send_data(loc, data_to_send) {
 	});
 }
 
-function set_web_control(){
-    send_data("/update_model", Client_Model.web_control);
-}
