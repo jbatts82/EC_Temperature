@@ -111,7 +111,7 @@ def insert_instant_hum(reading):
 
 def insert_model_record(model):
     global the_session
-    delete_table(Web_Model)
+    #delete_table(Web_Model)
     the_session.add(model)
     the_session.commit()
 

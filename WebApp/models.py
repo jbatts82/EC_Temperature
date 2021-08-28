@@ -26,6 +26,7 @@ def Init_Models():
 
 def update_client_model(client_model):
 	The_Model = client_model
+	Update_Model_DB(The_Model)
 
 def get_model():
 	global last_update_time
@@ -40,18 +41,4 @@ def get_ram_model():
 
 def Update_Model_DB(model):
 	time_stamp = datetime.now()
-	db.Write_Model_Record(time_stamp, model)
-
-
-def Update_Web_Control_Table(req_data):
-
-	time_stamp = datetime.now()
-
-	heater_req = req_data["heater_req"]
-	heater_state = req_data["heater_state"]
-
-	fan_req = req_data["fan_req"]
-	fan_state = req_data["fan_state"]
-
-
-	db.Write_Web_Control_Request(time_stamp, heater_req, heater_state, fan_req, fan_state)
+	db.Write_Web_Model_Rec(time_stamp, model)
