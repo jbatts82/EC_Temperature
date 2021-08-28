@@ -28,7 +28,6 @@ config = Config()
 @app.route('/index', methods=['GET', 'POST'])
 def index():
 
-    log("index", "Here")
     global data_arr, config
 
     data_arr = {

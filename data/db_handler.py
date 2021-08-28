@@ -83,7 +83,7 @@ def init_database_engine(config=None):
     the_session = session()
     meta = MetaData()
     meta.create_all(engine)
-    inspect_engine()
+
 
 def inspect_engine():
     global engine
@@ -94,11 +94,7 @@ def inspect_engine():
     # Get column information
     log("Columns", inspector.get_columns('WebModel'))
 
-def insert_model_record(model):
-    global the_session
-    log("The Model rec", model)
-    the_session.add(model)
-    the_session.commit()
+
 
 
 def insert_instant_sensor(reading):
@@ -113,29 +109,16 @@ def insert_instant_hum(reading):
     the_session.commit()
 
 
-def insert_control_record(control_data):
+def insert_model_record(model):
     global the_session
-    the_session.add(control_data)
-    the_session.commit()
-
-
-def insert_web_control_record(control_data):
-    global the_session
-    the_session.add(control_data)
+    delete_table(Web_Model)
+    the_session.add(model)
     the_session.commit()
 
 
 def get_model_recrd():
     global the_session
     query = the_session.query(Web_Model).order_by(Web_Model.time_stamp.desc())
-    log("THE MODEL", query.all())
-    last_record = query[0]
-    return last_record
-
-
-def get_web_control_recrd():
-    global the_session
-    query = the_session.query(Web_Control_Request).order_by(Web_Control_Request.time_stamp.desc())
     last_record = query[0]
     return last_record
 

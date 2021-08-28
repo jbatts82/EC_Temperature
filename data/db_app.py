@@ -20,7 +20,6 @@ import json
 
 def Db_App_Init(the_config):
 	db_hand.init_database_engine(the_config)
-	wc.Init_WebControl()
 
 
 def Write_Temp_Sensor_Data(time, channel, temp_f, hum):
@@ -48,16 +47,7 @@ def Write_Instant_Humidity(time, channel, hum):
 	db_hand.insert_instant_hum(reading)
 
 
-def Write_Control_Data(time_stamp, heater_state, humidifier_state, fan_state, light_state):
-	control_stats = Control_Status()
-	control_stats.time_stamp = time_stamp
-	control_stats.heater_state = heater_state
-	control_stats.humidifier_state = humidifier_state
-	control_stats.fan_state = fan_state
-	control_stats.light_state = light_state
-	db_hand.insert_control_record(control_stats)
-
-def Write_Model_Record(time_stamp, model):
+def Write_Web_Model_Rec(time_stamp, model):
 	web_model = Web_Model()
 	web_model.time_stamp = time_stamp
 	jsonData = json.dumps(model)
@@ -65,32 +55,8 @@ def Write_Model_Record(time_stamp, model):
 	db_hand.insert_model_record(web_model)
 
 
-
-def Write_Web_Control_Request(time_stamp, heater_req, heater_state, \
-	humidifier_req, humidifier_state, fan_req, fan_state, light_req, light_state):
-	web_control = Web_Control_Request()
-	web_control.time_stamp = time_stamp
-
-	web_control.heater_req = heater_req
-	web_control.heater_state = heater_state
-
-	web_control.humidifier_req = humidifier_req
-	web_control.humidifier_state = humidifier_state
-
-	web_control.fan_req = fan_req
-	web_control.fan_state = fan_state
-
-	web_control.light_req = light_req
-	web_control.light_state = light_state
-
-	db_hand.insert_web_control_record(web_control)
-
-def Get_Web_Model():
+def Get_Web_Model_Rec():
 	record = db_hand.get_model_recrd()
-	return record
-
-def Get_Last_Web_Control_Rec():
-	record = db_hand.get_web_control_recrd()
 	return record
 
 
@@ -141,18 +107,13 @@ def Get_Last_Control_List(time):
 def Delete_Table(table_class):
 	db_hand.delete_table(table_class)
 
+
 def Init_Web_Model():
-	if db_hand.table_exists(Web_Model):
-		return
-	time_stamp = datetime.now()
-	model = wc.get_ram_model()
-	Write_Model_Record(time_stamp, model)
-
-
-
-def Init_Data_Control_Table():
-	if db_hand.table_exists(Web_Control_Request):
-		Delete_Table(Web_Control_Request)
-		Write_Web_Control_Request(datetime.now(), False, False, False, False, False, False, False, False)
-	else:
-		Write_Web_Control_Request(datetime.now(), False, False, False, False, False, False, False, False)
+	# if db_hand.table_exists(Web_Model):
+	# 	log("DB", "Table Exisits")
+	# 	return
+	# log("DB", "Init Model Rec")
+	# time_stamp = datetime.now()
+	# model = wc.get_ram_model()
+	# Write_Model_Record(time_stamp, model)
+	pass

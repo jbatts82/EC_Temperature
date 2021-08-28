@@ -21,8 +21,7 @@ The_Model = {
 }
 
 
-def Init_WebControl():
-	db.Init_Data_Control_Table()
+def Init_Models():
 	db.Init_Web_Model()
 
 def update_client_model(client_model):
@@ -30,7 +29,7 @@ def update_client_model(client_model):
 
 def get_model():
 	global last_update_time
-	model_record = db.Get_Web_Model()
+	model_record = db.Get_Web_Model_Rec()
 	last_update_time = model_record.time_stamp
 	the_model = json.loads(model_record.the_model)
 	The_Model = the_model
