@@ -48,7 +48,6 @@ def index():
 
     graphConfig = forms.GraphConfigForm()
     if graphConfig.validate_on_submit():
-        log("GraphConfig", "Sumbit")
         previous_minutes_back = graphConfig.time.data
 
 
