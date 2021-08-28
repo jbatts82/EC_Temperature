@@ -6,8 +6,8 @@ var Client_Model = {
     "web_control": {
     "heater_req": false,
     "heater_state": false,
-    "fan_req": false,
-    "fan_state": false}
+    "fan_req": true,
+    "fan_state": true}
 };
 
 var Server_Model = {
@@ -24,8 +24,8 @@ var Server_Model = {
 $(document).ready(function() {
     get_server_model();
     update_client_model(Server_Model);
-    draw_graph_lines();
     set_page_elements();
+    draw_graph_lines();
 });
 
 
@@ -35,18 +35,13 @@ function update_model() {
 }
 
 function update_client_model(new_model) {
+	$("#demohi").text(JSON.stringify(new_model));
+
     Client_Model = new_model;
 }
 
-function update_client_model_page() {
-	update_web_control();
-    update_graph_lines();
-}
 
-function update_web_control() {
-    get_fan_override();
-    get_heater_override();
-}
+
 
 function update_graph_lines() {
     get_graph_lines();
@@ -89,8 +84,6 @@ function get_server_model(){
 		else
 		{
 			Server_Model = response.server_model;
-			Client_Model = Server_Model;
-			$("#demo").text(JSON.stringify(Server_Model));
 		}
 	});
 
@@ -136,7 +129,7 @@ function send_data(loc, data_to_send) {
 
 function set_page_elements() {
 
-	if (Client_Model.web_control.fan_req === true)
+	if (Client_Model.web_control.fan_req == true)
 	{
 		$("#is_fan_override").attr("checked", true);
 	}
@@ -145,7 +138,7 @@ function set_page_elements() {
 		$("#is_fan_override").attr("checked", false);
 	}
 
-	if (Client_Model.web_control.fan_state === true)
+	if (Client_Model.web_control.fan_state == true)
 	{
 		$("#fan_override_state").attr("checked", true);
 	}
@@ -154,7 +147,7 @@ function set_page_elements() {
 		$("#fan_override_state").attr("checked", false);
 	}
 
-	if (Client_Model.web_control.heater_req === true)
+	if (Client_Model.web_control.heater_req == true)
 	{
 		$("#is_heater_override").attr("checked", true);
 	}
@@ -163,7 +156,7 @@ function set_page_elements() {
 		$("#is_heater_override").attr("checked", false);
 	}
 
-	if (Client_Model.web_control.heater_state === true)
+	if (Client_Model.web_control.heater_state == true)
 	{
 		$("#heater_override_state").attr("checked", true);
 	}
@@ -172,7 +165,7 @@ function set_page_elements() {
 		$("#heater_override_state").attr("checked", false);
 	}
 
-	if (Client_Model.graph_lines.heater === true)
+	if (Client_Model.graph_lines.heater == true)
 	{
 		$("#show_heater").attr("checked", true);
 	}
@@ -181,7 +174,7 @@ function set_page_elements() {
 		$("#show_heater").attr("checked", false);
 	}
 
-	if (Client_Model.graph_lines.light === true)
+	if (Client_Model.graph_lines.light == true)
 	{
 		$("#show_light").attr("checked", true);
 	}
@@ -190,7 +183,7 @@ function set_page_elements() {
 		$("#show_light").attr("checked", false);
 	}
 
-	if (Client_Model.graph_lines.fan === true)
+	if (Client_Model.graph_lines.fan == true)
 	{
 		$("#show_fan").attr("checked", true);
 	}
