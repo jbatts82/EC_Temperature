@@ -30,7 +30,7 @@ $(document).ready(function() {
 
 
 function update_model() {
-	get_all_elements();
+	get_page_elements();
 	send_client_model();
 }
 
@@ -54,12 +54,6 @@ function update_graph_lines() {
 
 function draw_graph_lines() {
     send_graph_data();
-}
-
-function get_all_elements() {
-	get_fan_override();
-	get_heater_override();
-	get_graph_lines();
 }
 
 
