@@ -82,7 +82,6 @@ def index():
     fan_override = forms.FanOverride()
     heater_override = forms.HeaterOverride()
 
-
     return render_template('index.html', 
                             title=_title, 
                             data = sensor_data, 
@@ -131,6 +130,7 @@ def update_model():
     ret_val = {'error' : False, 'data' :  server_model}
     return json.dumps(ret_val)
 
+
 @app.route('/get_server_model', methods=['GET', 'POST'])
 def get_server_model():
     json_data = request.form['cmd']
@@ -139,16 +139,13 @@ def get_server_model():
     ret_val = {'error' : False, 'server_model' : server_model}
     return json.dumps(ret_val)
 
+
 @app.route('/send_client_model', methods=['GET', 'POST'])
 def send_client_model():
     json_data = request.form['client_model']
     log("clientModel", json_data)
     client_model = json.loads(json_data)
     wc.update_client_model(client_model)
-
-    # send new model
     server_model = wc.get_model()
     ret_val = {'error' : False, 'server_model' : server_model}
     return json.dumps(ret_val)
-
-

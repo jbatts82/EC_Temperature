@@ -8,7 +8,7 @@
 from support import log, div
 import data.db_app as db
 from datetime import datetime
-
+import json
 
 The_Model = {
 	"graph_lines": {"ch1": True, "ch2": False, "ch3": False, "ch4": False, "heater": False, "light": True, "fan": False},
@@ -23,13 +23,27 @@ The_Model = {
 
 def Init_WebControl():
 	db.Init_Data_Control_Table()
+	db.Init_Web_Model()
 
 def update_client_model(client_model):
 	The_Model = client_model
 	log("WebControll", The_Model)
 
 def get_model():
+	global last_update_time
+	model_record = db.Get_Web_Model()
+	last_update_time = model_record.time_stamp
+	the_model = json.loads(model_record.the_model)
+	The_Model = the_model
 	return The_Model
+
+def get_ram_model():
+	return The_Model
+
+def Update_Model_DB(model):
+	time_stamp = datetime.now()
+	db.Write_Model_Record(time_stamp, model)
+
 
 def Update_Web_Control_Table(req_data):
 	log("req_data", str(req_data))

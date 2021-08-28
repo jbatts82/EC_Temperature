@@ -5,7 +5,7 @@
 ###############################################################################
 
 import sys
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Table, Column, Integer, String, DateTime, Float, Boolean
 from sqlalchemy.orm import sessionmaker
@@ -48,6 +48,12 @@ class Control_Status(base):
     light_state = Column('Light', Boolean)
 
 
+class Web_Model(base):
+    __tablename__ = 'WebModel'
+    time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
+    the_model = Column('The_Model', String(500))
+
+
 class Web_Control_Request(base):
     __tablename__ = 'WebControl'
     time_stamp = Column('Time_Date', DateTime, primary_key=True, index=True)
@@ -72,10 +78,27 @@ def init_database_engine(config=None):
     engine = create_engine(database_loc, connect_args={'check_same_thread': False}, echo=False)
     log("Connected to", database_loc)
     base.metadata.create_all(engine)
+
     session = sessionmaker(bind=engine)
     the_session = session()
     meta = MetaData()
     meta.create_all(engine)
+    inspect_engine()
+
+def inspect_engine():
+    global engine
+    inspector = inspect(engine)
+    # Get table information
+    log("Table Names", inspector.get_table_names())
+
+    # Get column information
+    log("Columns", inspector.get_columns('WebModel'))
+
+def insert_model_record(model):
+    global the_session
+    log("The Model rec", model)
+    the_session.add(model)
+    the_session.commit()
 
 
 def insert_instant_sensor(reading):
@@ -100,6 +123,14 @@ def insert_web_control_record(control_data):
     global the_session
     the_session.add(control_data)
     the_session.commit()
+
+
+def get_model_recrd():
+    global the_session
+    query = the_session.query(Web_Model).order_by(Web_Model.time_stamp.desc())
+    log("THE MODEL", query.all())
+    last_record = query[0]
+    return last_record
 
 
 def get_web_control_recrd():

@@ -77,7 +77,7 @@ function get_fan_override() {
         Client_Model.web_control.fan_state = true;
     }
     else {
-         Client_Model.web_control.fan_state = false;
+        Client_Model.web_control.fan_state = false;
     }
 
 }
@@ -185,6 +185,7 @@ function get_server_model(){
 		else
 		{
 			Server_Model = response.server_model;
+			Client_Model = Server_Model;
 			$("#demo").text(JSON.stringify(Server_Model));
 		}
 	});
@@ -243,9 +244,11 @@ function send_client_model(){
 		}
 		else
 		{
+			alert("joy")
 			Server_Model = response.server_model;
 			Client_Model = Server_Model;
 			$("#demo2").text(JSON.stringify(Server_Model));
+
 		}
 	});
 }

@@ -8,12 +8,13 @@ import data.db_handler as db_hand
 from data.db_handler import Instant_Temperature
 from data.db_handler import Instant_Humidity
 from data.db_handler import Instant_Sensor
-from data.db_handler import Control_Status, Web_Control_Request
+from data.db_handler import Control_Status, Web_Control_Request, Web_Model
 from support import log
 from support import div
 from time import sleep
 from datetime import datetime
 import WebApp.models as wc
+import json
 
 
 
@@ -56,6 +57,14 @@ def Write_Control_Data(time_stamp, heater_state, humidifier_state, fan_state, li
 	control_stats.light_state = light_state
 	db_hand.insert_control_record(control_stats)
 
+def Write_Model_Record(time_stamp, model):
+	web_model = Web_Model()
+	web_model.time_stamp = time_stamp
+	jsonData = json.dumps(model)
+	web_model.the_model = jsonData
+	db_hand.insert_model_record(web_model)
+
+
 
 def Write_Web_Control_Request(time_stamp, heater_req, heater_state, \
 	humidifier_req, humidifier_state, fan_req, fan_state, light_req, light_state):
@@ -76,6 +85,9 @@ def Write_Web_Control_Request(time_stamp, heater_req, heater_state, \
 
 	db_hand.insert_web_control_record(web_control)
 
+def Get_Web_Model():
+	record = db_hand.get_model_recrd()
+	return record
 
 def Get_Last_Web_Control_Rec():
 	record = db_hand.get_web_control_recrd()
@@ -128,6 +140,16 @@ def Get_Last_Control_List(time):
 
 def Delete_Table(table_class):
 	db_hand.delete_table(table_class)
+
+def Init_Web_Model():
+	time_stamp = datetime.now()
+	model = wc.get_ram_model()
+	log("init web model", model)
+	if db_hand.table_exists(Web_Model):
+		Delete_Table(Web_Model)
+		log("Delete", "Table")
+	Write_Model_Record(time_stamp, model)
+	log("No Delete", "Table")
 
 
 def Init_Data_Control_Table():
