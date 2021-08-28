@@ -142,14 +142,12 @@ def Delete_Table(table_class):
 	db_hand.delete_table(table_class)
 
 def Init_Web_Model():
+	if db_hand.table_exists(Web_Model):
+		return
 	time_stamp = datetime.now()
 	model = wc.get_ram_model()
-	log("init web model", model)
-	if db_hand.table_exists(Web_Model):
-		Delete_Table(Web_Model)
-		log("Delete", "Table")
 	Write_Model_Record(time_stamp, model)
-	log("No Delete", "Table")
+
 
 
 def Init_Data_Control_Table():

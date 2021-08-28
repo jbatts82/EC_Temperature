@@ -27,7 +27,6 @@ def Init_WebControl():
 
 def update_client_model(client_model):
 	The_Model = client_model
-	log("WebControll", The_Model)
 
 def get_model():
 	global last_update_time
@@ -46,7 +45,6 @@ def Update_Model_DB(model):
 
 
 def Update_Web_Control_Table(req_data):
-	log("req_data", str(req_data))
 
 	time_stamp = datetime.now()
 

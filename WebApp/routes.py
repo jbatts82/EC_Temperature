@@ -123,7 +123,6 @@ def update_graph(req_graph_lines):
 @app.route('/update_model', methods=['GET', 'POST'])
 def update_model():
     json_data = request.form['data']
-    log("json_data", json_data)
     client_model = json.loads(json_data)
     wc.update_client_webcontrol(web_control)
     server_model = wc.get_web_model()
@@ -134,7 +133,7 @@ def update_model():
 @app.route('/get_server_model', methods=['GET', 'POST'])
 def get_server_model():
     json_data = request.form['cmd']
-    log("json_data", json_data)
+    # nothing to do with command
     server_model = wc.get_model()
     ret_val = {'error' : False, 'server_model' : server_model}
     return json.dumps(ret_val)
@@ -143,7 +142,6 @@ def get_server_model():
 @app.route('/send_client_model', methods=['GET', 'POST'])
 def send_client_model():
     json_data = request.form['client_model']
-    log("clientModel", json_data)
     client_model = json.loads(json_data)
     wc.update_client_model(client_model)
     server_model = wc.get_model()
