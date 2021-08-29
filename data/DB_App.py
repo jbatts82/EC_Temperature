@@ -8,7 +8,7 @@ import data.db_handler as db_hand
 from data.db_handler import Instant_Temperature
 from data.db_handler import Instant_Humidity
 from data.db_handler import Instant_Sensor
-from data.db_handler import Control_Status, Web_Control_Request, Web_Model
+from data.db_handler import Control_Status, Web_Model
 from support import log
 from support import div
 from time import sleep
@@ -46,6 +46,16 @@ def Write_Instant_Humidity(time, channel, hum):
 	reading.humidity = hum
 	db_hand.insert_instant_hum(reading)
 
+
+def Write_Control_Data(time_stamp, heater_state, humidifier_state, fan_state, light_state):
+	control_stats = Control_Status()
+	control_stats.time_stamp = time_stamp
+	control_stats.heater_state = heater_state
+	control_stats.humidifier_state = humidifier_state
+	control_stats.fan_state = fan_state
+	control_stats.light_state = light_state
+	db_hand.insert_control_record(control_stats)
+	
 
 def Write_Web_Model_Rec(time_stamp, model):
 	web_model = Web_Model()

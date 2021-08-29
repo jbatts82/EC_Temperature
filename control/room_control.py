@@ -59,7 +59,7 @@ def Process_Room_Control(clock):
 	global heater, humidifier, fan, lamp, heater_request_list, \
 	humidity_request_list, exhaust_request_list
 
-	process_web_requests()
+
 	process_heater_requests(heater_request_list)
 	process_humidifier_requests(humidity_request_list)
 	process_fan_requests(exhaust_request_list)

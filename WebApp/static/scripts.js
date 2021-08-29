@@ -1,51 +1,56 @@
 // helper_script.js
 
+alert("Script Called");
 
-var Client_Model = {
-    "graph_lines": {"ch1": true, "ch2": false, "ch3": false, "ch4": false, "heater": false, "light": true, "fan": false},
-    "web_control": {
-    "heater_req": false,
-    "heater_state": false,
-    "fan_req": true,
-    "fan_state": true}
-};
-
-var Server_Model = {
-    "graph_lines": {"ch1": true, "ch2": false, "ch3": false, "ch4": false, "heater": false, "light": true, "fan": false},
-    "web_control": {
-    "heater_req": false,
-    "heater_state": false,
-    "fan_req": false,
-    "fan_state": false}
-};
-
+Client_Model = {};
+Server_Model = {};
 
 // after page loads
 $(document).ready(function() {
     get_server_model();
-    update_client_model(Server_Model);
-    set_page_elements();
-    draw_graph_lines();
+   // $("#demohi").text(JSON.stringify(window.Client_Model));
+    //set_page_elements();
+    //draw_graph_lines();
+   
 });
 
+
+function get_server_model(){
+	$.post( "/get_server_model", {
+	  "cmd": "GET_SERVER_MODEL"
+	}, function(resp){
+
+		var response = JSON.parse(resp);
+
+		if (response.error === true)
+		{
+			alert("Error");
+		}
+		else
+		{
+			set_page_elements(response.server_model);
+			update_client(response.server_model);
+		}
+	});
+}
+
+function update_client(new_model) {
+	
+	window.Client_Model = new_model;
+
+
+}
 
 function update_model() {
 	get_page_elements();
 	send_client_model();
 }
 
-function update_client_model(new_model) {
-	$("#demohi").text(JSON.stringify(new_model));
-
-    Client_Model = new_model;
-}
-
-
-
 
 function update_graph_lines() {
     get_graph_lines();
 }
+
 
 function draw_graph_lines() {
     send_graph_data();
@@ -70,24 +75,7 @@ function send_graph_data() {
 	});
 }
 
-function get_server_model(){
-	$.post( "/get_server_model", {
-	  "cmd": "GET_SERVER_MODEL"
-	}, function(resp){
 
-		var response = JSON.parse(resp);
-
-		if (response.error === true)
-		{
-
-		}
-		else
-		{
-			Server_Model = response.server_model;
-		}
-	});
-
-}
 
 function send_client_model(){
 	$.post( "/send_client_model", {
@@ -103,33 +91,18 @@ function send_client_model(){
 		else
 		{
 			Server_Model = response.server_model;
-			Client_Model = Server_Model;
-		}
-	});
-}
-
-function send_data(loc, data_to_send) {
-	$.post( loc, {
-	  data: JSON.stringify(data_to_send)
-	}, function(resp){
-
-		var the_resp = JSON.parse(resp);
-
-		if (the_resp.error === true)
-		{
-			alert("Error");
-		}
-		else
-		{
-
+			update_client(Server_Model);
 		}
 	});
 }
 
 
-function set_page_elements() {
 
-	if (Client_Model.web_control.fan_req == true)
+function set_page_elements(Client_Model) {
+
+	
+
+	if (Client_Model.web_control.fan_req)
 	{
 		$("#is_fan_override").attr("checked", true);
 	}
@@ -231,6 +204,7 @@ function set_page_elements() {
 
 
 function get_page_elements() {
+
     if ($("#is_fan_override").is(":checked")) {
         Client_Model.web_control.fan_req = true;
     }
@@ -306,4 +280,5 @@ function get_page_elements() {
 	else {
 		Client_Model.graph_lines.ch4 = false;
 	}
+
 }
