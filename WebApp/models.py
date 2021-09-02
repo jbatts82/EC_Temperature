@@ -42,3 +42,5 @@ def get_ram_model():
 def Update_Model_DB(model):
 	time_stamp = datetime.now()
 	db.Write_Web_Model_Rec(time_stamp, model)
+	log("Saving IN DB", model)
+	

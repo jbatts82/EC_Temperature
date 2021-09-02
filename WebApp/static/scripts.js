@@ -1,19 +1,20 @@
 // helper_script.js
 
-alert("Script Called");
 
-Client_Model = {};
-Server_Model = {};
+
+var Client_Model = {};
+
 
 // after page loads
 $(document).ready(function() {
     get_server_model();
-   // $("#demohi").text(JSON.stringify(window.Client_Model));
-    //set_page_elements();
-    //draw_graph_lines();
-   
 });
 
+
+function update_model() {
+	get_page_elements();
+	send_client_model();
+}
 
 function get_server_model(){
 	$.post( "/get_server_model", {
@@ -28,36 +29,18 @@ function get_server_model(){
 		}
 		else
 		{
-			set_page_elements(response.server_model);
-			update_client(response.server_model);
+
+			Client_Model = response.server_model;
+			//$("#demohi").text(JSON.stringify(Client_Model));
+			set_page_elements();
+    		send_graph_data();
 		}
 	});
 }
 
-function update_client(new_model) {
-	
-	window.Client_Model = new_model;
-
-
-}
-
-function update_model() {
-	get_page_elements();
-	send_client_model();
-}
-
-
-function update_graph_lines() {
-    get_graph_lines();
-}
-
-
-function draw_graph_lines() {
-    send_graph_data();
-}
-
 
 function send_graph_data() {
+	
 	$.post( "/set_graph_data", {
 	  graph_data: JSON.stringify(Client_Model.graph_lines)
 	}, function(resp){
@@ -76,7 +59,6 @@ function send_graph_data() {
 }
 
 
-
 function send_client_model(){
 	$.post( "/send_client_model", {
 	  "client_model": JSON.stringify(Client_Model)
@@ -90,120 +72,96 @@ function send_client_model(){
 		}
 		else
 		{
-			Server_Model = response.server_model;
-			update_client(Server_Model);
+			Client_Model = response.server_model;
 		}
 	});
 }
 
 
+function set_page_elements() {
 
-function set_page_elements(Client_Model) {
-
-	
-
-	if (Client_Model.web_control.fan_req)
-	{
+	if (Client_Model.web_control.fan_req) {
 		$("#is_fan_override").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#is_fan_override").attr("checked", false);
 	}
 
-	if (Client_Model.web_control.fan_state == true)
-	{
+	if (Client_Model.web_control.fan_state == true) {
 		$("#fan_override_state").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#fan_override_state").attr("checked", false);
 	}
 
-	if (Client_Model.web_control.heater_req == true)
-	{
+	if (Client_Model.web_control.heater_req == true) {
 		$("#is_heater_override").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#is_heater_override").attr("checked", false);
 	}
 
-	if (Client_Model.web_control.heater_state == true)
-	{
+	if (Client_Model.web_control.heater_state == true) {
 		$("#heater_override_state").attr("checked", true);
 	}
-	else
-	{
+
+	else {
 		$("#heater_override_state").attr("checked", false);
 	}
-
-	if (Client_Model.graph_lines.heater == true)
-	{
+	if (Client_Model.graph_lines.heater == true) {
 		$("#show_heater").attr("checked", true);
 	}
-	else
-	{
+
+	else {
 		$("#show_heater").attr("checked", false);
 	}
-
-	if (Client_Model.graph_lines.light == true)
-	{
+	if (Client_Model.graph_lines.light == true) {
 		$("#show_light").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#show_light").attr("checked", false);
 	}
 
-	if (Client_Model.graph_lines.fan == true)
-	{
+	if (Client_Model.graph_lines.fan == true) {
 		$("#show_fan").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#show_fan").attr("checked", false);
 	}
 
-	if (Client_Model.graph_lines.ch1 == true)
-	{
+	if (Client_Model.graph_lines.ch1 == true) {
 		$("#show_ch1").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#show_ch1").attr("checked", false);
 	}
 
-	if (Client_Model.graph_lines.ch2 == true)
-	{
+	if (Client_Model.graph_lines.ch2 == true) {
 		$("#show_ch2").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#show_ch2").attr("checked", false);
 	}
 
-	if (Client_Model.graph_lines.ch3 == true)
-	{
+	if (Client_Model.graph_lines.ch3 == true) {
 		$("#show_ch3").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#show_ch3").attr("checked", false);
 	}
 
-	if (Client_Model.graph_lines.ch4 == true)
-	{
+	if (Client_Model.graph_lines.ch4 == true) {
 		$("#show_ch4").attr("checked", true);
 	}
-	else
-	{
+	else {
 		$("#show_ch4").attr("checked", false);
 	}
 }
 
 
 function get_page_elements() {
+
+	$("#demohi").text(JSON.stringify(window.Client_Model));
 
     if ($("#is_fan_override").is(":checked")) {
         Client_Model.web_control.fan_req = true;
@@ -280,5 +238,4 @@ function get_page_elements() {
 	else {
 		Client_Model.graph_lines.ch4 = false;
 	}
-
 }
