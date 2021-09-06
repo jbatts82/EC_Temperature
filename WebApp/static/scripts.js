@@ -1,6 +1,8 @@
-// helper_script.js
-
-
+///////////////////////////////////////////////////////////////////////////////
+// file: helper_script.js
+//
+//
+//////////////////////////////////////////////////////////////////////////////
 
 var Client_Model = {};
 
@@ -15,6 +17,7 @@ function update_model() {
 	get_page_elements();
 	send_client_model();
 }
+
 
 function get_server_model(){
 	$.post( "/get_server_model", {
