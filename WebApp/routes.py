@@ -33,8 +33,11 @@ def index():
     data_arr = {
         "time_arr":[],
         "time2_arr":[],
-        "temp_arr":[],
-        "hum_arr":[],
+        "sensor_data" : {   "ch1": {"temp_arr": [], "hum_arr": [], "time_arr": []},
+                            "ch2": {"temp_arr": [], "hum_arr": [], "time_arr": []},
+                            "ch3": {"temp_arr": [], "hum_arr": [], "time_arr": []},
+                            "ch4": {"temp_arr": [], "hum_arr": [], "time_arr": []},
+        },
         "heat_state_arr":[],
         "hum_state_arr":[],
         "fan_state_arr":[],
@@ -50,13 +53,26 @@ def index():
     if graphConfig.validate_on_submit():
         previous_minutes_back = graphConfig.time.data
 
+    record = db.Get_Web_Model_Rec()
+    last_update_time = record.time_stamp
+    control_dict = json.loads(record.the_model)
 
-    # Sensor Data
-    sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
-    for record in sensor_recs:
-        data_arr["time_arr"].append(record.time_stamp)
-        data_arr["temp_arr"].append(record.temperature)
-        data_arr["hum_arr"].append(record.humidity)
+    graph_lines_to_show = control_dict["graph_lines"]
+
+
+    if any(graph_lines_to_show):
+        sensor_recs = db.Get_Last_Sensor_List("ch1", previous_minutes_back) #any channel
+        for record in sensor_recs:
+            data_arr["time_arr"].append(record.time_stamp)
+
+
+    for each in config.dht11_config:
+        channel = each['name']
+        if graph_lines_to_show[channel]:
+            sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
+            for record in sensor_recs:
+                data_arr["sensor_data"][channel]["temp_arr"].append(record.temperature)
+                data_arr["sensor_data"][channel]["hum_arr"].append(record.humidity)
 
 
     # Control Data

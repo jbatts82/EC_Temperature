@@ -104,8 +104,6 @@ def insert_control_record(control_data):
 
 def insert_model_record(model):
     global the_session
-    #delete_table(Web_Model)
-    log("insert db model", model.the_model)
     the_session.add(model)
     the_session.commit()
 
@@ -113,7 +111,6 @@ def insert_model_record(model):
 def get_model_recrd():
     global the_session
     query = the_session.query(Web_Model).order_by(Web_Model.time_stamp.desc())
-    log("get last db model", query[0].the_model)
     last_record = query[0]
     return last_record
 

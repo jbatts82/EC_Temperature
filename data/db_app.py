@@ -67,6 +67,7 @@ def Write_Web_Model_Rec(time_stamp, model):
 
 def Get_Web_Model_Rec():
 	record = db_hand.get_model_recrd()
+	
 	return record
 
 
