@@ -19,6 +19,7 @@ import json
 from WebApp.mat_graph import MatGraph
 import WebApp.models as wc
 from support.timeclock import OS_Clock
+import numpy as np
 
 config = Config()
 
@@ -31,13 +32,12 @@ def index():
     global data_arr, config
 
     data_arr = {
-        "time_arr":[],
-        "time2_arr":[],
         "sensor_data" : {   "ch1": {"temp_arr": [], "hum_arr": [], "time_arr": []},
                             "ch2": {"temp_arr": [], "hum_arr": [], "time_arr": []},
                             "ch3": {"temp_arr": [], "hum_arr": [], "time_arr": []},
                             "ch4": {"temp_arr": [], "hum_arr": [], "time_arr": []},
         },
+        "time2_arr":[],
         "heat_state_arr":[],
         "hum_state_arr":[],
         "fan_state_arr":[],
@@ -60,10 +60,17 @@ def index():
     graph_lines_to_show = control_dict["graph_lines"]
 
 
+    for channel in graph_lines_to_show:
+        log("keys in graph_lines_to_show", channel)
+
     if any(graph_lines_to_show):
         sensor_recs = db.Get_Last_Sensor_List("ch1", previous_minutes_back) #any channel
         for record in sensor_recs:
             data_arr["time_arr"].append(record.time_stamp)
+
+        index, size = find_smallest_ch(data_arr["sensor_data"])
+        log("Smallest Array Size", size)
+        log("Smallest Array Index", index)
 
 
     for each in config.dht11_config:
@@ -73,7 +80,7 @@ def index():
             for record in sensor_recs:
                 data_arr["sensor_data"][channel]["temp_arr"].append(record.temperature)
                 data_arr["sensor_data"][channel]["hum_arr"].append(record.humidity)
-
+                data_arr["sensor_data"][channel]["time_arr"].append(record.time_stamp)
 
     # Control Data
     control_recs = db.Get_Last_Control_List(previous_minutes_back)
@@ -161,3 +168,21 @@ def send_client_model():
     server_model = wc.get_model()
     ret_val = {'error' : False, 'server_model' : server_model}
     return json.dumps(ret_val)
+
+def find_smallest_ch(sensor_dict):
+    index = 0
+    log("Sensor Dict", sensor_dict)
+    for channel in sensor_dict:
+
+        if index == 0:
+            smallest_size = len(sensor_dict[channel]["time_arr"])
+            smallest_index = 0
+        else:
+            if (len(sensor_dict[channel]["time_arr"]) > smallest_size) and \
+               (len(sensor_dict[channel]["time_arr"]) != 0):
+                smallest_size = len(sensor_dict[channel]["time_arr"])
+                smallest_index = index
+        index = index + 1
+
+    return smallest_index, smallest_size
+    
