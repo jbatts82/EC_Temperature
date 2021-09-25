@@ -19,7 +19,7 @@ heater = None
 humidifier = None
 fan = None
 timer = 0
-fan_on_time = 15
+fan_on_time = 20
 last_time = False
 periodic_init = True
 
@@ -176,7 +176,7 @@ def process_fan_requests(requests):
 	if requests["periodic"]:
 		if periodic_init:
 			fan_timer = Device_Clock()
-			fan_timer.set_on_timer(10)
+			fan_timer.set_on_timer(fan_on_time)
 			fan.Turn_On()
 			periodic_init = False
 		else:

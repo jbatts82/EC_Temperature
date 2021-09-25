@@ -19,6 +19,7 @@ import json
 from WebApp.mat_graph import MatGraph
 import WebApp.models as wc
 from support.timeclock import OS_Clock
+import numpy as np
 
 config = Config()
 
@@ -31,10 +32,12 @@ def index():
     global data_arr, config
 
     data_arr = {
-        "time_arr":[],
+        "sensor_data" : {   "ch1": {"temp_arr": [], "hum_arr": [], "time_arr": []},
+                            "ch2": {"temp_arr": [], "hum_arr": [], "time_arr": []},
+                            "ch3": {"temp_arr": [], "hum_arr": [], "time_arr": []},
+                            "ch4": {"temp_arr": [], "hum_arr": [], "time_arr": []},
+        },
         "time2_arr":[],
-        "temp_arr":[],
-        "hum_arr":[],
         "heat_state_arr":[],
         "hum_state_arr":[],
         "fan_state_arr":[],
@@ -50,14 +53,21 @@ def index():
     if graphConfig.validate_on_submit():
         previous_minutes_back = graphConfig.time.data
 
+    record = db.Get_Web_Model_Rec()
+    last_update_time = record.time_stamp
+    control_dict = json.loads(record.the_model)
 
-    # Sensor Data
-    sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
-    for record in sensor_recs:
-        data_arr["time_arr"].append(record.time_stamp)
-        data_arr["temp_arr"].append(record.temperature)
-        data_arr["hum_arr"].append(record.humidity)
+    graph_lines_to_show = control_dict["graph_lines"]
 
+    for each in config.dht11_config:
+        channel = each['name']
+        if graph_lines_to_show[channel]:
+            sensor_recs = db.Get_Last_Sensor_List(channel, previous_minutes_back)
+            for record in sensor_recs:
+                data_arr["sensor_data"][channel]["temp_arr"].append(record.temperature)
+                data_arr["sensor_data"][channel]["hum_arr"].append(record.humidity)
+                data_arr["sensor_data"][channel]["time_arr"].append(record.time_stamp)
+                
 
     # Control Data
     control_recs = db.Get_Last_Control_List(previous_minutes_back)
@@ -145,3 +155,20 @@ def send_client_model():
     server_model = wc.get_model()
     ret_val = {'error' : False, 'server_model' : server_model}
     return json.dumps(ret_val)
+
+def find_smallest_ch(sensor_dict):
+    index = 0
+    for channel in sensor_dict:
+
+        if index == 0:
+            smallest_size = len(sensor_dict[channel]["time_arr"])
+            smallest_index = 0
+        else:
+            if (len(sensor_dict[channel]["time_arr"]) > smallest_size) and \
+               (len(sensor_dict[channel]["time_arr"]) != 0):
+                smallest_size = len(sensor_dict[channel]["time_arr"])
+                smallest_index = index
+        index = index + 1
+
+    return smallest_index, smallest_size
+    
