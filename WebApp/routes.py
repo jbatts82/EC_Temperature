@@ -79,11 +79,7 @@ def index():
         data_arr["time2_arr"].append(rec.time_stamp)
 
     # Sensor Data
-    sensor_data = {}
-    for each in config.dht11_config:
-        channel = each['name']
-        record = db.Get_Last_Sensor_Rec(channel)
-        sensor_data[channel] = {"temp":record.temperature, "humidity":record.humidity, "time_temp":record.time_stamp}
+    sensor_data = get_all_current_sensor_data()
 
     # User Input
     data_to_show = forms.Data_To_Show()
@@ -98,6 +94,15 @@ def index():
                             graph1b64 = None,
                             fan_override=fan_override,
                             heater_override = heater_override)
+
+
+def get_all_current_sensor_data():
+    sensor_data = {}
+    for each in config.dht11_config:
+        channel = each['name']
+        record = db.Get_Last_Sensor_Rec(channel)
+        sensor_data[channel] = {"temp":record.temperature, "humidity":record.humidity, "time_temp":record.time_stamp}
+    return sensor_data
 
 
 @app.route('/set_web_req', methods=['GET', 'POST'])
@@ -135,6 +140,15 @@ def update_model():
     wc.update_client_webcontrol(web_control)
     server_model = wc.get_web_model()
     ret_val = {'error' : False, 'data' :  server_model}
+    return json.dumps(ret_val)
+
+
+@app.route('/update_temp_sensors', methods=['GET', 'POST'])
+def update_temp_sensors():
+    cmd_string = request.form['cmd']
+    sensor_array = get_all_current_sensor_data()
+    log("SensorArray", str(sensor_array))
+    ret_val = {'error' : False, 'temp_array' : sensor_array}
     return json.dumps(ret_val)
 
 

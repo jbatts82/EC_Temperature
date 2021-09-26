@@ -5,19 +5,48 @@
 //////////////////////////////////////////////////////////////////////////////
 
 var Client_Model = {};
-
+var sec_count = 0;
 
 // after page loads
 $(document).ready(function() {
     get_server_model();
+    setInterval(oneSecondFunction, 1000);
 });
-
 
 function update_model() {
 	get_page_elements();
 	send_client_model();
 }
 
+function oneSecondFunction() {
+	$("#demohi").text(JSON.stringify(sec_count));
+	sec_count++;
+	update_temp_sensors()
+}
+
+function update_temp_sensors(){
+	$.post( "/update_temp_sensors", {
+	  "cmd": "GET_SERVER_TEMPS"
+	}, function(resp){
+
+		var response = JSON.parse(resp);
+
+		if (response.error === true)
+		{
+			alert("Error");
+		}
+		else
+		{
+			Client_Temps = response.temp_array;
+			//set_temps(Client_Temps);
+			$("#demolow").text(Client_Temps);
+		}
+	});
+}
+
+function set_temps(temp_sensors){
+	//update html page
+}
 
 function get_server_model(){
 	$.post( "/get_server_model", {
@@ -32,9 +61,7 @@ function get_server_model(){
 		}
 		else
 		{
-
 			Client_Model = response.server_model;
-			//$("#demohi").text(JSON.stringify(Client_Model));
 			set_page_elements();
     		send_graph_data();
 		}
@@ -89,32 +116,27 @@ function set_page_elements() {
 	else {
 		$("#is_fan_override").attr("checked", false);
 	}
-
 	if (Client_Model.web_control.fan_state == true) {
 		$("#fan_override_state").attr("checked", true);
 	}
 	else {
 		$("#fan_override_state").attr("checked", false);
 	}
-
 	if (Client_Model.web_control.heater_req == true) {
 		$("#is_heater_override").attr("checked", true);
 	}
 	else {
 		$("#is_heater_override").attr("checked", false);
 	}
-
 	if (Client_Model.web_control.heater_state == true) {
 		$("#heater_override_state").attr("checked", true);
 	}
-
 	else {
 		$("#heater_override_state").attr("checked", false);
 	}
 	if (Client_Model.graph_lines.heater == true) {
 		$("#show_heater").attr("checked", true);
 	}
-
 	else {
 		$("#show_heater").attr("checked", false);
 	}
@@ -124,35 +146,30 @@ function set_page_elements() {
 	else {
 		$("#show_light").attr("checked", false);
 	}
-
 	if (Client_Model.graph_lines.fan == true) {
 		$("#show_fan").attr("checked", true);
 	}
 	else {
 		$("#show_fan").attr("checked", false);
 	}
-
 	if (Client_Model.graph_lines.ch1 == true) {
 		$("#show_ch1").attr("checked", true);
 	}
 	else {
 		$("#show_ch1").attr("checked", false);
 	}
-
 	if (Client_Model.graph_lines.ch2 == true) {
 		$("#show_ch2").attr("checked", true);
 	}
 	else {
 		$("#show_ch2").attr("checked", false);
 	}
-
 	if (Client_Model.graph_lines.ch3 == true) {
 		$("#show_ch3").attr("checked", true);
 	}
 	else {
 		$("#show_ch3").attr("checked", false);
 	}
-
 	if (Client_Model.graph_lines.ch4 == true) {
 		$("#show_ch4").attr("checked", true);
 	}
