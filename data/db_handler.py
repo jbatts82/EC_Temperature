@@ -82,8 +82,6 @@ def inspect_engine():
     log("Columns", inspector.get_columns('WebModel'))
 
 
-
-
 def insert_instant_sensor(reading):
     global the_session
     the_session.add(reading)
@@ -110,6 +108,7 @@ def insert_model_record(model):
 
 def get_model_recrd():
     global the_session
+    
     query = the_session.query(Web_Model).order_by(Web_Model.time_stamp.desc())
     last_record = query[0]
     return last_record
