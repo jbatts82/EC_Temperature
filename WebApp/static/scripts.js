@@ -10,7 +10,7 @@ var sec_count = 0;
 // after page loads
 $(document).ready(function() {
     get_server_model();
-    setInterval(oneSecondFunction, 1000);
+    //setInterval(oneSecondFunction, 1000);
 });
 
 function update_model() {
