@@ -52,6 +52,8 @@ def Init_Room_Control(the_config):
 	humidifier = Humidifier(the_config)
 	fan = Fan(the_config)
 	lamp = Lamp(the_config)
+	fan_on_time = the_config.ef_on_duration
+	
 	
 	
 def Process_Room_Control(clock):
@@ -165,6 +167,7 @@ def process_humidifier_requests(requests):
 
 def process_fan_requests(requests):
 	global fan, fan_on_time, fan_timer, periodic_init
+
 
 	if requests["web_override"]:
 		if requests["web_state"]:

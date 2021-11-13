@@ -53,4 +53,11 @@ class Config:
     time_table.append({"hour":16, "name":'Evening', "temp":74})
     time_table.append({"hour":20, "name":'Night', "temp":70})
 
+    humidifier_on_thresh = 44
+    humidifier_off_thresh = 47
+
+    ef_periodic_on_time = 60
+    ef_on_duration = 10
+
+    
     
