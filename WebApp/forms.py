@@ -17,6 +17,7 @@ class Data_To_Show(FlaskForm):
 	show_heater = BooleanField("Heater")
 	show_light = BooleanField("Light")
 	show_fan = BooleanField("Fan")
+	show_hum = BooleanField("Hum")
 	show_ch1 = BooleanField("Channel 1")
 	show_ch2 = BooleanField("Channel 2")
 	show_ch3 = BooleanField("Channel 3")

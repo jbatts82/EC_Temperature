@@ -176,11 +176,16 @@ function set_page_elements() {
 	else {
 		$("#show_ch4").attr("checked", false);
 	}
+	if (Client_Model.graph_lines.hum == true) {
+		$("#show_hum").attr("checked", true);
+	}
+	else {
+		$("#show_hum").attr("checked", false);
+	}
 }
 
 
 function get_page_elements() {
-
 	$("#demohi").text(JSON.stringify(window.Client_Model));
 
     if ($("#is_fan_override").is(":checked")) {
@@ -257,5 +262,12 @@ function get_page_elements() {
 	}
 	else {
 		Client_Model.graph_lines.ch4 = false;
+	}
+
+	if ($("#show_hum").is(":checked")) {
+		Client_Model.graph_lines.hum = true;
+	}
+	else {
+		Client_Model.graph_lines.hum = false;
 	}
 }

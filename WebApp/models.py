@@ -11,13 +11,15 @@ from datetime import datetime
 import json
 
 The_Model = {
-	"graph_lines": {"ch1": True, "ch2": False, "ch3": False, "ch4": False, "heater": False, "light": True, "fan": False},
+	"graph_lines": {"ch1": True, "ch2": False, "ch3": False, "ch4": False, "heater": False, "light": True, "fan": False, "hum":False},
 
 	"web_control": {
 					"heater_req": False,
 					"heater_state": False,
 					"fan_req": False,
-					"fan_state": False, }
+					"fan_state": False,
+					"hum_req": False,
+					"hum_state": False }
 }
 
 

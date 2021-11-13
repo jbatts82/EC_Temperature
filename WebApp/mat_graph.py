@@ -97,6 +97,11 @@ class MatGraph:
 		else:
 			self.remove_line_bool("fan")
 
+		if req_graph_lines["hum"]:
+			self.add_line_bool(data_arr["time2_arr"], data_arr["hum_state_arr"], "hum", "orange")
+		else:
+			self.remove_line_bool("hum")
+
 
 	def add_line_fehr(self, xs, ys, id, color):
 		self.plot_axes["fehr"].plot(xs, ys, gid=id, color=color)
