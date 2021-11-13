@@ -36,3 +36,5 @@ class DHT11:
 
     def get_current_data(self):
         return self.current_data
+
+    

@@ -21,8 +21,8 @@ class Config:
     # temperature sensor configuration
     dht11_config = [{"name":"ch1", "pin":4, "sensor_type":22, "assigned": False},
                     {"name":"ch2", "pin":17, "sensor_type":22, "assigned": False},
-                    {"name":"ch3", "pin":27, "sensor_type":22, "assigned": False},
-                    {"name":"ch4", "pin":22, "sensor_type":22, "assigned": False}]
+                    {"name":"ch3", "pin":27, "sensor_type":11, "assigned": False},
+                    {"name":"ch4", "pin":22, "sensor_type":11, "assigned": False}]
 
     sensor_retrys = 5
             
@@ -46,11 +46,11 @@ class Config:
 
 
     time_table = []
-    time_table.append({"hour":0, "name":'Late Night', "temp":68})
-    time_table.append({"hour":4, "name":'Early Morning', "temp":70})
-    time_table.append({"hour":8, "name":'Morning', "temp":72})
-    time_table.append({"hour":12, "name":'After Noon', "temp":74})
-    time_table.append({"hour":16, "name":'Evening', "temp":71})
-    time_table.append({"hour":20, "name":'Night', "temp":68})
+    time_table.append({"hour":0, "name":'Late Night', "temp":70})
+    time_table.append({"hour":4, "name":'Early Morning', "temp":73})
+    time_table.append({"hour":8, "name":'Morning', "temp":75})
+    time_table.append({"hour":12, "name":'After Noon', "temp":77})
+    time_table.append({"hour":16, "name":'Evening', "temp":74})
+    time_table.append({"hour":20, "name":'Night', "temp":70})
 
     
